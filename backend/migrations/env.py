@@ -3,11 +3,12 @@ from os.path import abspath, dirname
 sys.path.insert(0, abspath(dirname(dirname(__file__))))
 
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config
+from sqlalchemy import engine_from_config, create_engine
 from sqlalchemy import pool
 from alembic import context
 from app.database.session import Base
 from app.models.user import User, UserStats, SpacedRepetition, ChallengeProgress
+from app.core.config import settings
 
 config = context.config
 if config.config_file_name is not None:
@@ -15,8 +16,14 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 
+def get_url():
+    url = settings.DATABASE_URL
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    return url
+
 def run_migrations_offline() -> None:
-    url = config.get_main_option("sqlalchemy.url")
+    url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -27,11 +34,9 @@ def run_migrations_offline() -> None:
         context.run_migrations()
 
 def run_migrations_online() -> None:
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-    )
+    url = get_url()
+    connectable = create_engine(url, poolclass=pool.NullPool)
+
     with connectable.connect() as connection:
         context.configure(
             connection=connection, target_metadata=target_metadata

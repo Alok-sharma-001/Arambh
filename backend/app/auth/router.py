@@ -1,14 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from datetime import timedelta
 from jose import JWTError, jwt
+import logging
 from app.database.session import get_db
 from app.models.user import User, UserStats
 from app.schemas.user import UserCreate, User as UserSchema, Token, TokenData
 from app.auth.utils import get_password_hash, verify_password, create_access_token
 from app.core.config import settings
 
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/auth", tags=["auth"])
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
@@ -33,30 +36,46 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
 
 @router.post("/register", response_model=UserSchema)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
-    db_user = db.query(User).filter(User.email == user_in.email).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+    try:
+        db_user = db.query(User).filter(User.email == user_in.email).first()
+        if db_user:
+            raise HTTPException(status_code=400, detail="Email already registered")
 
-    db_user = db.query(User).filter(User.username == user_in.username).first()
-    if db_user:
-        raise HTTPException(status_code=400, detail="Username already taken")
+        db_user = db.query(User).filter(User.username == user_in.username).first()
+        if db_user:
+            raise HTTPException(status_code=400, detail="Username already taken")
 
-    hashed_password = get_password_hash(user_in.password)
-    new_user = User(
-        username=user_in.username,
-        email=user_in.email,
-        hashed_password=hashed_password
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+        hashed_password = get_password_hash(user_in.password)
+        new_user = User(
+            username=user_in.username,
+            email=user_in.email,
+            hashed_password=hashed_password
+        )
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
 
-    # Initialize stats
-    stats = UserStats(user_id=new_user.id)
-    db.add(stats)
-    db.commit()
+        # Initialize stats
+        stats = UserStats(user_id=new_user.id)
+        db.add(stats)
+        db.commit()
 
-    return new_user
+        logger.info(f"Successfully registered user: {new_user.username}")
+        return new_user
+    except SQLAlchemyError as e:
+        db.rollback()
+        logger.error(f"Database error during registration: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database error during registration"
+        )
+    except Exception as e:
+        db.rollback()
+        logger.error(f"Unexpected error during registration: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal server error during registration"
+        )
 
 @router.post("/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
