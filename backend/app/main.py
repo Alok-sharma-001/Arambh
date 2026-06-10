@@ -1,13 +1,16 @@
 import logging
 import sys
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 from app.database.session import engine, Base
 from app.core.config import settings
 
-# Setup logging before anything else
+# CRITICAL: Import all models via the models package to ensure registration in Base.metadata
+import app.models
+
+# Setup logging
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -15,66 +18,76 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# CRITICAL: Import all models so they are registered with Base.metadata
-# These MUST be imported before any operations on Base.metadata
-logger.info("Importing models for metadata registration...")
-try:
-    from app.models.user import User, UserStats, SpacedRepetition, ChallengeProgress
-    logger.info(f"Models registered in metadata: {list(Base.metadata.tables.keys())}")
-except Exception as e:
-    logger.error(f"Failed to import models: {e}")
-
 from app.auth.router import router as auth_router
 from app.api.progress import router as progress_router
 
-def verify_and_init_db():
+def init_db():
     """
-    Verifies the database connection, logs existing tables,
-    and creates missing tables if necessary.
+    Initializes the database schema by creating all tables registered in metadata.
     """
     try:
         # Masked DATABASE_URL logging
         db_url = settings.DATABASE_URL
-        masked_url = db_url.split("@")[-1] if "@" in db_url else "configured"
-        logger.info(f"Database verification start. Target Host: {masked_url}")
+        masked_host = db_url.split("@")[-1] if "@" in db_url else "configured"
+        logger.info(f"DB INIT: Connecting to host: {masked_host}")
 
+        # Log registered models
+        registered_tables = list(Base.metadata.tables.keys())
+        logger.info(f"DB INIT: Models registered in metadata: {registered_tables}")
+
+        if not registered_tables:
+            logger.warning("DB INIT: No tables registered in metadata! Schema creation will do nothing.")
+
+        # Create tables
+        logger.info("DB INIT: Running Base.metadata.create_all(bind=engine)...")
+        Base.metadata.create_all(bind=engine)
+
+        # Verify existing tables
         inspector = inspect(engine)
         existing_tables = inspector.get_table_names()
-        logger.info(f"Existing tables in database before init: {existing_tables}")
+        logger.info(f"DB INIT: Tables detected in database: {existing_tables}")
 
-        # Check if critical table 'users' exists
-        if 'users' not in existing_tables:
-            logger.info("Table 'users' not found. Running Base.metadata.create_all(bind=engine)...")
-            # This will create all tables defined in models that don't exist yet
-            Base.metadata.create_all(bind=engine)
-
-            # Re-inspect to verify
-            updated_tables = inspect(engine).get_table_names()
-            logger.info(f"Tables in database after init: {updated_tables}")
-
-            if 'users' in updated_tables:
-                logger.info("Database schema initialized successfully.")
-            else:
-                logger.error("CRITICAL: Schema initialization failed - 'users' table still missing!")
+        if 'users' in existing_tables:
+            logger.info("DB INIT: Initialization successful. 'users' table exists.")
         else:
-            logger.info("Database schema already verified (users table exists).")
+            logger.error("DB INIT: CRITICAL ERROR - 'users' table still missing after create_all!")
 
     except Exception as e:
-        logger.error(f"Database verification/initialization failed: {e}")
+        logger.error(f"DB INIT: Failed during initialization: {e}")
 
-# Run initialization immediately on module load
-verify_and_init_db()
+# Diagnostics Router
+diag_router = APIRouter(prefix="/diag", tags=["diagnostics"])
+
+@diag_router.get("/db-status")
+async def get_db_status():
+    status = {
+        "database_connected": False,
+        "dialect": engine.name,
+        "registered_metadata_tables": list(Base.metadata.tables.keys()),
+        "actual_database_tables": [],
+        "error": None
+    }
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+            status["database_connected"] = True
+
+        inspector = inspect(engine)
+        status["actual_database_tables"] = inspector.get_table_names()
+    except Exception as e:
+        status["error"] = str(e)
+
+    return status
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Secondary check on startup
-    logger.info("Application lifespan starting...")
-    verify_and_init_db()
+    # Ensure DB is initialized before serving requests
+    init_db()
     yield
 
 app = FastAPI(
     title="Arambh API",
-    version="0.1.2",
+    version="0.1.3",
     lifespan=lifespan
 )
 
@@ -88,34 +101,23 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/api")
 app.include_router(progress_router, prefix="/api")
+app.include_router(diag_router, prefix="/api")
 
 @app.get("/")
 async def root():
     return {
         "message": "Welcome to Arambh API",
         "status": "online",
-        "version": "0.1.2"
+        "version": "0.1.3"
     }
 
 @app.get("/health")
 async def health_check():
-    health_info = {
-        "status": "healthy",
-        "database": "unknown",
-        "tables": [],
-        "models_registered": list(Base.metadata.tables.keys())
-    }
     try:
         inspector = inspect(engine)
-        health_info["tables"] = inspector.get_table_names()
-        health_info["database"] = "connected"
-        if "users" in health_info["tables"]:
-            health_info["status"] = "healthy"
-        else:
-            health_info["status"] = "degraded"
-            health_info["error"] = "users table missing"
+        tables = inspector.get_table_names()
+        if "users" in tables:
+            return {"status": "healthy", "tables_count": len(tables)}
+        return {"status": "degraded", "error": "schema missing"}
     except Exception as e:
-        health_info["status"] = "unhealthy"
-        health_info["error"] = str(e)
-
-    return health_info
+        return {"status": "unhealthy", "error": str(e)}
