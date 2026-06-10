@@ -1,22 +1,31 @@
 import logging
+import sys
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import inspect
-from app.auth.router import router as auth_router
-from app.api.progress import router as progress_router
 from app.database.session import engine, Base
 from app.core.config import settings
 
-# CRITICAL: Import all models so they are registered with Base.metadata
-from app.models.user import User, UserStats, SpacedRepetition, ChallengeProgress
-
-# Setup logging
+# Setup logging before anything else
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    stream=sys.stdout
 )
 logger = logging.getLogger(__name__)
+
+# CRITICAL: Import all models so they are registered with Base.metadata
+# These MUST be imported before any operations on Base.metadata
+logger.info("Importing models for metadata registration...")
+try:
+    from app.models.user import User, UserStats, SpacedRepetition, ChallengeProgress
+    logger.info(f"Models registered in metadata: {list(Base.metadata.tables.keys())}")
+except Exception as e:
+    logger.error(f"Failed to import models: {e}")
+
+from app.auth.router import router as auth_router
+from app.api.progress import router as progress_router
 
 def verify_and_init_db():
     """
@@ -26,15 +35,12 @@ def verify_and_init_db():
     try:
         # Masked DATABASE_URL logging
         db_url = settings.DATABASE_URL
-        if "@" in db_url:
-            masked_url = db_url.split("@")[-1]
-        else:
-            masked_url = "configured"
-        logger.info(f"Database verification start. Host: {masked_url}")
+        masked_url = db_url.split("@")[-1] if "@" in db_url else "configured"
+        logger.info(f"Database verification start. Target Host: {masked_url}")
 
         inspector = inspect(engine)
         existing_tables = inspector.get_table_names()
-        logger.info(f"Existing tables in database: {existing_tables}")
+        logger.info(f"Existing tables in database before init: {existing_tables}")
 
         # Check if critical table 'users' exists
         if 'users' not in existing_tables:
@@ -44,7 +50,7 @@ def verify_and_init_db():
 
             # Re-inspect to verify
             updated_tables = inspect(engine).get_table_names()
-            logger.info(f"Tables after initialization: {updated_tables}")
+            logger.info(f"Tables in database after init: {updated_tables}")
 
             if 'users' in updated_tables:
                 logger.info("Database schema initialized successfully.")
@@ -55,18 +61,20 @@ def verify_and_init_db():
 
     except Exception as e:
         logger.error(f"Database verification/initialization failed: {e}")
-        # We don't raise here to allow the app to start and potentially show errors in /health
+
+# Run initialization immediately on module load
+verify_and_init_db()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # This runs on startup
+    # Secondary check on startup
+    logger.info("Application lifespan starting...")
     verify_and_init_db()
     yield
-    # This runs on shutdown (nothing needed)
 
 app = FastAPI(
     title="Arambh API",
-    version="0.1.1",
+    version="0.1.2",
     lifespan=lifespan
 )
 
@@ -86,7 +94,7 @@ async def root():
     return {
         "message": "Welcome to Arambh API",
         "status": "online",
-        "version": "0.1.1"
+        "version": "0.1.2"
     }
 
 @app.get("/health")
