@@ -2,20 +2,22 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/ui/PageHeader';
-import { UserOverview } from '../components/dashboard/UserOverview';
+import { CharacterCard } from '../components/progression/CharacterCard';
+import { LevelUpModal } from '../components/progression/LevelUpModal';
 import { DailyGoals } from '../components/dashboard/DailyGoals';
 import { InventoryPreview } from '../components/dashboard/InventoryPreview';
 import { AvatarSelection } from '../components/dashboard/AvatarSelection';
+import { ProgressionWidget } from '../components/dashboard/ProgressionWidget';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { LayoutDashboard, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useProgressionStore } from '../store/progressionStore';
+import { useProgression } from '../hooks/useProgression';
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { fetchProgression } = useProgressionStore();
+  const { fetchProgression } = useProgression();
 
   useEffect(() => {
     fetchProgression();
@@ -41,24 +43,32 @@ export default function Dashboard() {
       animate="show"
       className="max-w-6xl mx-auto space-y-6 md:space-y-8"
     >
+      {/* Level-up modal (renders only on event) */}
+      <LevelUpModal />
+
+      {/* Avatar class selection (renders only if no class set) */}
+      <AvatarSelection />
+
       <PageHeader 
         title="Dashboard" 
         description="Welcome back! Here's an overview of your progress."
         icon={<LayoutDashboard className="w-6 h-6" />}
       />
 
+      {/* Character Profile Card — the RPG hero area */}
       <motion.div variants={itemVariants}>
-        <UserOverview />
+        <CharacterCard />
       </motion.div>
 
-      <AvatarSelection />
-
+      {/* Inventory Grid */}
       <motion.div variants={itemVariants}>
         <InventoryPreview />
       </motion.div>
 
+      {/* Main content grid */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2 space-y-4 md:space-y-6">
+          {/* Continue Learning CTA */}
           <Card className="p-6 md:p-8 bg-gradient-to-r from-game-purple/20 to-indigo-900/20 border-game-purple/20">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
               <div>
@@ -75,23 +85,18 @@ export default function Dashboard() {
               </Button>
             </div>
           </Card>
+          
+          {/* Quests + Activity */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-             <DailyGoals />
-             <RecentActivity />
+            <DailyGoals />
+            <RecentActivity />
           </div>
         </div>
+
+        {/* Progression Widget sidebar */}
         <div className="lg:col-span-1">
-           {/* Additional space for right sidebar widgets if needed, currently filled by grid layout adjustments. 
-               Let's make DailyGoals and RecentActivity fill the space better. Actually, placing them in a 2/1 grid works well. */}
-           <div className="h-full hidden lg:block">
-              <RecentActivity />
-           </div>
+          <ProgressionWidget />
         </div>
-      </motion.div>
-      
-      {/* Mobile view override for Recent Activity since it's hidden above */}
-      <motion.div variants={itemVariants} className="lg:hidden">
-         <RecentActivity />
       </motion.div>
     </motion.div>
   );

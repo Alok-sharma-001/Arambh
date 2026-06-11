@@ -15,22 +15,41 @@ from app.schemas.user import (
 
 router = APIRouter()
 
-RANKS = [
-    (0, "Novice"),
-    (5, "Apprentice"),
-    (10, "Explorer"),
-    (20, "Scholar"),
-    (30, "Master"),
-    (40, "Grandmaster"),
-    (50, "Legend")
+# ── Level thresholds: cumulative XP needed to reach each level ──
+LEVEL_THRESHOLDS = {
+    1: 0, 2: 250, 3: 600, 4: 1000, 5: 1600,
+    6: 2500, 7: 3500, 8: 5000, 9: 7000, 10: 10000,
+}
+
+# ── Rank thresholds: based on total XP ──
+RANK_THRESHOLDS = [
+    (0,    "Novice"),
+    (501,  "Explorer"),
+    (1501, "Adept"),
+    (3001, "Master"),
+    (5001, "Grandmaster"),
 ]
 
-def calculate_rank(level: int) -> str:
-    current_rank = "Novice"
-    for rank_level, rank_name in RANKS:
-        if level >= rank_level:
-            current_rank = rank_name
-    return current_rank
+def calculate_level(total_xp: int) -> int:
+    level = 1
+    max_level = max(LEVEL_THRESHOLDS.keys())
+    for lv in range(2, max_level + 1):
+        if total_xp >= LEVEL_THRESHOLDS[lv]:
+            level = lv
+        else:
+            break
+    # Beyond defined thresholds, extrapolate
+    if total_xp >= LEVEL_THRESHOLDS[max_level]:
+        excess = total_xp - LEVEL_THRESHOLDS[max_level]
+        level = max_level + excess // 3000
+    return level
+
+def calculate_rank(total_xp: int) -> str:
+    rank = "Novice"
+    for min_xp, rank_name in RANK_THRESHOLDS:
+        if total_xp >= min_xp:
+            rank = rank_name
+    return rank
 
 @router.get("/me", response_model=ProgressionResponse)
 def get_progression(
@@ -85,15 +104,12 @@ def add_xp(
         
     stats.total_xp += request.amount
     
-    # Calculate level (XP thresholds: Level * 500)
-    # Simple calculation: level = floor(sqrt(total_xp / 250)) or similar.
-    # Let's use a simpler linear scale: Level N requires N * 500 cumulative XP.
-    # Actually, a fixed 500 per level is easier to manage on frontend without heavy math.
-    new_level = 1 + (stats.total_xp // 500)
+    # Use centralized level/rank calculators
+    new_level = calculate_level(stats.total_xp)
     
     if new_level > stats.current_level:
         stats.current_level = new_level
-        stats.rank = calculate_rank(stats.current_level)
+    stats.rank = calculate_rank(stats.total_xp)
         
     db.commit()
     db.refresh(stats)

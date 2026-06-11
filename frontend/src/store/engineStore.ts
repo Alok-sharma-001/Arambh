@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { ExecutionStep, generateMockExecution } from '../engine/VisualizationEngine';
 import { useProgressionStore } from './progressionStore';
 import { useToastStore } from './toastStore';
+import { XP_REWARDS } from '../services/progressionService';
 
 interface EngineStore {
   steps: ExecutionStep[];
@@ -33,11 +34,11 @@ export const useEngineStore = create<EngineStore>((set, get) => {
       set((state) => ({ outputLog: [...state.outputLog, step.output!] }));
       
       // Award XP when execution successfully reaches print
-      useProgressionStore.getState().gainXP(10, 'Code Execution');
+      useProgressionStore.getState().gainXP('CODE_EXECUTION', 'Code Execution');
       useToastStore.getState().addToast({
         type: 'xp',
         title: 'Execution Successful',
-        xpAmount: 10
+        xpAmount: XP_REWARDS.CODE_EXECUTION
       });
     }
     // If we step backward, we'd need to rebuild output log. Simplified for now.
