@@ -8,9 +8,9 @@ export default {
     extend: {
       colors: {
         slate: {
-          950: '#0A0F1C', // Deepest background
-          900: '#111827', // Surface
-          800: '#161B2E', // Border/Elevated
+          950: '#0D0D12', // Deepest background (Obsidian)
+          900: '#13131A', // Surface
+          800: '#181820', // Border/Elevated
         },
         game: {
           gold: '#FBBF24',

@@ -18,7 +18,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="flex min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-blue-500/30">
+    <div className="flex min-h-screen bg-transparent text-slate-100 font-sans selection:bg-game-purple/30">
       <Sidebar />
       <ToastProvider />
       <main className="flex-1 overflow-x-hidden min-w-0 flex flex-col relative">

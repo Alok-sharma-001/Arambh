@@ -40,9 +40,9 @@ export default function LearningArena() {
   }, [currentStepIndex, steps.length, hasRun, addToast]);
 
   return (
-    <div className="h-screen flex flex-col bg-game-bg bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(139,92,246,0.15),rgba(255,255,255,0))] text-white overflow-hidden font-sans">
+    <div className="h-screen flex flex-col bg-transparent text-white overflow-hidden font-sans relative">
       {/* Header */}
-      <header className="h-16 border-b border-game-border flex items-center justify-between px-6 bg-slate-950/60 backdrop-blur-3xl relative z-30 shadow-xl">
+      <header className="h-16 border-b border-game-border flex items-center justify-between px-6 bg-slate-950/40 backdrop-blur-3xl relative z-30 shadow-xl">
         <div className="flex items-center space-x-4">
           <button 
             onClick={() => navigate('/map')} 

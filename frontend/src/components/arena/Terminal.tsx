@@ -1,7 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Terminal as TerminalIcon } from 'lucide-react';
 import { useEngineStore } from '../../store/engineStore';
 import { motion, AnimatePresence } from 'framer-motion';
+
+// Typing effect component
+const TypingText = ({ text }: { text: string }) => {
+  const [displayedText, setDisplayedText] = useState('');
+
+  useEffect(() => {
+    let i = 0;
+    setDisplayedText('');
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        setDisplayedText((prev) => prev + text.charAt(i));
+        i++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 50); // 50ms per character
+    return () => clearInterval(timer);
+  }, [text]);
+
+  return <span>{displayedText}</span>;
+};
 
 export const Terminal: React.FC = () => {
   const { outputLog, isPlaying, steps, currentStepIndex } = useEngineStore();
@@ -41,7 +62,7 @@ export const Terminal: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               className="text-game-emerald font-bold"
             >
-              &gt; {log}
+              &gt; <TypingText text={log} />
             </motion.div>
           ))}
 
