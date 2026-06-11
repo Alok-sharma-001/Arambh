@@ -11,7 +11,7 @@ interface ProgressBarProps {
 
 export const ProgressBar: React.FC<ProgressBarProps> = ({
   progress,
-  color = 'bg-blue-500',
+  color = 'bg-game-purple',
   height = 'h-3',
   className = '',
   showLabel = false,
@@ -26,7 +26,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
           <span>{Math.round(safeProgress)}%</span>
         </div>
       )}
-      <div className={`w-full bg-slate-800 rounded-full overflow-hidden border border-slate-700 ${height}`}>
+      <div className={`w-full bg-[#0D0D12] rounded-full overflow-hidden border border-[#181820] ${height}`}>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: `${safeProgress}%` }}

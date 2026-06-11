@@ -36,11 +36,11 @@ export const DailyGoals: React.FC = () => {
   };
 
   return (
-    <Card className="p-6 h-full flex flex-col bg-slate-900 border-slate-700/50 shadow-xl">
+    <Card className="p-6 h-full flex flex-col bg-[#0D0D12] border-[#181820] shadow-xl">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-500/10 rounded-xl border border-blue-500/20">
-            <Scroll className="w-5 h-5 text-blue-400" />
+          <div className="p-2 bg-game-purple/10 rounded-xl border border-game-purple/20">
+            <Scroll className="w-5 h-5 text-game-purple" />
           </div>
           <h3 className="text-xl font-bold text-white">Daily Quests</h3>
         </div>
@@ -55,7 +55,7 @@ export const DailyGoals: React.FC = () => {
             className={`group p-4 rounded-xl border transition-all cursor-pointer ${
               goal.completed 
                 ? 'bg-emerald-500/5 border-emerald-500/20' 
-                : 'bg-slate-800/50 border-slate-700/50 hover:bg-slate-800 hover:border-slate-600'
+                : 'bg-[#13131A]/50 border-[#181820] hover:bg-[#13131A] hover:border-[#181820]'
             }`}
             onClick={() => simulateProgress(goal.id)}
           >
@@ -68,7 +68,7 @@ export const DailyGoals: React.FC = () => {
                   {goal.completed ? (
                     <CheckCircle2 className="w-5 h-5 text-emerald-500" />
                   ) : (
-                    <div className="w-5 h-5 rounded-md border-2 border-slate-600 group-hover:border-blue-400 transition-colors" />
+                    <div className="w-5 h-5 rounded-md border-2 border-slate-600 group-hover:border-game-purple transition-colors" />
                   )}
                 </motion.div>
                 <span className={`font-semibold ${goal.completed ? 'text-slate-400 line-through' : 'text-slate-200'}`}>
@@ -89,7 +89,7 @@ export const DailyGoals: React.FC = () => {
                 </div>
                 <ProgressBar 
                   progress={(goal.progress / goal.target) * 100} 
-                  color="bg-blue-500" 
+                  color="bg-game-purple" 
                   height="h-1.5" 
                 />
               </div>

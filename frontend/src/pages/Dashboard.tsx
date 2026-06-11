@@ -44,7 +44,7 @@ export default function Dashboard() {
       </motion.div>
 
       <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <StatCard title="Level" value="5" icon={<Star className="w-6 h-6" />} color="blue" />
+        <StatCard title="Level" value="5" icon={<Star className="w-6 h-6" />} color="purple" />
         <StatCard title="Total XP" value="1,200" icon={<Star className="w-6 h-6" />} trend="250 this week" color="amber" />
         <StatCard title="Streak" value="3 Days" icon={<Flame className="w-6 h-6" />} trend="Personal Best: 7" color="red" />
         <StatCard title="Intelligence" value="142" icon={<Brain className="w-6 h-6" />} trend="Top 15%" color="purple" />
@@ -52,17 +52,17 @@ export default function Dashboard() {
 
       <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         <div className="lg:col-span-2 space-y-4 md:space-y-6">
-          <Card className="p-6 md:p-8 bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border-blue-500/20">
+          <Card className="p-6 md:p-8 bg-gradient-to-r from-game-purple/20 to-indigo-900/20 border-game-purple/20">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-2">Continue Learning</h3>
-                <p className="text-slate-300">You're currently in the <strong className="text-blue-400">Data Types Valley</strong> module.</p>
+                <p className="text-slate-300">You're currently in the <strong className="text-game-gold">Data Types Valley</strong> module.</p>
               </div>
               <Button 
                 size="lg" 
                 rightIcon={<Play className="w-5 h-5" />}
                 onClick={() => navigate('/learning-map')}
-                className="w-full sm:w-auto shadow-xl shadow-blue-900/50"
+                className="w-full sm:w-auto shadow-xl shadow-game-purple/30 bg-game-purple hover:bg-game-purple/80 border-none"
               >
                 Resume Quest
               </Button>

@@ -17,7 +17,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, description, icon
     >
       <div className="flex items-center gap-4">
         {icon && (
-          <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20">
+          <div className="p-3 bg-game-purple/10 text-game-purple rounded-xl border border-game-purple/20">
             {icon}
           </div>
         )}

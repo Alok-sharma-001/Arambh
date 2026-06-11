@@ -27,7 +27,7 @@ export const QuestCard: React.FC<QuestCardProps> = ({
   
   const difficultyColors = {
     Easy: "emerald",
-    Medium: "blue",
+    Medium: "purple",
     Hard: "amber",
     Epic: "purple",
   } as const;
@@ -37,11 +37,11 @@ export const QuestCard: React.FC<QuestCardProps> = ({
       <div>
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">
-            <div className={`p-2 rounded-xl ${completed ? 'bg-emerald-500/10' : 'bg-blue-500/10'}`}>
+            <div className={`p-2 rounded-xl ${completed ? 'bg-emerald-500/10' : 'bg-game-purple/10'}`}>
               {completed ? (
                 <CheckCircle2 className="w-6 h-6 text-emerald-500" />
               ) : (
-                <Target className="w-6 h-6 text-blue-400" />
+                <Target className="w-6 h-6 text-game-purple" />
               )}
             </div>
             <div>
@@ -70,7 +70,7 @@ export const QuestCard: React.FC<QuestCardProps> = ({
         </div>
         <ProgressBar 
           progress={percentage} 
-          color={completed ? "bg-emerald-500" : "bg-blue-500"} 
+          color={completed ? "bg-emerald-500" : "bg-game-purple"} 
           height="h-2" 
         />
       </div>

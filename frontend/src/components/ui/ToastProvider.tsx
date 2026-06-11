@@ -11,7 +11,7 @@ const ToastItem: React.FC<{ toast: Toast }> = ({ toast }) => {
     switch (toast.type) {
       case 'achievement': return <Trophy className="w-6 h-6 text-yellow-400" />;
       case 'xp': return <Zap className="w-6 h-6 text-amber-400" />;
-      default: return <Info className="w-6 h-6 text-blue-400" />;
+      default: return <Info className="w-6 h-6 text-game-purple" />;
     }
   };
 
@@ -19,7 +19,7 @@ const ToastItem: React.FC<{ toast: Toast }> = ({ toast }) => {
     switch (toast.type) {
       case 'achievement': return 'bg-yellow-400/10 border-yellow-400/30';
       case 'xp': return 'bg-amber-400/10 border-amber-400/30';
-      default: return 'bg-blue-400/10 border-blue-400/30';
+      default: return 'bg-game-purple/10 border-game-purple/30';
     }
   };
 

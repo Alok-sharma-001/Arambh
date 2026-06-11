@@ -45,16 +45,16 @@ export const MapNode: React.FC<MapNodeProps> = ({
       
       {/* Pulse for current node */}
       {isCurrent && (
-        <div className="absolute -inset-1 bg-blue-500/30 blur-lg rounded-2xl animate-pulse" />
+        <div className="absolute -inset-1 bg-game-purple/30 blur-lg rounded-2xl animate-pulse" />
       )}
 
       <Card 
         className={`p-6 relative border-2 transition-all duration-300 backdrop-blur-md overflow-hidden ${
           isLocked 
-            ? 'border-slate-800 bg-slate-900/60 grayscale opacity-80' 
+            ? 'border-[#181820] bg-[#0D0D12]/60 grayscale opacity-80' 
             : isCompleted
-            ? 'border-emerald-500/50 bg-slate-900 shadow-[0_0_20px_rgba(16,185,129,0.15)] cursor-pointer hover:border-emerald-400'
-            : 'border-blue-500/50 bg-slate-900 cursor-pointer shadow-[0_0_20px_rgba(59,130,246,0.2)] hover:border-blue-400'
+            ? 'border-emerald-500/50 bg-[#0D0D12] shadow-[0_0_20px_rgba(16,185,129,0.15)] cursor-pointer hover:border-emerald-400'
+            : 'border-game-purple/50 bg-[#0D0D12] cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.2)] hover:border-game-purple'
         }`}
       >
         {/* Fog effect for locked nodes */}
@@ -64,11 +64,11 @@ export const MapNode: React.FC<MapNodeProps> = ({
           </div>
         )}
 
-        <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center bg-slate-900 border-2 border-slate-800 z-10 shadow-lg">
+        <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center bg-[#0D0D12] border-2 border-[#181820] z-10 shadow-lg">
           {isCompleted ? (
             <CheckCircle className="w-5 h-5 text-emerald-400" />
           ) : isCurrent ? (
-            <Unlock className="w-5 h-5 text-blue-400" />
+            <Unlock className="w-5 h-5 text-game-purple" />
           ) : (
             <Lock className="w-5 h-5 text-slate-600" />
           )}
@@ -94,12 +94,12 @@ export const MapNode: React.FC<MapNodeProps> = ({
           {!isLocked && (
             <ProgressBar 
               progress={completion} 
-              color={isCompleted ? "bg-emerald-500" : "bg-blue-500"} 
+              color={isCompleted ? "bg-emerald-500" : "bg-game-purple"} 
               showLabel 
             />
           )}
           {isLocked && (
-             <div className="h-2 w-full bg-slate-800 rounded-full" />
+             <div className="h-2 w-full bg-[#181820] rounded-full" />
           )}
         </div>
       </Card>

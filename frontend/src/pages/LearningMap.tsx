@@ -51,8 +51,8 @@ export default function LearningMap() {
           const pathColor = mod.status === 'completed' && nextMod?.status !== 'locked' 
             ? 'stroke-emerald-500/50' 
             : mod.status === 'current'
-            ? 'stroke-blue-500/50'
-            : 'stroke-slate-800';
+            ? 'stroke-game-purple/50'
+            : 'stroke-[#181820]';
 
           return (
             <div key={mod.id} className="relative w-full max-w-4xl flex flex-col items-center">
@@ -98,11 +98,11 @@ export default function LearningMap() {
                 <div className={`w-full md:w-[45%] flex items-center justify-center relative ${isLeft ? 'md:ml-auto md:mr-12' : 'md:mr-auto md:ml-12'}`}>
                   
                   {/* Waypoint Marker for Desktop */}
-                  <div className={`hidden md:flex absolute ${isLeft ? '-right-12 translate-x-1/2' : '-left-12 -translate-x-1/2'} top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-slate-900 border-4 border-slate-700 items-center justify-center z-20`}>
+                  <div className={`hidden md:flex absolute ${isLeft ? '-right-12 translate-x-1/2' : '-left-12 -translate-x-1/2'} top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0D0D12] border-4 border-[#181820] items-center justify-center z-20`}>
                     <div className={`w-3 h-3 rounded-full ${
                       mod.status === 'completed' ? 'bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,1)]' 
-                      : mod.status === 'current' ? 'bg-blue-400 shadow-[0_0_15px_rgba(96,165,250,1)]' 
-                      : 'bg-slate-600'
+                      : mod.status === 'current' ? 'bg-game-purple shadow-[0_0_15px_rgba(139,92,246,1)]' 
+                      : 'bg-slate-700'
                     }`} />
                   </div>
 
@@ -112,7 +112,7 @@ export default function LearningMap() {
                       transition={{ duration: 2, repeat: Infinity }}
                       className={`absolute -top-12 ${isLeft ? '-right-16' : '-left-16'} hidden md:block z-30`}
                     >
-                      <MapPin className="w-10 h-10 text-blue-500 fill-blue-500/20 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
+                      <MapPin className="w-10 h-10 text-game-gold fill-game-gold/20 drop-shadow-[0_0_10px_rgba(251,191,36,0.8)]" />
                     </motion.div>
                   )}
 

@@ -4,13 +4,13 @@ import { History, Trophy, BookOpen, Code2 } from 'lucide-react';
 
 const activities = [
   { id: 1, type: 'achievement', title: 'Earned First Login Achievement', time: '2 hours ago', icon: Trophy, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
-  { id: 2, type: 'lesson', title: 'Completed Variables Module', time: '5 hours ago', icon: BookOpen, color: 'text-blue-400', bg: 'bg-blue-400/10' },
+  { id: 2, type: 'lesson', title: 'Completed Variables Module', time: '5 hours ago', icon: BookOpen, color: 'text-game-purple', bg: 'bg-game-purple/10' },
   { id: 3, type: 'challenge', title: 'Solved "Hello World" Challenge', time: '1 day ago', icon: Code2, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
 ];
 
 export const RecentActivity: React.FC = () => {
   return (
-    <Card className="p-6 h-full">
+    <Card className="p-6 h-full bg-[#0D0D12] border-[#181820]">
       <div className="flex items-center gap-3 mb-6">
         <div className="p-2 bg-purple-500/10 rounded-lg">
           <History className="w-5 h-5 text-purple-500" />

@@ -21,8 +21,12 @@ export default function Register() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-900">
-      <div className="w-full max-w-md p-8 space-y-6 bg-slate-800 rounded-xl shadow-lg border border-slate-700">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-[#0D0D12] via-[#13131A] to-indigo-900/20 relative overflow-hidden">
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-game-purple/30 rounded-full blur-[100px]" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-[120px]" />
+      </div>
+      <div className="w-full max-w-md p-8 space-y-6 bg-slate-800 rounded-xl shadow-lg border border-slate-700 z-10">
         <h1 className="text-3xl font-bold text-center text-white">Join Arambh</h1>
         {error && <div className="p-3 text-sm text-red-400 bg-red-900/30 border border-red-800 rounded">{error}</div>}
         <form className="space-y-4" onSubmit={handleSubmit}>

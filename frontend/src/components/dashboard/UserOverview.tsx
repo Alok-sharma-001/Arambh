@@ -49,18 +49,18 @@ export const UserOverview: React.FC = () => {
   };
 
   return (
-    <Card className="p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6 bg-slate-900 border-slate-700/50 shadow-2xl relative overflow-hidden group">
+    <Card className="p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6 bg-[#0D0D12] border-[#181820] shadow-2xl relative overflow-hidden group">
       {/* Dynamic background glow */}
-      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-blue-500/20 transition-colors duration-700" />
+      <div className="absolute top-0 right-0 w-64 h-64 bg-game-purple/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-game-purple/20 transition-colors duration-700" />
       
       <div className="relative">
         <motion.button 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleGainXP}
-          className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 p-1 shadow-2xl shadow-blue-900/50 cursor-pointer relative z-10 border-2 border-slate-600 hover:border-blue-500 transition-colors"
+          className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-[#13131A] to-[#181820] p-1 shadow-2xl shadow-game-purple/50 cursor-pointer relative z-10 border-2 border-[#181820] hover:border-game-purple transition-colors"
         >
-          <div className="w-full h-full bg-slate-900 rounded-xl flex items-center justify-center overflow-hidden relative">
+          <div className="w-full h-full bg-[#0D0D12] rounded-xl flex items-center justify-center overflow-hidden relative">
             <img 
               src={`https://api.dicebear.com/7.x/bottts/svg?seed=hero&backgroundColor=transparent`} 
               alt="Avatar" 
@@ -83,7 +83,7 @@ export const UserOverview: React.FC = () => {
               PyMaster99
               <Shield className="w-5 h-5 text-amber-400" />
             </h2>
-            <p className="text-blue-400 font-bold uppercase tracking-widest text-xs mt-1">
+            <p className="text-game-purple font-bold uppercase tracking-widest text-xs mt-1">
               {getRankTitle(level)}
             </p>
           </div>
@@ -92,7 +92,7 @@ export const UserOverview: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-slate-950/80 p-5 rounded-2xl border border-slate-800/50 mt-4 md:mt-6 shadow-inner relative overflow-hidden">
+        <div className="bg-[#13131A]/80 p-5 rounded-2xl border border-[#181820] mt-4 md:mt-6 shadow-inner relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-[50px] rounded-full pointer-events-none" />
           <div className="flex justify-between items-end mb-3 relative z-10">
             <span className="text-sm font-bold text-slate-200">Level {level} Progress</span>

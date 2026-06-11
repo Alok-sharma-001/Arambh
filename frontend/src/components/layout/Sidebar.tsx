@@ -40,9 +40,9 @@ export const Sidebar: React.FC = () => {
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-slate-900 border-r border-slate-800 text-slate-300 w-64 shadow-2xl">
+    <div className="flex flex-col h-full bg-[#0D0D12]/60 backdrop-blur-3xl border-r border-[#181820] text-slate-300 w-64 shadow-2xl">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-game-purple to-indigo-600 flex items-center justify-center shadow-lg shadow-game-purple/20">
           <Code2 className="w-5 h-5 text-white" />
         </div>
         <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
@@ -61,8 +61,8 @@ export const Sidebar: React.FC = () => {
               className={({ isActive }) => `
                 flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
                 ${isActive 
-                  ? 'bg-blue-600/10 text-blue-400 font-semibold shadow-inner' 
-                  : 'hover:bg-slate-800/50 hover:text-white'
+                  ? 'bg-game-purple/10 text-game-purple font-semibold shadow-inner' 
+                  : 'hover:bg-[#13131A] hover:text-white'
                 }
               `}
             >
@@ -71,7 +71,7 @@ export const Sidebar: React.FC = () => {
                   {isActive && (
                     <motion.div
                       layoutId="active-indicator"
-                      className="absolute left-0 w-1 h-8 bg-blue-500 rounded-r-full"
+                      className="absolute left-0 w-1 h-8 bg-game-purple rounded-r-full shadow-[0_0_10px_rgba(139,92,246,0.8)]"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -86,8 +86,8 @@ export const Sidebar: React.FC = () => {
         })}
       </div>
 
-      <div className="p-4 border-t border-slate-800 space-y-2">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all duration-200 group">
+      <div className="p-4 border-t border-[#181820] space-y-2">
+        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-[#13131A] transition-all duration-200 group">
           <Settings className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
           <span>Settings</span>
         </button>
@@ -107,7 +107,7 @@ export const Sidebar: React.FC = () => {
       {/* Mobile Toggle Button */}
       <button 
         onClick={toggleSidebar}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-800 border border-slate-700 rounded-lg text-white shadow-lg"
+        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-[#13131A] border border-[#181820] rounded-lg text-white shadow-lg"
       >
         {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </button>
@@ -120,7 +120,7 @@ export const Sidebar: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="lg:hidden fixed inset-0 z-40 bg-slate-950/80 backdrop-blur-sm"
+            className="lg:hidden fixed inset-0 z-40 bg-[#0D0D12]/80 backdrop-blur-sm"
           />
         )}
       </AnimatePresence>
@@ -135,7 +135,7 @@ export const Sidebar: React.FC = () => {
         <div className="h-full hidden lg:block">
            <SidebarContent />
         </div>
-        <div className="h-full lg:hidden block w-64 bg-slate-900 absolute left-0 top-0">
+        <div className="h-full lg:hidden block w-64 bg-[#0D0D12] absolute left-0 top-0">
            <SidebarContent />
         </div>
       </motion.aside>

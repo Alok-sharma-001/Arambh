@@ -23,14 +23,14 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
 }) => {
   const rarityColors = {
     Common: "slate",
-    Rare: "blue",
+    Rare: "emerald",
     Epic: "purple",
     Legendary: "warning",
   } as const;
 
   const bgColors = {
     Common: "bg-slate-500",
-    Rare: "bg-blue-500",
+    Rare: "bg-emerald-500",
     Epic: "bg-purple-500",
     Legendary: "bg-amber-500",
   };
@@ -48,7 +48,7 @@ export const AchievementCard: React.FC<AchievementCardProps> = ({
       <div className="p-6 flex flex-col items-center text-center h-full">
         <div className="relative mb-4">
           <div className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg border-2 
-            ${unlocked ? 'bg-slate-800 border-slate-600' : 'bg-slate-900 border-slate-800'}`}>
+            ${unlocked ? 'bg-[#13131A] border-[#181820]' : 'bg-[#0D0D12] border-[#181820]'}`}>
             {unlocked ? (
               <motion.div 
                 initial={{ scale: 0.8 }} 

@@ -16,7 +16,7 @@ export const Badge: React.FC<BadgeProps> = ({
   icon
 }) => {
   const variants = {
-    primary: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    primary: "bg-game-purple/10 text-game-purple border-game-purple/20",
     success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     danger: "bg-red-500/10 text-red-400 border-red-500/20",
@@ -25,7 +25,7 @@ export const Badge: React.FC<BadgeProps> = ({
     emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     amber: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     red: "bg-red-500/10 text-red-400 border-red-500/20",
-    blue: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    blue: "bg-game-purple/10 text-game-purple border-game-purple/20",
   };
 
   const sizes = {

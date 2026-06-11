@@ -35,7 +35,7 @@ function App() {
 
             {/* Private Routes */}
             <Route path="/" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/map" element={<PrivateRoute><LearningMap /></PrivateRoute>} />
+            <Route path="/learning-map" element={<PrivateRoute><LearningMap /></PrivateRoute>} />
             <Route path="/quests" element={<PrivateRoute><Quests /></PrivateRoute>} />
             <Route path="/achievements" element={<PrivateRoute><Achievements /></PrivateRoute>} />
             <Route path="/arena" element={<PrivateRoute><LearningArena /></PrivateRoute>} />
