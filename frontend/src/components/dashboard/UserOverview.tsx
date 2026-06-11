@@ -4,49 +4,35 @@ import { ProgressBar } from '../ui/ProgressBar';
 import { Badge } from '../ui/Badge';
 import { Award, Zap, Shield } from 'lucide-react';
 import { FloatingXP } from '../ui/FloatingXP';
-import { useToastStore } from '../../store/toastStore';
 import { motion } from 'framer-motion';
 
-const getRankTitle = (level: number) => {
-  if (level >= 50) return 'Python Master';
-  if (level >= 20) return 'Python Knight';
-  if (level >= 10) return 'Adventurer';
-  if (level >= 5) return 'Explorer';
-  return 'Beginner';
-};
+import { useProgressionStore } from '../../store/progressionStore';
+import { useAuthStore } from '../../store/authStore';
 
 export const UserOverview: React.FC = () => {
-  const [xp, setXp] = useState(1200);
-  const [level, setLevel] = useState(5);
+  const { stats, gainXP, isLoading } = useProgressionStore();
+  const { user } = useAuthStore();
   const [xpTrigger, setXpTrigger] = useState(0);
-  const addToast = useToastStore((state) => state.addToast);
 
-  const xpNeeded = level * 500;
-  const progress = (xp / xpNeeded) * 100;
+  const level = stats?.current_level || 1;
+  const xp = stats?.total_xp || 0;
+  
+  // Since we changed XP logic to cumulative (Level N requires N*500), let's calculate progress:
+  // e.g. Level 1 needs 500. Level 2 needs 1000.
+  // xp for current level is xp % 500
+  // next level requires 500.
+  const currentLevelXp = xp % 500;
+  const xpNeeded = 500;
+  const progress = (currentLevelXp / xpNeeded) * 100;
 
-  const handleGainXP = () => {
-    const gained = 50;
-    const newXp = xp + gained;
+  const handleGainXP = async () => {
     setXpTrigger(prev => prev + 1);
-    
-    addToast({
-      type: 'xp',
-      title: 'Quest Progress!',
-      xpAmount: gained
-    });
-
-    if (newXp >= xpNeeded) {
-      setXp(newXp - xpNeeded);
-      setLevel(l => l + 1);
-      addToast({
-        type: 'achievement',
-        title: `Level Up! Reached Level ${level + 1}`,
-        icon: '🎉'
-      });
-    } else {
-      setXp(newXp);
-    }
+    await gainXP(50, 'Manual Click');
   };
+
+  if (isLoading || !stats) {
+    return <Card className="p-8 h-48 animate-pulse bg-[#0D0D12]" />;
+  }
 
   return (
     <Card className="p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6 bg-[#0D0D12] border-[#181820] shadow-2xl relative overflow-hidden group">
@@ -80,15 +66,21 @@ export const UserOverview: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
           <div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-white flex items-center gap-2 justify-center md:justify-start">
-              PyMaster99
+              {user?.username || 'Player'}
               <Shield className="w-5 h-5 text-amber-400" />
             </h2>
-            <p className="text-game-purple font-bold uppercase tracking-widest text-xs mt-1">
-              {getRankTitle(level)}
-            </p>
+            <div className="flex gap-2 items-center justify-center md:justify-start mt-1">
+              <p className="text-game-purple font-bold uppercase tracking-widest text-xs">
+                {stats.rank}
+              </p>
+              <span className="text-slate-600">•</span>
+              <p className="text-slate-400 font-medium text-xs">
+                {stats.player_class || 'Unclassed'}
+              </p>
+            </div>
           </div>
           <div className="flex gap-2 justify-center md:justify-end">
-            <Badge variant="purple" icon={<Zap className="w-3 h-3" />}>3 Day Streak</Badge>
+            <Badge variant="purple" icon={<Zap className="w-3 h-3" />}>{stats.streak_days} Day Streak</Badge>
           </div>
         </div>
 
@@ -96,11 +88,11 @@ export const UserOverview: React.FC = () => {
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-[50px] rounded-full pointer-events-none" />
           <div className="flex justify-between items-end mb-3 relative z-10">
             <span className="text-sm font-bold text-slate-200">Level {level} Progress</span>
-            <span className="text-xs font-bold text-amber-400">{xp} / {xpNeeded} XP</span>
+            <span className="text-xs font-bold text-amber-400">{currentLevelXp} / {xpNeeded} XP</span>
           </div>
           <ProgressBar progress={progress} color="bg-gradient-to-r from-amber-500 to-yellow-400" height="h-3" className="relative z-10" />
           <p className="text-xs text-slate-400 mt-3 font-medium relative z-10">
-            Earn <strong className="text-white">{xpNeeded - xp}</strong> more XP to reach Level {level + 1}
+            Earn <strong className="text-white">{xpNeeded - currentLevelXp}</strong> more XP to reach Level {level + 1}
           </p>
         </div>
       </div>

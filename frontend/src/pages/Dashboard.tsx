@@ -1,17 +1,25 @@
 
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/ui/PageHeader';
-import { StatCard } from '../components/ui/StatCard';
 import { UserOverview } from '../components/dashboard/UserOverview';
 import { DailyGoals } from '../components/dashboard/DailyGoals';
+import { InventoryPreview } from '../components/dashboard/InventoryPreview';
+import { AvatarSelection } from '../components/dashboard/AvatarSelection';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
-import { LayoutDashboard, Star, Flame, Brain, Play } from 'lucide-react';
+import { LayoutDashboard, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useProgressionStore } from '../store/progressionStore';
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { fetchProgression } = useProgressionStore();
+
+  useEffect(() => {
+    fetchProgression();
+  }, [fetchProgression]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,11 +51,10 @@ export default function Dashboard() {
         <UserOverview />
       </motion.div>
 
-      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <StatCard title="Level" value="5" icon={<Star className="w-6 h-6" />} color="purple" />
-        <StatCard title="Total XP" value="1,200" icon={<Star className="w-6 h-6" />} trend="250 this week" color="amber" />
-        <StatCard title="Streak" value="3 Days" icon={<Flame className="w-6 h-6" />} trend="Personal Best: 7" color="red" />
-        <StatCard title="Intelligence" value="142" icon={<Brain className="w-6 h-6" />} trend="Top 15%" color="purple" />
+      <AvatarSelection />
+
+      <motion.div variants={itemVariants}>
+        <InventoryPreview />
       </motion.div>
 
       <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">

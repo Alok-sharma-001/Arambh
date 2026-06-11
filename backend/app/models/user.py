@@ -13,6 +13,7 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     stats = relationship("UserStats", back_populates="user", uselist=False)
+    inventory = relationship("InventoryItem", back_populates="user")
     spaced_repetition = relationship("SpacedRepetition", back_populates="user")
     challenge_progress = relationship("ChallengeProgress", back_populates="user")
 
@@ -25,8 +26,23 @@ class UserStats(Base):
     total_xp = Column(Integer, default=0)
     intelligence_stat = Column(Integer, default=10)
     streak_days = Column(Integer, default=0)
+    
+    # RPG Progression
+    player_class = Column(String, nullable=True)
+    rank = Column(String, default="Novice")
+    title = Column(String, nullable=True)
 
     user = relationship("User", back_populates="stats")
+
+class InventoryItem(Base):
+    __tablename__ = "inventory_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    item_id = Column(String, nullable=False) # e.g., "variables_crystal"
+    acquired_at = Column(DateTime(timezone=True), server_default=func.now())
+
+    user = relationship("User", back_populates="inventory")
 
 class SpacedRepetition(Base):
     __tablename__ = "spaced_repetition"
