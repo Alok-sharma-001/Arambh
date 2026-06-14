@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   LayoutDashboard, 
@@ -10,22 +10,33 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  Grid,
+  Users,
+  BrainCircuit,
+  TowerControl
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
 const navItems = [
   { name: 'Dashboard', path: '/', icon: LayoutDashboard },
   { name: 'Learning Map', path: '/learning-map', icon: MapIcon },
+  { name: 'Inventory', path: '/inventory', icon: Grid },
   { name: 'Quests', path: '/quests', icon: Target },
   { name: 'Achievements', path: '/achievements', icon: Trophy },
   { name: 'Learning Arena', path: '/arena', icon: Code2 },
+  { name: 'Guild Realms', path: '/guild', icon: Users },
+  { name: 'Oracle Hub', path: '/oracle', icon: BrainCircuit },
+  { name: 'Infinite Tower', path: '/tower', icon: TowerControl },
 ];
 
 export const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const setToken = useAuthStore((state) => state.setToken);
+  
+  const isLessonRoute = location.pathname.includes('/lesson/');
 
   const handleLogout = () => {
     setToken(null);
@@ -105,12 +116,14 @@ export const Sidebar: React.FC = () => {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <button 
-        onClick={toggleSidebar}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-[#13131A] border border-[#181820] rounded-lg text-white shadow-lg"
-      >
-        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
+      {!isLessonRoute && (
+        <button 
+          onClick={toggleSidebar}
+          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-[#13131A] border border-[#181820] rounded-lg text-white shadow-lg"
+        >
+          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      )}
 
       {/* Mobile Overlay */}
       <AnimatePresence>
@@ -140,11 +153,12 @@ export const Sidebar: React.FC = () => {
         </div>
       </motion.aside>
       
-      {/* Force sidebar open on desktop, wait, the layout actually handles this by changing flex-direction and sticking the sidebar. 
-          To make framer-motion variants play well with responsive, we use a hidden block. */}
-      <aside className="hidden lg:block sticky top-0 left-0 z-40 h-screen flex-shrink-0">
-         <SidebarContent />
-      </aside>
+      {/* Force sidebar open on desktop UNLESS we are in a lesson */}
+      {!isLessonRoute && (
+        <aside className="hidden lg:block sticky top-0 left-0 z-40 h-screen flex-shrink-0">
+           <SidebarContent />
+        </aside>
+      )}
     </>
   );
 };

@@ -58,3 +58,21 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str] = None
+
+class LeaderboardEntrySchema(BaseModel):
+    rank: int
+    user_id: int
+    username: str
+    level: int
+    total_xp: int
+    streak: int
+    artifacts_collected: int
+    regions_completed: int
+    is_current_user: Optional[bool] = False
+
+    class Config:
+        from_attributes = True
+
+class LeaderboardResponse(BaseModel):
+    entries: list[LeaderboardEntrySchema]
+    last_updated: datetime

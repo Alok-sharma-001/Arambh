@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.auth.router import router as auth_router
 from app.api.progress import router as progress_router
-from app.api.endpoints import progression
+from app.api.endpoints import progression, sync, guild
 from app.database.session import engine, Base
 import app.models  # This ensures the __init__.py is loaded
 
@@ -56,6 +56,8 @@ app.add_middleware(
 app.include_router(auth_router, prefix="/api")
 app.include_router(progress_router, prefix="/api")
 app.include_router(progression.router, prefix="/api/progression", tags=["progression"])
+app.include_router(sync.router, prefix="/api/v1/sync", tags=["sync"])
+app.include_router(guild.router, prefix="/api/v1/guilds", tags=["guilds"])
 
 @app.get("/")
 async def root():

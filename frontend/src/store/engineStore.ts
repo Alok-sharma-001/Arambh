@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ExecutionStep, generateMockExecution } from '../engine/VisualizationEngine';
+import { ExecutionStep } from '../engine/VisualizationEngine';
 import { useProgressionStore } from './progressionStore';
 import { useToastStore } from './toastStore';
 import { XP_REWARDS } from '../services/progressionService';
@@ -8,7 +8,7 @@ interface EngineStore {
   steps: ExecutionStep[];
   currentStepIndex: number;
   isPlaying: boolean;
-  speed: number;
+  executionMode: 'PLAY' | 'SLOW' | 'STEP';
   outputLog: string[];
   
   // Actions
@@ -18,7 +18,7 @@ interface EngineStore {
   stepNext: () => void;
   stepPrev: () => void;
   reset: () => void;
-  setSpeed: (speed: number) => void;
+  setExecutionMode: (mode: 'PLAY' | 'SLOW' | 'STEP') => void;
 }
 
 export const useEngineStore = create<EngineStore>((set, get) => {
@@ -48,18 +48,24 @@ export const useEngineStore = create<EngineStore>((set, get) => {
     steps: [],
     currentStepIndex: 0,
     isPlaying: false,
-    speed: 1500, // ms per step
+    executionMode: 'PLAY', // ms per step
     outputLog: [],
 
     initialize: () => {
-      set({ steps: generateMockExecution(), currentStepIndex: 0, outputLog: [], isPlaying: false });
+      set({ currentStepIndex: 0, outputLog: [], isPlaying: false });
     },
 
     play: () => {
-      const { currentStepIndex, steps } = get();
+      const { currentStepIndex, steps, executionMode } = get();
       if (currentStepIndex >= steps.length - 1) return;
       
+      if (executionMode === 'STEP') {
+        // Step mode doesn't auto-play. We just let the user use stepNext
+        return;
+      }
+      
       set({ isPlaying: true });
+      const intervalMs = executionMode === 'PLAY' ? 1500 : 3000;
       
       playInterval = setInterval(() => {
         const state = get();
@@ -70,7 +76,7 @@ export const useEngineStore = create<EngineStore>((set, get) => {
           set({ currentStepIndex: nextIndex });
           executeStepLogic(state.steps[nextIndex]);
         }
-      }, get().speed);
+      }, intervalMs);
     },
 
     pause: () => {
@@ -105,11 +111,13 @@ export const useEngineStore = create<EngineStore>((set, get) => {
       set({ currentStepIndex: 0, outputLog: [] });
     },
 
-    setSpeed: (speed) => {
-      set({ speed });
-      if (get().isPlaying) {
+    setExecutionMode: (mode) => {
+      set({ executionMode: mode });
+      if (get().isPlaying && mode !== 'STEP') {
         get().pause();
         get().play();
+      } else if (mode === 'STEP') {
+        get().pause();
       }
     }
   };

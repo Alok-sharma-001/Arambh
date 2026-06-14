@@ -9,7 +9,7 @@ const CLASSES = [
   { id: 'Python Mage', icon: Wand2, color: 'text-game-purple', bg: 'bg-game-purple/10', border: 'border-game-purple/50', desc: 'Masters of the arcane syntax. Excel in logic and functional programming.' },
   { id: 'Code Warrior', icon: Sword, color: 'text-red-400', bg: 'bg-red-500/10', border: 'border-red-500/50', desc: 'Frontline developers who tackle algorithms head-on with brute force.' },
   { id: 'Data Alchemist', icon: FlaskConical, color: 'text-emerald-400', bg: 'bg-emerald-500/10', border: 'border-emerald-500/50', desc: 'Transmutes raw data into golden insights using Pandas and NumPy.' },
-  { id: 'AI Scholar', icon: BrainCircuit, color: 'text-blue-400', bg: 'bg-blue-500/10', border: 'border-blue-500/50', desc: 'Seekers of artificial truth. Specialists in machine learning models.' },
+  { id: 'AI Scholar', icon: BrainCircuit, color: 'text-fuchsia-400', bg: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/50', desc: 'Seekers of artificial truth. Specialists in machine learning models.' },
   { id: 'Bug Hunter', icon: Bug, color: 'text-amber-400', bg: 'bg-amber-500/10', border: 'border-amber-500/50', desc: 'Stealthy trackers who eliminate errors before they reach production.' },
 ];
 

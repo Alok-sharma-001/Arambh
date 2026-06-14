@@ -97,9 +97,10 @@ const RANK_THRESHOLDS = [
   { minXP:  1501, rank: 'Adept' },
   { minXP:  3001, rank: 'Master' },
   { minXP:  5001, rank: 'Grandmaster' },
+  { minXP: 10000, rank: 'Legend' },
 ] as const;
 
-export type Rank = typeof RANK_THRESHOLDS[number]['rank'];
+export type Rank = typeof RANK_THRESHOLDS[number]['rank'] | 'Legend';
 
 /** Returns rank based on total XP */
 export function calculateRank(totalXP: number): Rank {
@@ -134,12 +135,12 @@ export const LEVEL_REWARDS: LevelReward[] = [
   { level: 2,  name: 'Bronze Badge',       icon: '🥉', type: 'badge' },
   { level: 3,  name: 'Variables Crystal',   icon: '💎', type: 'artifact' },
   { level: 4,  name: 'XP Booster',         icon: '⚡', type: 'booster' },
-  { level: 5,  name: 'Explorer Banner',     icon: '🚩', type: 'banner' },
-  { level: 6,  name: 'Loop Compass',        icon: '🧭', type: 'artifact' },
+  { level: 5,  name: 'Loop Compass',        icon: '🧭', type: 'artifact' },
+  { level: 6,  name: 'Explorer Banner',     icon: '🚩', type: 'banner' },
   { level: 7,  name: 'Function Scroll',     icon: '📜', type: 'artifact' },
   { level: 8,  name: 'Gold Badge',          icon: '🥇', type: 'badge' },
-  { level: 9,  name: 'OOP Relic',           icon: '⚙️', type: 'artifact' },
-  { level: 10, name: 'Algorithm Stone',     icon: '🔮', type: 'artifact' },
+  { level: 10, name: 'OOP Crown',           icon: '👑', type: 'artifact' },
+  { level: 15, name: 'Algorithm Orb',       icon: '🔮', type: 'artifact' },
 ];
 
 /** Returns the reward for a specific level, or null */

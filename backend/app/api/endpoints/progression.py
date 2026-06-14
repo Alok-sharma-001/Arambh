@@ -3,14 +3,15 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.database.session import get_db
-from app.api.auth import get_current_user
+from app.auth.router import get_current_user
 from app.models.user import User, UserStats, InventoryItem
 from app.schemas.user import (
     ProgressionResponse, 
     ClassSelectionRequest, 
     XPRewardRequest, 
     InventoryRewardRequest,
-    InventoryItemResponse
+    InventoryItemResponse,
+    LeaderboardResponse
 )
 
 router = APIRouter()
@@ -142,4 +143,43 @@ def add_inventory_item(
     return ProgressionResponse(
         stats=current_user.stats,
         inventory=current_user.inventory
+    )
+
+@router.get("/leaderboard", response_model=LeaderboardResponse)
+def get_leaderboard(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    from datetime import datetime
+    from app.schemas.user import LeaderboardEntrySchema
+    
+    # Query top 50 users based on total_xp
+    top_stats = db.query(UserStats).order_by(UserStats.total_xp.desc()).limit(50).all()
+    
+    entries = []
+    rank = 1
+    for stat in top_stats:
+        user = stat.user
+        
+        # Calculate derived stats if needed
+        # We can optimize this later with a join/group_by, but for now this works.
+        artifacts_count = len(user.inventory) if user.inventory else 0
+        regions_count = len([r for r in user.regions if r.status == 'completed']) if user.regions else 0
+        
+        entries.append(LeaderboardEntrySchema(
+            rank=rank,
+            user_id=user.id,
+            username=user.username,
+            level=stat.current_level,
+            total_xp=stat.total_xp,
+            streak=stat.streak_days,
+            artifacts_collected=artifacts_count,
+            regions_completed=regions_count,
+            is_current_user=(user.id == current_user.id)
+        ))
+        rank += 1
+        
+    return LeaderboardResponse(
+        entries=entries,
+        last_updated=datetime.now()
     )

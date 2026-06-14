@@ -6,13 +6,15 @@ import { Lock, Unlock, Star, Zap, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export interface MapNodeProps {
-  id: number;
+  id: number | string;
   title: string;
   description: string;
   status: 'locked' | 'current' | 'completed';
   completion: number;
-  xpReward: number;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  xpReward?: number;
+  difficulty?: 'Beginner' | 'Intermediate' | 'Advanced' | 'Boss';
+  artifactReward?: string;
+  isBossGate?: boolean;
 }
 
 export const MapNode: React.FC<MapNodeProps> = ({ 
@@ -21,12 +23,15 @@ export const MapNode: React.FC<MapNodeProps> = ({
   status, 
   completion, 
   xpReward, 
-  difficulty 
+  difficulty,
+  artifactReward,
+  isBossGate
 }) => {
   const difficultyColors = {
     Beginner: "emerald",
     Intermediate: "amber",
     Advanced: "red",
+    Boss: "purple"
   } as const;
 
   const isLocked = status === 'locked';
@@ -82,16 +87,25 @@ export const MapNode: React.FC<MapNodeProps> = ({
         </p>
         
         <div className="flex flex-wrap gap-2 mb-5">
-          <Badge variant={difficultyColors[difficulty]} icon={<Star className="w-3 h-3" />}>
-            {difficulty}
-          </Badge>
-          <Badge variant="warning" icon={<Zap className="w-3 h-3" />}>
-            {xpReward} XP
-          </Badge>
+          {difficulty && (
+            <Badge variant={difficultyColors[difficulty]} icon={<Star className="w-3 h-3" />}>
+              {difficulty}
+            </Badge>
+          )}
+          {xpReward && (
+            <Badge variant="warning" icon={<Zap className="w-3 h-3" />}>
+              {xpReward} XP
+            </Badge>
+          )}
+          {artifactReward && !isLocked && !isBossGate && (
+             <Badge variant="purple" icon={<Star className="w-3 h-3" />}>
+               Unlocks Artifact
+             </Badge>
+          )}
         </div>
         
         <div className="mt-auto">
-          {!isLocked && (
+          {!isLocked && !isBossGate && (
             <ProgressBar 
               progress={completion} 
               color={isCompleted ? "bg-emerald-500" : "bg-game-purple"} 

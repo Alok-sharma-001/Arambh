@@ -2,11 +2,17 @@ import { create } from 'zustand';
 import { progressionApi, UserStats, InventoryItem } from '../services/progressionApi';
 import { calculateLevel, calculateRank, getRewardForLevel, XP_REWARDS, XPAction } from '../services/progressionService';
 import type { LevelReward } from '../services/progressionService';
+import { syncApi } from '../services/syncApi';
+import { useRegionStore } from './regionStore';
 
 export interface LevelUpEvent {
   oldLevel: number;
   newLevel: number;
   reward: LevelReward | null;
+}
+
+export interface ArtifactRevealEvent {
+  artifactId: string;
 }
 
 interface ProgressionState {
@@ -18,6 +24,10 @@ interface ProgressionState {
   // Level-up event
   levelUpEvent: LevelUpEvent | null;
   dismissLevelUp: () => void;
+  
+  // Artifact reveal event
+  artifactRevealEvent: ArtifactRevealEvent | null;
+  dismissArtifactReveal: () => void;
   
   // Actions
   fetchProgression: () => Promise<void>;
@@ -32,8 +42,10 @@ export const useProgressionStore = create<ProgressionState>((set, get) => ({
   isLoading: false,
   error: null,
   levelUpEvent: null,
+  artifactRevealEvent: null,
 
   dismissLevelUp: () => set({ levelUpEvent: null }),
+  dismissArtifactReveal: () => set({ artifactRevealEvent: null }),
 
   fetchProgression: async () => {
     set({ isLoading: true, error: null });
@@ -97,6 +109,15 @@ export const useProgressionStore = create<ProgressionState>((set, get) => ({
       if (newLevel > prevLevel) {
         const reward = getRewardForLevel(newLevel);
         set({ levelUpEvent: { oldLevel: prevLevel, newLevel, reward } });
+        
+        // Auto-unlock artifact if there's one for this level
+        import('../services/artifactService').then(({ getArtifactForLevel }) => {
+          const artifact = getArtifactForLevel(newLevel);
+          if (artifact) {
+            get().gainItem(artifact.id);
+            set({ artifactRevealEvent: { artifactId: artifact.id } });
+          }
+        });
       }
     } catch {
       // Fallback: compute locally
@@ -116,6 +137,14 @@ export const useProgressionStore = create<ProgressionState>((set, get) => ({
         if (newLevel > prevLevel) {
           const reward = getRewardForLevel(newLevel);
           set({ levelUpEvent: { oldLevel: prevLevel, newLevel, reward } });
+          
+          import('../services/artifactService').then(({ getArtifactForLevel }) => {
+            const artifact = getArtifactForLevel(newLevel);
+            if (artifact) {
+              get().gainItem(artifact.id);
+              set({ artifactRevealEvent: { artifactId: artifact.id } });
+            }
+          });
         }
       }
     }
@@ -139,7 +168,23 @@ export const useProgressionStore = create<ProgressionState>((set, get) => ({
   }
 }));
 
-/** Persist to localStorage so data survives refresh even without backend */
+/** Persist to localStorage and attempt cloud sync */
 function persistLocally(stats: UserStats, inventory: InventoryItem[]) {
   localStorage.setItem('pyquest_progression', JSON.stringify({ stats, inventory }));
+  
+  // Attempt background cloud sync
+  const state = useRegionStore.getState();
+  const regionsSync = Object.entries(state.regions).map(([id, reg]) => ({
+    region_id: id,
+    status: reg.regionStatus,
+    boss_defeated: reg.bossStatus === 'completed',
+    completed_at: null
+  }));
+  
+  syncApi.pushState({
+    timestamp: new Date().toISOString(),
+    stats,
+    inventory,
+    regions: regionsSync
+  }).catch(e => console.warn('Background sync failed', e));
 }

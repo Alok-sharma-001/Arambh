@@ -17,6 +17,17 @@ class User(Base):
     spaced_repetition = relationship("SpacedRepetition", back_populates="user")
     challenge_progress = relationship("ChallengeProgress", back_populates="user")
 
+    # New Progression relationships
+    lessons = relationship("LessonProgress", back_populates="user")
+    regions = relationship("RegionProgress", back_populates="user")
+    achievements = relationship("AchievementProgress", back_populates="user")
+    quests = relationship("QuestProgress", back_populates="user")
+    knowledge_graph = relationship("KnowledgeGraph", back_populates="user", uselist=False)
+    tower_progress = relationship("TowerProgress", back_populates="user", uselist=False)
+
+    # Guilds
+    guild_membership = relationship("GuildMember", back_populates="user", uselist=False)
+
 class UserStats(Base):
     __tablename__ = "user_stats"
 

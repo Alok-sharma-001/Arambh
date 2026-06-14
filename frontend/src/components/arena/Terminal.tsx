@@ -11,10 +11,9 @@ const TypingText = ({ text }: { text: string }) => {
     let i = 0;
     setDisplayedText('');
     const timer = setInterval(() => {
-      if (i < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(i));
-        i++;
-      } else {
+      i++;
+      setDisplayedText(text.substring(0, i));
+      if (i >= text.length) {
         clearInterval(timer);
       }
     }, 50); // 50ms per character

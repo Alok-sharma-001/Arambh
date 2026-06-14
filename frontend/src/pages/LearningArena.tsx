@@ -1,21 +1,25 @@
 import { useEffect, useState } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor, { OnMount } from '@monaco-editor/react';
 import { Play, Send, ChevronLeft, Database, Code } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../components/ui/Button';
+import * as monaco from 'monaco-editor';
 
 // Engine Components
 import { MemoryVisualizer } from '../components/arena/MemoryVisualizer';
-import { TimelineControls } from '../components/arena/TimelineControls';
+import { ExecutionTimeline } from '../components/arena/ExecutionTimeline';
 import { Terminal } from '../components/arena/Terminal';
 import { useEngineStore } from '../store/engineStore';
 import { useToastStore } from '../store/toastStore';
+import { LineExecutionHighlighter } from '../components/arena/LineExecutionHighlighter';
+import { LearningLayer } from '../components/arena/LearningLayer';
 
 export default function LearningArena() {
   const navigate = useNavigate();
   const [code, setCode] = useState('x = 5\ny = 10\nz = x + y\nprint(z)');
   const [hasRun, setHasRun] = useState(false);
+  const [editorInstance, setEditorInstance] = useState<monaco.editor.IStandaloneCodeEditor | null>(null);
   
   const { initialize, play, isPlaying, steps, currentStepIndex } = useEngineStore();
   const { addToast } = useToastStore();
@@ -24,6 +28,10 @@ export default function LearningArena() {
     setHasRun(true);
     initialize();
     play();
+  };
+
+  const handleEditorMount: OnMount = (editor) => {
+    setEditorInstance(editor);
   };
 
   // Listen for execution completion to award XP
@@ -39,10 +47,15 @@ export default function LearningArena() {
     }
   }, [currentStepIndex, steps.length, hasRun, addToast]);
 
+  const currentStep = steps[currentStepIndex];
+
   return (
-    <div className="h-screen flex flex-col bg-transparent text-white overflow-hidden font-sans relative">
+    <div className="h-screen flex flex-col bg-slate-950 text-white overflow-hidden font-sans relative">
+      {/* Ambient background glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[radial-gradient(ellipse_at_top,rgba(139,92,246,0.15),transparent_70%)] pointer-events-none" />
+
       {/* Header */}
-      <header className="h-16 border-b border-game-border flex items-center justify-between px-6 bg-slate-950/40 backdrop-blur-3xl relative z-30 shadow-xl">
+      <header className="h-16 border-b border-game-border flex items-center justify-between px-6 bg-slate-950/40 backdrop-blur-3xl relative z-30 shadow-xl flex-shrink-0">
         <div className="flex items-center space-x-4">
           <button 
             onClick={() => navigate('/map')} 
@@ -81,40 +94,44 @@ export default function LearningArena() {
         </div>
       </header>
 
-      {/* Main Workspace */}
-      <div className="flex-1 flex overflow-hidden p-6 gap-6 relative z-10">
-        
-        {/* Left Panel: Code Editor & Terminal */}
-        <motion.div 
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="w-[40%] flex flex-col gap-6"
-        >
-          {/* Code Editor */}
-          <div className="flex-1 bg-slate-950/80 backdrop-blur-2xl border border-game-border rounded-3xl overflow-hidden flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative">
-             <div className="absolute top-0 right-0 w-64 h-64 bg-game-purple/5 blur-[80px] pointer-events-none" />
-             
-             <div className="h-12 border-b border-game-border bg-black/40 flex items-center justify-between px-5 relative z-10">
-               <div className="flex items-center gap-4">
-                 <div className="flex space-x-2">
-                   <div className="w-3 h-3 rounded-full bg-game-crimson/20 border border-game-crimson/50" />
-                   <div className="w-3 h-3 rounded-full bg-game-gold/20 border border-game-gold/50" />
-                   <div className="w-3 h-3 rounded-full bg-game-emerald/20 border border-game-emerald/50" />
-                 </div>
-                 <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded-lg border border-white/5">
-                    <Code className="w-4 h-4 text-game-purple" />
-                    <span className="text-xs font-bold font-mono text-slate-300 tracking-wide">main.py</span>
-                 </div>
-               </div>
-             </div>
-             
+      {/* Main Workspace - Vertical Pipeline Layout */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden p-8 relative z-10 w-full">
+        <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-20">
+          
+          {/* 1. Code Editor */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="h-64 bg-slate-950/80 backdrop-blur-2xl border border-game-border rounded-3xl overflow-hidden flex flex-col shadow-[0_10px_40px_rgba(0,0,0,0.5)] relative flex-shrink-0"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-game-purple/5 blur-[80px] pointer-events-none" />
+            
+            <div className="h-12 border-b border-game-border bg-black/40 flex items-center justify-between px-5 relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 rounded-full bg-game-crimson/20 border border-game-crimson/50" />
+                  <div className="w-3 h-3 rounded-full bg-game-gold/20 border border-game-gold/50" />
+                  <div className="w-3 h-3 rounded-full bg-game-emerald/20 border border-game-emerald/50" />
+                </div>
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded-lg border border-white/5">
+                  <Code className="w-4 h-4 text-game-purple" />
+                  <span className="text-xs font-bold font-mono text-slate-300 tracking-wide">main.py</span>
+                </div>
+              </div>
+            </div>
+            
             <div className="flex-1 p-3 relative z-10">
+              <LineExecutionHighlighter 
+                editor={editorInstance} 
+                lineNumber={currentStep?.lineNumber || null} 
+              />
               <Editor
                 height="100%"
                 defaultLanguage="python"
                 theme="vs-dark"
                 value={code}
                 onChange={(value) => setCode(value || '')}
+                onMount={handleEditorMount}
                 options={{
                   fontSize: 15,
                   fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
@@ -125,58 +142,71 @@ export default function LearningArena() {
                   renderLineHighlight: "all",
                   cursorBlinking: "smooth",
                   cursorSmoothCaretAnimation: "on",
+                  glyphMargin: true
                 }}
               />
             </div>
-          </div>
-          
-          {/* Terminal */}
-          <Terminal />
-          
-        </motion.div>
+          </motion.div>
 
-        {/* Right Panel: Visualization Engine (Hero Section) */}
-        <motion.div 
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="flex-1 relative bg-slate-900/30 backdrop-blur-3xl border border-game-border rounded-3xl flex flex-col overflow-hidden shadow-2xl"
-        >
-          {/* Ambient Engine Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.15),transparent_70%)] pointer-events-none" />
-
-          {/* Engine Header */}
-          <div className="absolute top-6 left-6 z-20">
-            <div className="flex items-center space-x-3 bg-black/60 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/5 shadow-2xl">
-              <Database size={18} className="text-game-purple" />
-              <span className="text-sm font-bold uppercase tracking-widest text-slate-200">Execution Engine</span>
-              {isPlaying && (
-                 <div className="flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full bg-game-emerald/10 border border-game-emerald/20">
-                   <div className="w-1.5 h-1.5 rounded-full bg-game-emerald animate-pulse" />
-                   <span className="text-[10px] font-bold text-game-emerald">LIVE</span>
-                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Visualization Canvas */}
-          <MemoryVisualizer />
-
-          {/* Timeline Controls */}
+          {/* 2. Execution Timeline */}
           {steps.length > 0 && (
-             <TimelineControls />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+              <ExecutionTimeline />
+            </motion.div>
           )}
 
-          {/* Empty State */}
-          {steps.length === 0 && (
-             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <p className="text-slate-500 font-bold uppercase tracking-widest text-sm flex items-center gap-3">
-                  <Play className="w-4 h-4 opacity-50" />
-                  Click Run Animation to Begin
-                </p>
-             </div>
-          )}
+          {/* 3. Memory World (Ancient Magic Laboratory) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex-1 min-h-[400px] relative bg-[#0B0B0F] border border-game-border rounded-3xl flex flex-col overflow-hidden shadow-2xl"
+          >
+            {/* Ambient Engine Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-3/4 h-3/4 bg-[radial-gradient(ellipse_at_center,rgba(139,92,246,0.15),transparent_70%)] pointer-events-none" />
 
-        </motion.div>
+            {/* Engine Header */}
+            <div className="absolute top-6 left-6 z-20">
+              <div className="flex items-center space-x-3 bg-black/60 backdrop-blur-xl px-5 py-3 rounded-2xl border border-white/5 shadow-2xl">
+                <Database size={18} className="text-game-purple" />
+                <span className="text-sm font-bold uppercase tracking-widest text-slate-200">Memory World</span>
+                {isPlaying && (
+                   <div className="flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full bg-game-emerald/10 border border-game-emerald/20">
+                     <div className="w-1.5 h-1.5 rounded-full bg-game-emerald animate-pulse" />
+                     <span className="text-[10px] font-bold text-game-emerald">LIVE</span>
+                   </div>
+                )}
+              </div>
+            </div>
+
+            {/* Visualization Canvas */}
+            <MemoryVisualizer />
+            <LearningLayer step={currentStep} />
+
+            {/* Empty State */}
+            {steps.length === 0 && (
+               <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-center">
+                  <div className="space-y-3">
+                    <p className="text-slate-500 font-bold uppercase tracking-widest text-lg flex items-center justify-center gap-3">
+                      Execution Engine Idle
+                    </p>
+                    <p className="text-slate-600 font-medium text-sm">
+                      Write code and press Run Animation<br/>to generate execution steps.
+                    </p>
+                  </div>
+               </div>
+            )}
+          </motion.div>
+
+          {/* 4. Terminal */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="h-48 flex-shrink-0"
+          >
+            <Terminal />
+          </motion.div>
+
+        </div>
       </div>
     </div>
   );

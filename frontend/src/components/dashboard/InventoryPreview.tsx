@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 const ALL_ARTIFACTS = [
   { id: 'variables_crystal', name: 'Variables Crystal', icon: Diamond, color: 'text-game-purple', bg: 'bg-game-purple/10' },
-  { id: 'loop_compass', name: 'Loop Compass', icon: Compass, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+  { id: 'loop_compass', name: 'Loop Compass', icon: Compass, color: 'text-purple-400', bg: 'bg-purple-500/10' },
   { id: 'function_scroll', name: 'Function Scroll', icon: Scroll, color: 'text-emerald-400', bg: 'bg-emerald-500/10' },
   { id: 'oop_relic', name: 'OOP Relic', icon: Hexagon, color: 'text-amber-400', bg: 'bg-amber-500/10' },
   { id: 'algorithm_stone', name: 'Algorithm Stone', icon: Component, color: 'text-red-400', bg: 'bg-red-500/10' },

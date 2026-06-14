@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { PageHeader } from '../components/ui/PageHeader';
 import { CharacterCard } from '../components/progression/CharacterCard';
 import { LevelUpModal } from '../components/progression/LevelUpModal';
+import { ArtifactRevealModal } from '../components/artifacts/ArtifactRevealModal';
 import { DailyGoals } from '../components/dashboard/DailyGoals';
-import { InventoryPreview } from '../components/dashboard/InventoryPreview';
+import { ArtifactWidget } from '../components/artifacts/ArtifactWidget';
 import { AvatarSelection } from '../components/dashboard/AvatarSelection';
 import { ProgressionWidget } from '../components/dashboard/ProgressionWidget';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
@@ -14,6 +15,8 @@ import { Card } from '../components/ui/Card';
 import { LayoutDashboard, Play } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useProgression } from '../hooks/useProgression';
+import { useRegionStore } from '../store/regionStore';
+import { ALL_LESSONS, getRegionForLesson } from '../data/allLessons';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -22,6 +25,41 @@ export default function Dashboard() {
   useEffect(() => {
     fetchProgression();
   }, [fetchProgression]);
+
+  const regions = useRegionStore((state) => state.regions);
+  const REGION_ORDER = ['variables-forest', 'data-types-valley', 'loops-desert', 'functions-mountain', 'oop-castle', 'dsa-dungeon', 'ai-temple'];
+  
+  let activeRegionId = 'variables-forest';
+  for (const rId of REGION_ORDER) {
+    const r = regions[rId];
+    if (r && r.regionStatus !== 'locked' && r.regionStatus !== 'completed') {
+      activeRegionId = rId;
+      break;
+    }
+  }
+
+  const activeRegion = regions[activeRegionId];
+  let resumePath = '/learning-map';
+  if (activeRegion) {
+    if (activeRegion.bossStatus === 'available') {
+      resumePath = `/region/${activeRegionId}/boss`;
+    } else {
+      // Find the first uncompleted lesson for this region
+      const regionLessons = Object.keys(ALL_LESSONS).filter(id => getRegionForLesson(id) === activeRegionId);
+      regionLessons.sort((a, b) => parseInt(a) - parseInt(b));
+      
+      const uncompletedLessons = regionLessons.filter(id => !activeRegion.completedLessons.includes(id));
+      const targetLessonId = uncompletedLessons.length > 0 ? uncompletedLessons[0] : regionLessons[0];
+      
+      if (targetLessonId) {
+        resumePath = `/lesson/${targetLessonId}`;
+      } else {
+        resumePath = `/region/${activeRegionId}`;
+      }
+    }
+  }
+  
+  const activeRegionName = activeRegionId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -49,6 +87,8 @@ export default function Dashboard() {
       {/* Avatar class selection (renders only if no class set) */}
       <AvatarSelection />
 
+      <ArtifactRevealModal />
+
       <PageHeader 
         title="Dashboard" 
         description="Welcome back! Here's an overview of your progress."
@@ -60,9 +100,9 @@ export default function Dashboard() {
         <CharacterCard />
       </motion.div>
 
-      {/* Inventory Grid */}
+      {/* Artifact Collection Widget */}
       <motion.div variants={itemVariants}>
-        <InventoryPreview />
+        <ArtifactWidget />
       </motion.div>
 
       {/* Main content grid */}
@@ -73,12 +113,12 @@ export default function Dashboard() {
             <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-2">Continue Learning</h3>
-                <p className="text-slate-300">You're currently in the <strong className="text-game-gold">Data Types Valley</strong> module.</p>
+                <p className="text-slate-300">You're currently in the <strong className="text-game-gold">{activeRegionName}</strong> module.</p>
               </div>
               <Button 
                 size="lg" 
                 rightIcon={<Play className="w-5 h-5" />}
-                onClick={() => navigate('/learning-map')}
+                onClick={() => navigate(resumePath)}
                 className="w-full sm:w-auto shadow-xl shadow-game-purple/30 bg-game-purple hover:bg-game-purple/80 border-none"
               >
                 Resume Quest

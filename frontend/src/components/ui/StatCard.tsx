@@ -7,7 +7,7 @@ interface StatCardProps {
   icon: React.ReactNode;
   trend?: string;
   trendUp?: boolean;
-  color?: 'blue' | 'emerald' | 'amber' | 'purple' | 'red';
+  color?: 'emerald' | 'amber' | 'purple' | 'red';
 }
 
 export const StatCard: React.FC<StatCardProps> = ({ 
@@ -16,10 +16,9 @@ export const StatCard: React.FC<StatCardProps> = ({
   icon, 
   trend, 
   trendUp = true,
-  color = 'blue'
+  color = 'purple'
 }) => {
   const colors = {
-    blue: "text-blue-400 bg-blue-500/10 border-blue-500/20",
     emerald: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
     amber: "text-amber-400 bg-amber-500/10 border-amber-500/20",
     purple: "text-purple-400 bg-purple-500/10 border-purple-500/20",
