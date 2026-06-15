@@ -36,6 +36,17 @@ async def lifespan(app: FastAPI):
         else:
             logger.error("Error: 'users' table was NOT created.")
             
+        # Ensure new RPG columns exist in user_stats
+        from sqlalchemy import text
+        with engine.begin() as conn:
+            try:
+                conn.execute(text("ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS player_class VARCHAR;"))
+                conn.execute(text("ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS rank VARCHAR DEFAULT 'Novice';"))
+                conn.execute(text("ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS title VARCHAR;"))
+                logger.info("Database migration: Verified/Added missing RPG columns to user_stats.")
+            except Exception as e:
+                logger.warning(f"Database migration for user_stats failed: {e}")
+            
     except Exception as e:
         logger.error(f"Error during database initialization: {e}")
         
