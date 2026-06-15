@@ -51,7 +51,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   // Calculate current region (first one that isn't locked or completed)
   let currentRegion = 'variables-forest'; // Default
   for (const r of regions) {
-    const status = storeRegions[r.id]?.regionStatus || r.status;
+    const status = (storeRegions[r.id]?.regionStatus || r.status) as string;
     if (status === 'available' || status === 'current') {
       currentRegion = r.id;
       break;
