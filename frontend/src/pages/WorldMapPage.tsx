@@ -9,6 +9,23 @@ import type { Region } from '@/types';
 
 gsap.registerPlugin(ScrollTrigger);
 
+const getThemeColors = (status: 'completed' | 'current' | 'locked') => {
+  if (status === 'completed') {
+    return {
+      accent: '#5682B1', // Steel Blue
+    };
+  }
+  if (status === 'current') {
+    return {
+      accent: '#FFE8DB', // Peach
+    };
+  }
+  // Locked
+  return {
+    accent: '#739EC9', // Light Steel Blue
+  };
+};
+
 function MapHeader() {
   const { player } = usePlayer();
   const completedRegions = Object.values(player.regionProgress).filter((r) => r.completed).length;
@@ -21,7 +38,7 @@ function MapHeader() {
           <span className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-gold">WORLD MAP</span>
           <span className="hidden sm:inline text-warm-white/60">|</span>
           <span className="hidden sm:flex items-center gap-2 text-sm text-warm-white">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: regions.find((r) => r.id === player.currentRegion)?.accentColor || '#c8a45e' }} />
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors(regions.find((r) => r.id === player.currentRegion)?.status || 'current').accent }} />
             {regions.find((r) => r.id === player.currentRegion)?.name}
           </span>
         </div>
@@ -30,8 +47,8 @@ function MapHeader() {
           <div className="hidden sm:block">
             <div className="w-[200px] h-1.5 bg-warm-white/[0.08] rounded-full overflow-hidden">
               <div
-                className="h-full gradient-completion-bar rounded-full transition-all duration-1000"
-                style={{ width: `${progressPercent}%` }}
+                 className="h-full gradient-completion-bar rounded-full transition-all duration-1000"
+                 style={{ width: `${progressPercent}%` }}
               />
             </div>
             <span className="text-[0.625rem] text-mid-gray mt-1 block">Region {completedRegions} of {regions.length}</span>
@@ -59,12 +76,15 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
   const progressPercent = (completedLessons / region.lessons.length) * 100;
   const glowClass = isCurrent ? 'animate-pulse-glow' : '';
 
-  // Use the region's specific color for completed, gold for active, and subtle for locked
+  const themeColors = getThemeColors(region.status);
+  const accentColor = themeColors.accent;
+
+  // Use the theme's colors for borders and shadows
   const borderColor = isCompleted 
-    ? `${region.accentColor}50` // 50% opacity of their specific color
+    ? `${accentColor}50` // 50% opacity
     : isCurrent 
-      ? '#c8a45e' // Gold for currently active
-      : 'rgba(255,252,242,0.08)';
+      ? '#FFE8DB' // Peach for currently active
+      : 'rgba(115,158,201,0.08)';
 
   return (
     <div
@@ -78,20 +98,20 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
         style={{
           background: isBoss
             ? 'linear-gradient(135deg, rgba(28,28,28,0.98), rgba(20,10,30,0.98))'
-            : `linear-gradient(145deg, rgba(28,28,28,0.97), rgba(12,12,12,0.98)), radial-gradient(circle at 20% 0%, ${region.accentColor}22, transparent 45%)`,
+            : `linear-gradient(145deg, rgba(28,28,28,0.97), rgba(12,12,12,0.98)), radial-gradient(circle at 20% 0%, ${accentColor}22, transparent 45%)`,
           borderColor,
           boxShadow: isCurrent
-            ? `0 0 28px ${region.accentColor}35, 0 18px 60px rgba(0,0,0,0.45)`
+            ? `0 0 28px ${accentColor}35, 0 18px 60px rgba(0,0,0,0.45)`
             : isBoss
-              ? '0 0 30px rgba(200,164,94,0.4), 0 0 60px rgba(124,92,255,0.15)'
+              ? '0 0 30px rgba(255,232,219,0.4), 0 0 60px rgba(86,130,177,0.15)'
               : '0 16px 48px rgba(0,0,0,0.35)',
         }}
       >
         <div
           className="absolute -right-12 -top-12 h-32 w-32 rounded-full blur-2xl transition-opacity duration-300 group-hover:opacity-90"
-          style={{ backgroundColor: `${region.accentColor}24` }}
+          style={{ backgroundColor: `${accentColor}24` }}
         />
-        <div className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${region.accentColor}, transparent)` }} />
+        <div className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
 
         <div className="relative flex items-start justify-between">
           <span className="font-mono text-xs font-bold text-mid-gray">
@@ -100,9 +120,9 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
           <span
             className="rounded-full border px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.12em]"
             style={{
-              borderColor: `${region.accentColor}35`,
-              backgroundColor: `${region.accentColor}10`,
-              color: isLocked ? '#8a8a8a' : region.accentColor,
+              borderColor: `${accentColor}35`,
+              backgroundColor: `${accentColor}10`,
+              color: isLocked ? '#739EC9' : accentColor,
             }}
           >
             {isCompleted ? 'Mastered' : isCurrent ? 'Active' : 'Locked'}
@@ -112,9 +132,9 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
         {/* Region icon (circle with color) */}
         <div
           className="relative mt-4 flex h-14 w-14 items-center justify-center rounded-2xl border"
-          style={{ backgroundColor: `${region.accentColor}15`, borderColor: `${region.accentColor}25` }}
+          style={{ backgroundColor: `${accentColor}15`, borderColor: `${accentColor}25` }}
         >
-          <span style={{ color: region.accentColor }}>
+          <span style={{ color: accentColor }}>
             {region.number === 11 ? <Sword size={24} /> : <span className="font-mono text-lg font-bold">{region.name.charAt(0)}</span>}
           </span>
         </div>
@@ -127,7 +147,7 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
 
         <div className="relative mt-4 grid grid-cols-2 gap-2">
           <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-3 py-2">
-            <span className="block font-mono text-sm font-bold" style={{ color: region.accentColor }}>{region.lessons.length}</span>
+            <span className="block font-mono text-sm font-bold" style={{ color: accentColor }}>{region.lessons.length}</span>
             <span className="text-[0.6rem] uppercase tracking-[0.12em] text-mid-gray">Lessons</span>
           </div>
           <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-3 py-2">
@@ -142,14 +162,14 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
             className="h-full rounded-full transition-all"
             style={{
               width: `${progressPercent}%`,
-              backgroundColor: region.accentColor,
+              backgroundColor: accentColor,
             }}
           />
         </div>
 
         {/* Status */}
         <div className="relative mt-2 flex items-center gap-1.5">
-          {isCompleted && <><Check size={12} className="text-emerald" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-emerald font-semibold">COMPLETED</span></>}
+          {isCompleted && <><Check size={12} style={{ color: accentColor }} /><span className="text-[0.625rem] uppercase tracking-[0.1em] font-semibold" style={{ color: accentColor }}>COMPLETED</span></>}
           {isCurrent && <><Circle size={12} className="text-gold fill-gold" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-gold font-semibold">IN PROGRESS</span></>}
           {isLocked && <><Lock size={12} className="text-mid-gray" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-mid-gray font-semibold">LOCKED</span></>}
         </div>
@@ -160,9 +180,9 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
             <span
               className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-xs font-semibold"
               style={{
-                backgroundColor: `${region.accentColor}15`,
-                borderColor: `${region.accentColor}40`,
-                color: region.accentColor,
+                backgroundColor: `${accentColor}15`,
+                borderColor: `${accentColor}40`,
+                color: accentColor,
               }}
             >
               Open Region <ChevronRight size={14} />
@@ -186,6 +206,9 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
   const navigate = useNavigate();
   const panelRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+
+  const themeColors = getThemeColors(region.status);
+  const accentColor = themeColors.accent;
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -222,8 +245,8 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
             <X size={28} />
           </button>
 
-          <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${region.accentColor}15` }}>
-            <span className="font-mono text-2xl font-bold" style={{ color: region.accentColor }}>{region.name.charAt(0)}</span>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center" style={{ backgroundColor: `${accentColor}15` }}>
+            <span className="font-mono text-2xl font-bold" style={{ color: accentColor }}>{region.name.charAt(0)}</span>
           </div>
 
           <h2 className="mt-4 font-display font-bold text-2xl text-warm-white">{region.name}</h2>
@@ -377,7 +400,7 @@ export default function WorldMapPage() {
     <main className="bg-near-black min-h-screen">
       <MapHeader />
 
-      <div ref={mapRef} className="relative" style={{ height: '4800px' }}>
+      <div ref={mapRef} className="relative pb-40" style={{ height: '4800px' }}>
         {/* Subtle grid pattern */}
         <div
           className="absolute inset-0 pointer-events-none opacity-[0.03]"
@@ -389,20 +412,21 @@ export default function WorldMapPage() {
 
         {/* SVG Path */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+          {/* Full route path (always visible as a faint guide) */}
+          <path
+            d={buildPath()}
+            fill="none"
+            stroke="rgba(155,184,216,0.3)"
+            strokeWidth="0.15"
+          />
+          {/* Animated bright path (draws on scroll) */}
           <path
             ref={pathRef}
             d={buildPath()}
             fill="none"
-            stroke="#c8a45e"
+            stroke="#9BB8D8"
             strokeWidth="0.15"
-            style={{ filter: 'drop-shadow(0 0 6px rgba(200,164,94,0.4))' }}
-          />
-          {/* Dimmed upcoming path */}
-          <path
-            d={buildPath()}
-            fill="none"
-            stroke="rgba(200,164,94,0.15)"
-            strokeWidth="0.15"
+            style={{ filter: 'drop-shadow(0 0 6px rgba(155,184,216,0.4))' }}
           />
         </svg>
 

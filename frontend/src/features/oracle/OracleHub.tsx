@@ -57,8 +57,8 @@ export default function OracleHub() {
   return (
     <div className="p-4 lg:p-8 max-w-7xl mx-auto space-y-8">
       <header className="flex items-center gap-6 mb-12">
-        <div className="w-20 h-20 rounded-2xl bg-slate-900 border-2 border-game-purple flex items-center justify-center shadow-[0_0_30px_rgba(139,92,246,0.3)]">
-          <BrainCircuit className="w-10 h-10 text-game-purple" />
+        <div className="w-20 h-20 rounded-2xl bg-slate-900 border-2 border-royal-purple flex items-center justify-center shadow-purple-glow">
+          <BrainCircuit className="w-10 h-10 text-royal-purple" />
         </div>
         <div>
           <h1 className="text-4xl font-black text-white tracking-wide">Oracle Py</h1>
@@ -70,7 +70,7 @@ export default function OracleHub() {
         {/* Knowledge Graph Radar */}
         <div className="bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 flex flex-col items-center">
           <h2 className="text-xl font-bold text-white mb-8 flex items-center gap-2">
-            <Activity className="w-5 h-5 text-game-blue" /> Your Knowledge Graph
+            <Activity className="w-5 h-5 text-cool-gray" /> Your Knowledge Graph
           </h2>
           
           <div className="relative w-full max-w-[400px] aspect-square flex items-center justify-center">
@@ -100,8 +100,8 @@ export default function OracleHub() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
                 points={radar.points} 
-                fill="rgba(139,92,246,0.3)" 
-                stroke="#8b5cf6" 
+                fill="rgba(86,130,177,0.25)" 
+                stroke="#5682B1" 
                 strokeWidth="2" 
                 style={{ transformOrigin: 'center' }}
               />
@@ -134,7 +134,7 @@ export default function OracleHub() {
         {/* Concept Mastery List */}
         <div className="bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 flex flex-col max-h-[600px]">
           <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <BookOpen className="w-5 h-5 text-emerald-400" /> Core Pillars
+            <BookOpen className="w-5 h-5 text-gold" /> Core Pillars
           </h2>
           <div className="flex-1 overflow-y-auto pr-4 space-y-4 custom-scrollbar">
             {categories.map(cat => {
@@ -144,13 +144,13 @@ export default function OracleHub() {
                 <div key={cat.key} className="bg-slate-900/50 border border-slate-800 p-4 rounded-xl">
                   <div className="flex justify-between items-end mb-2">
                     <span className="font-bold text-slate-200">{cat.label}</span>
-                    <span className={`text-xs font-mono px-2 py-1 rounded bg-slate-800 ${val === 100 ? 'text-game-purple' : 'text-slate-400'}`}>
+                    <span className={`text-xs font-mono px-2 py-1 rounded bg-slate-800 ${val === 100 ? 'text-royal-purple' : 'text-slate-400'}`}>
                       {rank}
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                      <div className="h-full bg-game-blue transition-all duration-1000" style={{ width: `${val}%` }} />
+                      <div className="h-full bg-royal-purple transition-all duration-1000" style={{ width: `${val}%` }} />
                     </div>
                     <span className="text-xs text-slate-500 font-mono w-8">{val}%</span>
                   </div>
@@ -162,16 +162,16 @@ export default function OracleHub() {
       </div>
       
       {/* Mentor Recommendations */}
-      <div className="bg-gradient-to-r from-game-purple/20 to-indigo-900/20 border border-game-purple/30 rounded-3xl p-8 flex items-start gap-6">
-        <div className="p-3 bg-game-purple/20 rounded-full shrink-0">
-          <BrainCircuit className="w-8 h-8 text-game-purple" />
+      <div className="bg-gradient-to-r from-royal-purple/10 to-deep-charcoal/30 border border-royal-purple/20 rounded-3xl p-8 flex items-start gap-6">
+        <div className="p-3 bg-royal-purple/10 rounded-full shrink-0">
+          <BrainCircuit className="w-8 h-8 text-royal-purple" />
         </div>
         <div>
           <h3 className="text-xl font-bold text-white mb-2">Oracle's Analysis</h3>
           <p className="text-slate-300 leading-relaxed mb-4">
             Your logic structures are sound, but the Knowledge Graph indicates weakness in <strong className="text-white">File I/O</strong> and <strong className="text-white">Exceptions</strong>. I recommend venturing to the File System Ruins to stabilize these concepts.
           </p>
-          <button className="px-6 py-2 bg-game-purple hover:bg-purple-500 text-white font-bold rounded-lg transition-colors text-sm">
+          <button className="px-6 py-2 bg-royal-purple text-near-black hover:bg-cool-gray font-bold rounded-lg transition-colors text-sm">
             Travel to File System Ruins
           </button>
         </div>

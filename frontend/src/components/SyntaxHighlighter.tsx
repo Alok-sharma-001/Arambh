@@ -87,7 +87,7 @@ export default function SyntaxHighlighter({ code, className = '' }: SyntaxHighli
   const tokens = tokenize(code);
 
   return (
-    <code className={`font-mono text-sm leading-[1.8] ${className}`}>
+    <code className={`font-mono text-sm leading-[1.8] whitespace-pre-wrap ${className}`}>
       {tokens.map((token, i) => (
         <span key={i} className={TOKEN_CLASSES[token.type] || ''}>
           {token.value}

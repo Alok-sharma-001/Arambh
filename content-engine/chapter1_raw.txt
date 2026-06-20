@@ -1,0 +1,1435 @@
+table of contents
+ix
+Table of Contents (Summary)
+Table of Contents (the real thing)
+Your brain on Python.  Here you are trying to learn something, while 
+here your brain is doing you a favor by making sure the learning doesn’t stick. 
+Your brain’s thinking, “Better leave room for more important things, like which 
+wild animals to avoid and whether naked snowboarding is a bad idea.” So how 
+do you trick your brain into thinking that your life depends on knowing Python? 
+Intro
+Who is this book for? 
+xxiv
+We know what you’re thinking 
+xxv
+Metacognition 
+xxvii
+Bend your brain into submission 
+xxix
+Read me 
+xxx
+The technical review team 
+xxxii
+Acknowledgments 
+xxxiii
+  
+Intro 
+xxiii
+1 
+Meet Python: Everyone Loves Lists 
+1
+2 
+Sharing Your Code: Modules of  Functions 
+33
+3 
+Files and Exceptions: Dealing with Errors 
+73
+4 
+Persistence: Saving Data to Files 
+105
+5 
+Comprehending Data: Work That Data! 
+139
+6 
+Custom Data Objects: Bundling Code with Data 
+173
+7 
+Web Development: Putting It All Together 
+213
+8 
+Mobile App Development: Small Devices 
+255
+9 
+Manage Your Data: Handling Input 
+293
+10 
+Scaling Your Webapp: Getting Real 
+351
+11 
+Dealing with Complexity: Data Wrangling 
+397
+i 
+Leftovers: The Top Ten Things (We Didn’t Cover) 
+435
+table of contents
+x
+What’s to like about Python? 
+2
+Install Python 3 
+3
+Use IDLE to help learn Python 
+4
+Work effectively with IDLE 
+5
+Deal with complex data 
+6
+Create simple Python lists 
+7
+Lists are like arrays 
+9
+Add more data to your list 
+11
+Work with your list data 
+15
+For loops work with lists of any size 
+16
+Store lists within lists 
+18
+Check a list for a list 
+20
+Complex data is hard to process 
+23
+Handle many levels of nested lists 
+24
+Don’t repeat code; create a function 
+28
+Create a function in Python 
+29
+Recursion to the rescue! 
+31
+Your Python Toolbox 
+32
+Everyone loves lists
+1
+meet python
+You’re asking one question: “What makes Python different?”
+The short answer is: lots of things. The longer answers starts by stating that there’s 
+lots that’s familiar, too. Python is a lot like any other general-purpose programming 
+language, with statements, expressions, operators, functions, modules, methods, 
+and classes. All the usual stuff, really. And then there’s the other stuff Python provides 
+that makes the programmer’s life—your life—that little bit easier. You’ll start your tour 
+of Python by learning about lists. But, before getting to that, there’s another important 
+question that needs answering…
+The Holy Grail, 1975, Terry Jones & Terry Gilliam, 91 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+table of contents
+xi
+Modules of functions
+Reusable code is great, but a shareable module is better. 
+By sharing your code as a Python module, you open up your code to the entire Python 
+community…and it’s always good to share, isn’t it? In this chapter, you’ll learn how to 
+create, install, and distribute your own shareable modules. You’ll then load your module 
+onto Python’s software sharing site on the Web, so that everyone can benefit from your 
+work. Along the way, you’ll pick up a few new tricks relating to Python’s functions, too.
+sharing your code
+2
+It’s too good not to share 
+34
+Turn your function into a module 
+35
+Modules are everywhere 
+36
+Comment your code 
+37
+Prepare your distribution 
+40
+Build your distribution 
+41
+A quick review of your distribution 
+42
+Import a module to use it 
+43
+Python’s modules implement namespaces 
+45
+Register with the PyPI website 
+47
+Upload your code to PyPI 
+48
+Welcome to the PyPI community 
+49
+Control behavior with an extra argument 
+52
+Before your write new code, think BIF 
+53
+Python tries its best to run your code 
+57
+Trace your code 
+58
+Work out what’s wrong 
+59
+Update PyPI with your new code 
+60
+You’ve changed your API 
+62
+Use optional arguments 
+63
+Your module supports both APIs 
+65
+Your API is still not right 
+66
+Your module’s reputation is restored 
+70
+Your Python Toolbox 
+71
+nester
+nester.py
+setup.py
+table of contents
+xii
+Data is external to your program 
+74
+It’s all lines of text 
+75
+Take a closer look at the data 
+77
+Know your data 
+79
+Know your methods and ask for help 
+80
+Know your data (better) 
+82
+Two very different approaches 
+83
+Add extra logic 
+84
+Handle exceptions 
+88
+Try first, then recover 
+89
+Identify the code to protect 
+91
+Take a pass on the error 
+93
+What about other errors? 
+96
+Add more error-checking code… 
+97
+…Or add another level of exception handling 
+98
+So, which approach is best? 
+99
+You’re done…except for one small thing 
+101
+Be specific with your exceptions 
+102
+Your Python Toolbox 
+103
+Dealing with errors
+3
+files and exceptions
+It’s simply not enough to process your list data in your code.
+You need to be able to get your data into your programs with ease, too. It’s no surprise 
+then that Python makes reading data from files easy. Which is great, until you 
+consider what can go wrong when interacting with data external to your programs…
+and there are lots of things waiting to trip you up! When bad stuff happens, you need a 
+strategy for getting out of trouble, and one such strategy is to deal with any exceptional 
+situations using Python’s exception handling mechanism showcased in this chapter.
+split(beans)
+table of contents
+xiii
+Saving data to files
+It is truly great to be able to process your file-based data.
+But what happens to your data when you’re done? Of course, it’s best to save your 
+data to a disk file, which allows you to use it again at some later date and time. Taking 
+your memory-based data and storing it to disk is what persistence is all about. Python 
+supports all the usual tools for writing to files and also provides some cool facilities for 
+efficiently storing Python data. 
+persistence
+4
+Programs produce data 
+106
+Open your file in write mode 
+110
+Files are left open after an exception! 
+114
+Extend try with finally 
+115
+Knowing the type of error is not enough 
+117
+Use with to work with files 
+120
+Default formats are unsuitable for files 
+124
+Why not modify print_lol()? 
+126
+Pickle your data 
+132
+Save with dump and restore with load 
+133
+Generic file I/O with pickle is the way to go! 
+137
+Your Python Toolbox 
+138
+['Is this the right room for an 
+argument?', "No you haven't!", 
+'When?', "No you didn't!", "You 
+didn't!", 'You did not!', 'Ah! 
+(taking out his wallet and paying) 
+Just the five minutes.', 'You most 
+certainly did not!', "Oh no you 
+didn't!", "Oh no you didn't!", "Oh 
+look, this isn't an argument!", 
+"No it isn't!", "It's just 
+contradiction!", 'It IS!', 'You 
+just contradicted me!', 'You DID!', 
+'You did just then!', '(exasperated) 
+Oh, this is futile!!', 'Yes it 
+is!']
+[‘Is this the right room 
+for an argument?’, “No 
+you haven’t!”, ‘When?’, 
+“No you didn’t!”, “You 
+didn’t!”, ‘You did not!’, 
+‘Ah! (taking out his wallet 
+and paying) Just the five 
+minutes.’, ‘You most 
+certainly did not!’, “Oh 
+no you didn’t!”, “Oh no 
+you didn’t!”, “Oh look, 
+this isn’t an argument!”, 
+“No it isn’t!”, “It’s 
+just contradiction!”, 
+‘It IS!’, ‘You just 
+contradicted me!’, ‘You 
+DID!’, ‘You did just 
+then!’, ‘(exasperated) 
+Oh, this is futile!!’, 
+‘Yes it is!’]
+table of contents
+xiv
+Coach Kelly needs your help 
+140
+Sort in one of two ways 
+144
+The trouble with time 
+148
+Comprehending lists 
+155
+Iterate to remove duplicates 
+161
+Remove duplicates with sets 
+166
+Your Python Toolbox 
+172
+Work that data!
+5
+comprehending data
+Data comes in all shapes and sizes, formats and encodings.
+To work effectively with your data, you often have to manipulate and transform it into a 
+common format to allow for efficient processing, sorting, and storage. In this chapter, 
+you’ll explore Python goodies that help you work your data up into a sweat, allowing 
+you to achieve data-munging greatness. 
+This chapter’s 
+guaranteed to give you 
+a workout!
+table of contents
+xv
+Bundling code with data
+It’s important to match your data structure choice to your data. 
+And that choice can make a big difference to the complexity of your code. In Python, 
+although really useful, lists and sets aren’t the only game in town. The Python dictionary 
+lets you organize your data for speedy lookup by associating your data with names, not 
+numbers. And when Python’s built-in data structures don’t quite cut it, the Python class 
+statement lets you define your own. This chapter shows you how.
+custom data objects
+6
+Coach Kelly is back (with a new file format) 
+174
+Use a dictionary to associate data 
+178
+Bundle your code and its data in a class 
+189
+Define a class 
+190
+Use class to define classes 
+191
+The importance of self 
+192
+Every method’s first argument is self 
+193
+Inherit from Python’s built-in list 
+204
+Coach Kelly is impressed 
+211
+Your Python Toolbox 
+212
+The Object 
+Factory
+table of contents
+xvi
+7
+It’s good to share 
+214
+You can put your program on the Web 
+215
+What does your webapp need to do? 
+218
+Design your webapp with MVC 
+221
+Model your data 
+222
+View your interface 
+226
+Control your code 
+234
+CGI lets your web server run programs 
+235
+Display the list of athletes 
+236
+The dreaded 404 error! 
+242
+Create another CGI script 
+244
+Enable CGI tracking to help with errors 
+248
+A small change can make all the difference 
+250
+Your webapp’s a hit! 
+252
+Your Python Toolbox 
+253
+Putting it all together
+web development
+Sooner or later, you’ll want to share your app with lots of people. 
+You have many options for doing this. Pop your code on PyPI, send out lots of emails, put 
+your code on a CD or USB, or simply install your app manually on the computers of those 
+people who need it. Sounds like a lot of work…not to mention boring. Also, what happens 
+when you produce the next best version of your code? What happens then? How do 
+you manage the update? Let’s face it: it’s such a pain that you’ll think up really creative 
+excuses not to. Luckily, you don’t have to do any of this: just create a webapp instead. And, 
+as this chapter demonstrates, using Python for web development is a breeze.
+table of contents
+xvii
+8
+Small devices
+Putting your data on the Web opens up all types of possibilities. 
+Not only can anyone from anywhere interact with your webapp, but they are increasingly 
+doing so from a collection of diverse computing devices: PCs, laptops, tablets, palmtops, 
+and even mobile phones. And it’s not just humans interacting with your webapp that 
+you have to support and worry about: bots are small programs that can automate web 
+interactions and typically want your data, not your human-friendly HTML. In this chapter, 
+you exploit Python on Coach Kelly’s mobile phone to write an app that interacts with your 
+webapp’s data.
+mobile app development
+The world is getting smaller 
+256
+Coach Kelly is on Android 
+257
+Don’t worry about Python 2 
+259
+Set up your development environment 
+260
+Configure the SDK and emulator 
+261
+Install and configure Android Scripting 
+262
+Add Python to your SL4A installation 
+263
+Test Python on Android 
+264
+Define your app’s requirements 
+266
+The SL4A Android API 
+274
+Select from a list on Android 
+278
+The athlete’s data CGI script 
+281
+The data appears to have changed type 
+284
+JSON can’t handle your custom datatypes 
+285
+Run your app on a real phone 
+288
+Configure AndFTP 
+289
+The coach is thrilled with his app 
+290
+Your Python Toolbox 
+291
+table of contents
+xviii
+Your athlete times app has gone national 
+294
+Use a form or dialog to accept input 
+295
+Create an HTML form template 
+296
+The data is delivered to your CGI script 
+300
+Ask for input on your Android phone 
+304
+It’s time to update your server data 
+308
+Avoid race conditions 
+309
+You need a better data storage mechanism 
+310
+Use a database management system 
+312
+Python includes SQLite 
+313
+Exploit Python’s database API 
+314
+The database API as Python code 
+315
+A little database design goes a long way 
+316
+Define your database schema 
+317
+What does the data look like? 
+318
+Transfer the data from your pickle to SQLite 
+321
+What ID is assigned to which athlete? 
+322
+Insert your timing data 
+323
+SQLite data management tools 
+326
+Integrate SQLite with your existing webapp 
+327
+You still need the list of names 
+332
+Get an athlete’s details based on ID 
+333
+You need to amend your Android app, too 
+342
+Update your SQLite-based athlete data 
+348
+The NUAC is over the moon! 
+349
+Your Python Toolbox 
+350
+Handling input
+9
+manage your data
+The Web and your phone are not just great ways to display data. 
+They are also great tools to for accepting input from your users. Of course, once your 
+webapp accepts data, it needs to put it somewhere, and the choices you make when 
+deciding what and where this “somewhere” is are often the difference between a webapp 
+that’s easy to grow and extend and one that isn’t. In this chapter, you’ll extend your 
+webapp to accept data from the Web (via a browser or from an Android phone), as well 
+as look at and enhance your back-end data-management services.
+table of contents
+xix
+Getting real
+The Web is a great place to host your app…until things get real. 
+Sooner or later, you’ll hit the jackpot and your webapp will be wildly successful. When 
+that happens, your webapp goes from a handful of hits a day to thousands, possibly ten 
+of thousands, or even more. Will you be ready? Will your web server handle the load? 
+How will you know? What will it cost? Who will pay? Can your data model scale to 
+millions upon millions of data items without slowing to a crawl? Getting a webapp up and 
+running is easy with Python and now, thanks to Google App Engine, scaling a Python 
+webapp is achievable, too. 
+scaling your webapp
+10
+There are whale sightings everywhere 
+352
+The HFWWG needs to automate 
+353
+Build your webapp with Google App Engine 
+354
+Download and install App Engine 
+355
+Make sure App Engine is working 
+356
+App Engine uses the MVC pattern 
+359
+Model your data with App Engine 
+360
+What good is a model without a view? 
+363
+Use templates in App Engine 
+364
+Django’s form validation framework 
+368
+Check your form 
+369
+Controlling your App Engine webapp 
+370
+Restrict input by providing options 
+376
+Meet the “blank screen of death” 
+378
+Process the POST within your webapp 
+379
+Put your data in the datastore 
+380
+Don’t break the “robustness principle” 
+384
+Accept almost any date and time 
+385
+It looks like you’re not quite done yet 
+388
+Sometimes, the tiniest change can make all the difference… 
+389
+Capture your user’s Google ID, too 
+390
+Deploy your webapp to Google’s cloud 
+391
+Your HFWWG webapp is deployed! 
+394
+Your Python Toolbox 
+395
+table of contents
+xx
+What’s a good time goal for the next race? 
+398
+So…what’s the problem? 
+400
+Start with the data 
+401
+Store each time as a dictionary 
+407
+Dissect the prediction code 
+409
+Get input from your user  
+413
+Getting input raises an issue… 
+414
+Search for the closest match 
+416
+The trouble is with time 
+418
+The time-to-seconds-to-time module 
+419
+The trouble is still with time… 
+422
+Port to Android 
+424
+Your Android app is a bunch of dialogs 
+425
+Put your app together… 
+429
+Your app’s a wrap! 
+431
+Your Python Toolbox 
+432
+Data wrangling
+11
+dealing with complexity
+It’s great when you can apply Python to a specific domain area. 
+Whether it’s web development, database management, or mobile apps, Python helps 
+you get the job done by not getting in the way of you coding your solution. And then 
+there’s the other types of problems: the ones you can’t categorize or attach to a domain. 
+Problems that are in themselves so unique you have to look at them in a different, highly 
+specific way. Creating bespoke software solutions to these type of problems is an area 
+where Python excels. In this, your final chapter, you’ll stretch your Python skills to the 
+limit and solve problems along the way. 
+table of contents
+xxi
+The Top Ten Things (we didn’t cover)
+You’ve come a long way.
+But learning about Python is an activity that never stops. The more Python you code, 
+the more you’ll need to learn new ways to do certain things. You’ll need to master new 
+tools and new techniques, too. There’s just not enough room in this book to show you 
+everything you might possibly need to know about Python. So, here’s our list of the top 
+ten things we didn’t cover that you might want to learn more about next.
+leftovers
+i
+#1: Using a “professional” IDE 
+436
+#2: Coping with scoping 
+437
+#3: Testing 
+438
+#4: Advanced language features 
+439
+#5: Regular expressions 
+440
+#6: More on web frameworks 
+441
+#7: Object relational mappers and NoSQL 
+442
+#8: Programming GUIs 
+443
+#9: Stuff to avoid 
+444
+#10: Other books 
+445
+xxiii
+how to use this book
+Intro
+In this section, we answer the burning question:  
+“So why DID they put that in a Python book?”
+I can’t believe 
+they put that in a 
+Python book.
+xxiv  intro
+how to use this book
+Who is this book for?
+Who should probably back away from this book?
+If you can answer “yes” to all of these:
+If you can answer “yes” to any of these:
+this book is for you.
+this book is not for you.
+[Note from marketing: this book 
+is for anyone with a credit card… 
+we’ll accept a check, too.]
+Do you prefer actually doing things and applying the stuff 
+you learn over listening to someone in a lecture rattle on 
+for hours on end?
+3
+Do you wish you had the know-how to program Python, 
+add it to your list of tools, and make it do new things?
+2
+Are you looking for a reference book to Python, one that 
+covers all the details in excruciating detail?
+2
+Do you already know how to program in another 
+programming language?
+1
+Do you already know most of what you need to know to 
+program with Python?
+1
+Would you rather have your toenails pulled out by 15 
+screaming monkeys than learn something new? Do you 
+believe a Python book should cover everything and if it 
+bores the reader to tears in the process then so much the 
+better?
+3
+you are here 4  xxv
+the intro
+“How can this be a serious Python book?”
+“What’s with all the graphics?”
+“Can I actually learn it this way?”
+Your brain craves novelty. It’s always searching, scanning, waiting for something 
+unusual. It was built that way, and it helps you stay alive. 
+So what does your brain do with all the routine, ordinary, normal things 
+you encounter? Everything it can to stop them from interfering with the 
+brain’s real job—recording things that matter. It doesn’t bother saving the 
+boring things; they never make it past the “this is obviously not important” 
+filter.
+How does your brain know what’s important? Suppose you’re out for a day 
+hike and a tiger jumps in front of you, what happens inside your head and 
+body? 
+Neurons fire. Emotions crank up. Chemicals surge. 
+And that’s how your brain knows…
+This must be important! Don’t forget it!
+But imagine you’re at home, or in a library. It’s a safe, warm, tiger-free zone. 
+You’re studying. Getting ready for an exam. Or trying to learn some tough 
+technical topic your boss thinks will take a week, ten days at the most.
+Just one problem. Your brain’s trying to do you a big favor. It’s trying to 
+make sure that this obviously non-important content doesn’t clutter up scarce 
+resources. Resources that are better spent storing the really big things. 
+Like tigers. Like the danger of fire. Like how you should never have 
+posted those “party” photos on your Facebook page. And there’s no 
+simple way to tell your brain, “Hey brain, thank you very much, but 
+no matter how dull this book is, and how little I’m registering on the 
+emotional Richter scale right now, I really do want you to keep this 
+stuff around.”
+We know what you’re thinking
+We know what your brain is thinking
+Your brain thinks 
+THIS is important.
+Your brain thinks 
+THIS isn’t worth 
+saving.
+Great. Only 450 
+more dull, dry, 
+boring pages.
+xxvi  intro
+how to use this book
+We think of a “Head First” reader as a learner.
+So what does it take to learn something? First, you have to get it, then make sure 
+you don’t forget it. It’s not about pushing facts into your head. Based on the latest 
+research in cognitive science, neurobiology, and educational psychology, learning 
+takes a lot more than text on a page. We know what turns your brain on.
+Some of the Head First learning principles:
+Make it visual. Images are far more memorable than words alone, and make learning much 
+more effective (up to 89% improvement in recall and transfer studies). It also makes things more 
+understandable.  Put the words within or near the graphics they relate to, rather than on 
+the bottom or on another page, and learners will be up to twice as likely to solve problems related to the 
+content.
+Use a conversational and personalized style. In recent studies, students performed up 
+to 40% better on post-learning tests if the content spoke directly to the reader, using a first-person, 
+conversational style rather than taking a formal tone. Tell stories instead of lecturing. Use casual language. 
+Don’t take yourself too seriously. Which would you pay more attention to: a stimulating dinner party 
+companion or a lecture?
+Get the learner to think more deeply. In other words, unless you actively flex your neurons, 
+nothing much happens in your head.  A reader has to be motivated, engaged, curious, and inspired to 
+solve problems, draw conclusions, and generate new knowledge. And for that, you need challenges, 
+exercises, and thought-provoking questions, and activities that involve both sides of the brain and 
+multiple senses.
+Get—and keep—the reader’s attention. We’ve all had the “I really want to learn this but I can’t 
+stay awake past page one” experience. Your brain pays attention to things that are out of the ordinary, 
+interesting, strange, eye-catching, unexpected. Learning a new, tough, technical topic doesn’t have to be 
+boring. Your brain will learn much more quickly if it’s not.
+Touch their emotions. We now know that your ability to remember something is largely dependent 
+on its emotional content.  You remember what you care about.  You remember when you feel something. 
+No, we’re not talking heart-wrenching stories about a boy and his dog. We’re talking emotions like 
+surprise, curiosity, fun, “what the…?” , and the feeling of “I Rule!” that comes when you solve a puzzle, 
+learn something everybody else thinks is hard, or realize you know something that “I’m more technical 
+than thou” Bob from engineering doesn’t.
+you are here 4  xxvii
+the intro
+Metacognition: thinking about thinking
+I wonder how 
+I can trick my brain 
+into remembering 
+this stuff...
+If you really want to learn, and you want to learn more quickly and more 
+deeply, pay attention to how you pay attention. Think about how you think. 
+Learn how you learn.
+Most of us did not take courses on metacognition or learning theory when we 
+were growing up. We were expected to learn, but rarely taught to learn.
+But we assume that if you’re holding this book, you really want to learn how 
+to design user-friendly websites. And you probably don’t want to spend a lot 
+of time. If you want to use what you read in this book, you need to remember 
+what you read. And for that, you’ve got to understand it. To get the most from 
+this book, or any book or learning experience, take responsibility for your brain. 
+Your brain on this content. 
+The trick is to get your brain to see the new material you’re learning as 
+Really Important. Crucial to your well-being. As important as a tiger. 
+Otherwise, you’re in for a constant battle, with your brain doing its best to 
+keep the new content from sticking.
+So just how DO you get your brain to treat 
+programming like it was a hungry tiger?
+There’s the slow, tedious way, or the faster, more effective way. The 
+slow way is about sheer repetition. You obviously know that you are able to learn 
+and remember even the dullest of topics if you keep pounding the same thing into your 
+brain. With enough repetition, your brain says, “This doesn’t feel important to him, but he 
+keeps looking at the same thing over and over and over, so I suppose it must be.”
+The faster way is to do anything that increases brain activity, especially different 
+types of brain activity. The things on the previous page are a big part of the solution, 
+and they’re all things that have been proven to help your brain work in your favor. For 
+example, studies show that putting words within the pictures they describe (as opposed to 
+somewhere else in the page, like a caption or in the body text) causes your brain to try to 
+makes sense of how the words and picture relate, and this causes more neurons to fire. 
+More neurons firing = more chances for your brain to get that this is something worth 
+paying attention to, and possibly recording.
+A conversational style helps because people tend to pay more attention when they 
+perceive that they’re in a conversation, since they’re expected to follow along and hold up 
+their end. The amazing thing is, your brain doesn’t necessarily care that the “conversation” 
+is between you and a book! On the other hand, if the writing style is formal and dry, your 
+brain perceives it the same way you experience being lectured to while sitting in a roomful 
+of passive attendees. No need to stay awake.
+But pictures and conversational style are just the beginning…
+xxviii  intro
+how to use this book
+Here’s what WE did:
+We used pictures, because your brain is tuned for visuals, not text. As far as your brain’s 
+concerned, a picture really is worth a thousand words. And when text and pictures work 
+together, we embedded the text in the pictures because your brain works more effectively 
+when the text is within the thing the text refers to, as opposed to in a caption or buried in the 
+text somewhere.
+We used redundancy, saying the same thing in different ways and with different media types, 
+and multiple senses, to increase the chance that the content gets coded into more than one area 
+of your brain. 
+We used concepts and pictures in unexpected ways because your brain is tuned for novelty, 
+and we used pictures and ideas with at least some emotional content, because your brain 
+is tuned to pay attention to the biochemistry of emotions. That which causes you to feel 
+something is more likely to be remembered, even if that feeling is nothing more than a little 
+humor, surprise, or interest.
+We used a personalized, conversational style, because your brain is tuned to pay more 
+attention when it believes you’re in a conversation than if it thinks you’re passively listening 
+to a presentation. Your brain does this even when you’re reading.
+We included more than 80 activities, because your brain is tuned to learn and remember 
+more when you do things than when you read about things. And we made the exercises 
+challenging-yet-do-able, because that’s what most people prefer.
+We used multiple learning styles, because you might prefer step-by-step procedures, while 
+someone else wants to understand the big picture first, and someone else just wants to see 
+an example. But regardless of your own learning preference, everyone benefits from seeing the 
+same content represented in multiple ways.
+We include content for both sides of your brain, because the more of your brain you 
+engage, the more likely you are to learn and remember, and the longer you can stay focused. 
+Since working one side of the brain often means giving the other side a chance to rest, you 
+can be more productive at learning for a longer period of time. 
+And we included stories and exercises that present more than one point of view, 
+because your brain is tuned to learn more deeply when it’s forced to make evaluations and 
+judgments. 
+We included challenges, with exercises, and by asking questions that don’t always have 
+a straight answer, because your brain is tuned to learn and remember when it has to work at 
+something. Think about it—you can’t get your body in shape just by watching people at the 
+gym. But we did our best to make sure that when you’re working hard, it’s on the right things. 
+That you’re not spending one extra dendrite processing a hard-to-understand example, 
+or parsing difficult, jargon-laden, or overly terse text.
+We used people. In stories, examples, pictures, etc., because, well, because you’re a person. 
+And your brain pays more attention to people than it does to things. 
+you are here 4  xxix
+the intro
+So, we did our part. The rest is up to you. These tips are a 
+starting point; listen to your brain and figure out what works 
+for you and what doesn’t. Try new things.
+6
+Drink water. Lots of it.
+Your brain works best in a nice bath of fluid. 
+Dehydration (which can happen before you ever 
+feel thirsty) decreases cognitive function. 
+9
+Write a lot of code!
+There’s only one way to learn to program: writing 
+a lot of code. And that’s what you’re going to 
+do throughout this book. Coding is a skill, and the 
+only way to get good at it is to practice. We’re going 
+to give you a lot of practice: every chapter has 
+exercises that pose a problem for you to solve. Don’t 
+just skip over them—a lot of the learning happens 
+when you solve the exercises. We included a solution 
+to each exercise—don’t be afraid to peek at the 
+solution if you get stuck! (It’s easy to get snagged 
+on something small.) But try to solve the problem 
+before you look at the solution. And definitely get it 
+working before you move on to the next part of the 
+book.
+8
+Feel something.
+Your brain needs to know that this matters. Get 
+involved with the stories. Make up your own 
+captions for the photos. Groaning over a bad joke 
+is still better than feeling nothing at all.
+7
+Listen to your brain.
+Pay attention to whether your brain is getting 
+overloaded. If you find yourself starting to skim 
+the surface or forget what you just read, it’s time 
+for a break. Once you go past a certain point, you 
+won’t learn faster by trying to shove more in, and 
+you might even hurt the process.
+5
+Talk about it. Out loud.
+Speaking activates a different part of the brain. If 
+you’re trying to understand something, or increase 
+your chance of remembering it later, say it out loud. 
+Better still, try to explain it out loud to someone else. 
+You’ll learn more quickly, and you might uncover 
+ideas you hadn’t known were there when you were 
+reading about it.
+4
+Make this the last thing you read before bed. 
+Or at least the last challenging thing.
+Part of the learning (especially the transfer to 
+long-term memory) happens after you put the book 
+down. Your brain needs time on its own, to do more 
+processing. If you put in something new during that 
+processing time, some of what you just learned will 
+be lost. 
+3
+Read the “There are No Dumb Questions.”
+That means all of them. They’re not optional 
+sidebars, they’re part of the core content!
+Don’t skip them.
+Cut this out and stick it 
+on your refrigerator.
+Here’s what YOU can do to bend 
+your brain into submission
+2
+Do the exercises. Write your own notes.
+We put them in, but if we did them for you, that 
+would be like having someone else do your workouts 
+for you. And don’t just look at the exercises. Use a 
+pencil. There’s plenty of evidence that physical 
+activity while learning can increase the learning. 
+Don’t just read. Stop and think. When the book asks 
+you a question, don’t just skip to the answer. Imagine 
+that someone really is asking the question. The 
+more deeply you force your brain to think, the better 
+chance you have of learning and remembering.
+Slow down. The more you understand, the 
+less you have to memorize.
+1
+xxx  intro
+how to use this book
+Read Me
+This is a learning experience, not a reference book. We deliberately stripped out everything 
+that might get in the way of learning whatever it is we’re working on at that point in the 
+book. And the first time through, you need to begin at the beginning, because the book 
+makes assumptions about what you’ve already seen and learned.
+ 
+This book is designed to get you up to speed with Python as 
+quickly as possible. 
+As you need to know stuff, we teach it. So you won’t find long lists of technical material, no 
+tables of Python’s operators, not its operator precedence rules. We don’t cover everything, 
+but we’ve worked really hard to cover the essential material as well as we can, so that you 
+can get Python into your brain quickly and have it stay there. The only assumption we make 
+is that you already know how to program in some other programming language.
+ 
+This book targets Python 3
+We use Release 3 of the Python programming language in this book, and we cover how to 
+get and install Python 3 in the first chapter. That said, we don’t completely ignore Release 
+2, as you’ll discover in Chapters 8 through 11. But trust us, by then you’ll be so happy using 
+Python, you won’t notice that the technologies you’re programming are running Python 2.
+ 
+We put Python to work for you right away.
+We get you doing useful stuff in Chapter 1 and build from there. There’s no hanging 
+around, because we want you to be productive with Python right away.
+ 
+The activities are NOT optional. 
+The exercises and activities are not add-ons; they’re part of the core content of the book. 
+Some of them are to help with memory, some are for understanding, and some will help 
+you apply what you’ve learned. Don’t skip the exercises.
+ 
+The redundancy is intentional and important. 
+One distinct difference in a Head First book is that we want you to really get it. And we 
+want you to finish the book remembering what you’ve learned. Most reference books don’t 
+have retention and recall as a goal, but this book is about learning, so you’ll see some of the 
+same concepts come up more than once. 
+you are here 4  xxxi
+the intro
+The examples are as lean as possible.
+Our readers tell us that it’s frustrating to wade through 200 lines of an example looking 
+for the two lines they need to understand. Most examples in this book are shown within 
+the smallest possible context, so that the part you’re trying to learn is clear and simple. 
+Don’t expect all of the examples to be robust, or even complete—they are written 
+specifically for learning, and aren’t always fully functional. 
+We’ve placed a lot of the code examples on the Web so you can copy and paste them as 
+needed. You’ll find them at two locations:
+ 
+ 
+http://www.headfirstlabs.com/books/hfpython/ 
+ 
+http://python.itcarlow.ie
+The Brain Power exercises don’t have answers.
+For some of them, there is no right answer, and for others, part of the learning 
+experience of the Brain Power activities is for you to decide if and when your answers 
+are right. In some of the Brain Power exercises, you will find hints to point you in the 
+right direction.
+xxxii  intro
+the review team
+the review team
+David Griffiths is the author of Head First Rails 
+and the coauthor of Head First Programming. He began 
+programming at age 12, when he saw a documentary 
+on the work of Seymour Papert. At age 15, he wrote 
+an implementation of Papert’s computer language 
+LOGO. After studying Pure Mathematics at University, 
+he began writing code for computers and magazine 
+articles for humans. He’s worked as an agile coach, 
+a developer, and a garage attendant, but not in that 
+order. He can write code in over 10 languages and 
+prose in just one, and when not writing, coding, or 
+coaching, he spends much of his spare time traveling 
+with his lovely wife—and fellow Head First author—
+Dawn. 
+Phil Hartley has a degree in Computer Science 
+from Edinburgh, Scotland. Having spent more than 
+30 years in the IT industry with specific expertise in 
+OOP, he is now teaching full time at the University 
+of Advancing Technology in Tempe, AZ. In his spare 
+time, Phil is a raving NFL fanatic
+Jeremy Jones is coauthor of Python for Unix and 
+Linux System Administration. He has been actively using 
+Python since 2001. He has been a developer, system 
+administrator, quality assurance engineer, and tech 
+support analyst. They all have their rewards and 
+challenges, but his most challenging and rewarding job 
+has been husband and father.
+Technical Reviewers:
+Jeremy Jones
+Phil Hartley
+David Griffiths
+The technical review team
+you are here 4  xxxiii
+the intro
+My editor:
+Brian Sawyer was Head First Python’s editor. When not editing 
+books, Brian likes to run marathons in his spare time. This turns out 
+to be the perfect training for working on another book with me (our 
+second together). O’Reilly and Head First are lucky to have someone 
+of Brian’s caliber working to make this and other books the best they 
+can be.
+Acknowledgments
+Brian Sawyer
+The O’Reilly team:
+Karen Shaner provided administrative support and very capably coordinated the techical review process, responding 
+quickly to my many queries and requests for help. There’s also the back-room gang to thank—the O’Reilly Production 
+Team—who guided this book through its final stages and turned my InDesign files into the beautiful thing you’re 
+holding in your hands right now (or maybe you’re on an iPad, Android tablet, or reading on your PC—that’s cool, too).
+And thanks to the other Head First authors who, via Twitter, offered cheers, suggestions, and encouragement 
+throughout the entire writing process. You might not think 140 characters make a big difference, but they really do.
+I am also grateful to Bert Bates who, together with Kathy Sierra, created this series of books with their wonderful 
+Head First Java. At the start of this book, Bert took the time to set the tone with a marathon 90-minute phone call, 
+which stretched my thinking on what I wanted to do to the limit and pushed me to write a better book. Now, some nine 
+months after the phone call, I’m pretty sure I’ve recovered from the mind-bending Bert put me through.
+Friends and colleagues:
+My thanks again to Nigel Whyte, Head of Department, Computing and Networking at The Institute of Technology, 
+Carlow, for supporting my involvement in yet another book (especially so soon after the last one). 
+My students (those enrolled on 3rd Year Games Development and 4th Year Software Engineering) have been exposed 
+to this material in various forms over the last 18 months. Their positive reaction to Python and the approach I take with 
+my classes helped inform the structure and eventual content of this book. (And yes, folks, some of this is on your final).
+Family:
+My family, Deirdre, Joseph, Aaron, and Aideen had to, once more, bear the grunts and groans, huffs and puffs, 
+and more than a few roars on more than one occasion (although, to be honest, not as often they did with Head First 
+Programming). After the last book, I promised I wouldn’t start another one “for a while.” It turned out “a while” was no 
+more than a few weeks, and I’ll be forever grateful that they didn’t gang up and throw me out of the house for breaking 
+my promise. Without their support, and especially the ongoing love and support of my wife, Deirdre, this book would 
+not have seen the light of day.
+The without-whom list:
+My technical review team did an excellent job of keeping me straight and making sure what I covered was spot on. 
+They confirmed when my material was working, challenged me when it wasn’t and not only pointed out when stuff 
+was wrong, but provided suggestions on how to fix it. This is especially true of David Griffiths, my co-conspirator on 
+Head First Programming, whose technical review comments went above and beyond the call of duty. David’s name might 
+not be on the cover of this book, but a lot of his ideas and suggestions grace its pages, and I was thrilled and will forever 
+remain grateful that he approached his role as tech reviewer on Head First Python with such gusto.
+xxxiv  intro
+safari books online
+Safari® Books Online
+Safari Books Online is an on-demand digital library that lets 
+you easily search over 7,500 technology and creative reference 
+books and videos to find the answers you need quickly.
+With a subscription, you can read any page and watch any video from our library 
+online. Read books on your cell phone and mobile devices. Access new titles before 
+they are available for print, and get exclusive access to manuscripts in development 
+and post feedback for the authors. Copy and paste code samples, organize your 
+favorites, download chapters, bookmark key sections, create notes, print out pages, 
+and benefit from tons of other time-saving features.
+O’Reilly Media has uploaded this book to the Safari Books Online service. To have 
+full digital access to this book and others on similar topics from O’Reilly and other 
+publishers, sign up for free at http://my.safaribooksonline.com/?portal=oreilly.
+this is a new chapter  1
+Yes, yes...we have lots 
+of Pythons in stock... I’ll 
+just make a quick list.
+meet python
+1
+Everyone loves lists
+You’re asking one question: “What makes Python different?”
+The short answer is: lots of things. The longer answers starts by stating that there’s lots 
+that’s familiar, too. Python is a lot like any other general-purpose programming language, 
+with statements, expressions, operators, functions, modules, methods, and classes. 
+All the usual stuff, really. And then there’s the other stuff Python provides that makes 
+the programmer’s life—your life—that little bit easier. You’ll start your tour of Python by 
+learning about lists. But, before getting to that, there’s another important question that 
+needs answering…
+2  Chapter 1
+python greatness
+What’s to like about Python?
+Lots. Rather than tell you, this book’s goal is to show you the greatness that is 
+Python. 
+Yeah... I need something that I can deploy 
+on PCs, Macs, handhelds, phones,the Web, 
+on big servers and small clients...and it has 
+to let me build GUIs quickly and painlessly...
+OK, yes, yeah, I’m listening... What?!? 
+You’re kidding! Python can do all that?
+Before diving head first into Python, let’s get a bit of  housekeeping out of 
+the way. 
+To work with and execute the Python code in this book, you need a copy of 
+the Python 3 interpreter on your computer. Like a lot of things to do with 
+Python, it’s not difficult to install the interpreter. Assuming, of course, it’s not 
+already there…
+you are here 4  3
+meet python
+Install Python 3
+Before you write and run Python code, you need to make sure the Python 
+interpreter is on your computer. In this book, you’ll start out with Release 3 of 
+Python, the very latest (and best) version of the language.
+A release of Python might already be on your computer. Mac OS X comes 
+with Python 2 preinstalled, as do most versions of Linux (which can also ship 
+with Release 3). Windows, in contrast, doesn’t include any release of Python. 
+Let’s check your computer for Python 3. Open up a command-line prompt 
+and, if you are using Mac OS X or Linux, type:
+ 
+ 
+ 
+python3 -V
+On Windows, use this command:
+ 
+c:\Python31\python.exe -V
+That’s an UPPERCASE 
+“v”, by the way.
+$ python3 -V
+Python 3.1.2
+$ 
+$ python3
+Python 3.1.2 (r312:79360M, Mar 24 2010, 01:33:18) 
+[GCC 4.0.1 (Apple Inc. build 5493)] on darwin
+Type "help", "copyright", "credits" or "license" for more info.
+>>> 
+>>> quit()
+$ 
+File  Edit   Window  Help   WhichPython?
+Using the 
+UPPERCASE “v” 
+results in the Python 
+version appearing on 
+screen.
+Without the 
+UPPERCASE “v”, 
+you are taken 
+into the Python 
+interpreter.
+Use the quit() 
+command to exit 
+the interpreter and 
+return to your OS 
+prompt.
+If Python 3 is missing from 
+your computer, download 
+a copy for your favorite OS 
+from the www.python.org 
+website.
+Do this!
+Let’s take a quick look at IDLE.
+When you install Python 3, you also get IDLE, Python’s simple—yet 
+surprisingly useful— integrated development environment. IDLE includes a 
+color syntax-highlighting editor, a debugger, the Python Shell, and a complete 
+copy of Python 3’s online documentation set.
+4  Chapter 1
+idle hands
+Use IDLE to help learn Python
+IDLE lets you write code in its full-featured code editor as well as experiment 
+with code at the Python Shell. You’ll use the code editor later in this book 
+but, when learning Python, IDLE’s shell really rocks, because it lets you try 
+out new Python code as you go.
+When you first start IDLE, you are presented with the “triple chevron” 
+prompt (>>>) at which you enter code. The shell takes your code statement 
+and immediately executes it for you, displaying any results produced on screen.
+IDLE knows all about Python syntax and offers “completion hints” that pop 
+up when you use a built-in function like print(). Python programmers 
+generally refer to built-in functions as BIFs. The print() BIF displays 
+messages to standard output (usually the screen). 
+IDLE uses colored syntax to highlight your code. By default, built-in 
+functions are purple, strings are green, and language keywords (like if) are 
+orange. Any results produced are in blue. If you hate these color choices, 
+don’t worry; you can easily change them by adjusting IDLE’s preferences.
+IDLE also knows all about Python’s indentation syntax, which requires code 
+blocks be indented. When you start with Python, this can be hard to get 
+used to, but IDLE keeps you straight by automatically indenting as needed.
+IDLE knows 
+Python’s syntax 
+and helps you 
+conform to 
+the Python 
+indentation rules.
+Enter your code 
+at the >>> prompt.
+See results 
+immediately.
+Unlike other C-based 
+languages, which use { and } 
+to delimit blocks, Python uses 
+indentation instead. 
+you are here 4  5
+meet python
+Work effectively with IDLE
+IDLE has lots of features, but you need to know about only 
+a few of them to get going. 
+TAB completion
+Start to type in some code, and then press the TAB key. 
+IDLE will offer suggestions to help you complete your 
+statement.
+Type “pr” and then 
+TAB at the >>> prompt 
+to see IDLE’s list of 
+command completion 
+suggestions.
+Recall code statements
+Press Alt-P to recall the previous code statement entered into 
+IDLE or press Alt-N to move to the next code statement 
+(assuming there is one). Both key combinations can be used 
+to cycle rapidly through all of the code you’ve entered into 
+IDLE, re-executing any code statements as needed.
+Edit recalled code
+Once you recall your code statement, you can edit it and 
+move around the statement using the arrow keys. It’s 
+possible to edit any statement that you’ve previously 
+entered, even code statements that span multiple lines. 
+Adjust IDLE’s preferences
+IDLE’s preferences dialog lets you adjust its default 
+behavior to your tastes. There are four tabs of settings to 
+tweak. You can control font and tab behavior, the colors 
+used to syntax highlight, the behavior of certain key-
+combinations, and IDLE’s start-up settings. So, if shocking 
+pink strings is really your thing, IDLE gives you the power 
+to change how your code looks on screen.
+Alt-P for Previous
+Alt-N for Next
+Tweak IDLE 
+to your heart’s 
+content.
+This is how IDLE looks on 
+my computer. It might look a 
+little different on yours, but 
+not by much. (And, yes, it’s 
+meant to look this ugly.)
+Unless you’re on 
+a Mac, in which 
+case it’s Ctrl-P 
+and Ctrl-N.
+6  Chapter 1
+dealing with data
+Deal with complex data
+Any program of any worth that you create has to work with data. Sometimes, 
+the data is simple and straightforward—easy to work with. Other times, the 
+data you have to work with is complex in its structure and meaning, forcing you 
+to work hard to make sense of it all, let alone write code to process it.
+To tame complexity, you can often arrange your data as a list: there’s the list 
+of customers, your friend’s list, the shopping list, and your to-do list (to name 
+a few). Arranging data in lists is so common that Python makes it easy for you 
+to create and process lists in code.
+Let’s look at some complex data before learning how to create and process list 
+data with Python.
+The Holy Grail, 1975, Terry Jones & Terry Gilliam, 91 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Life of Brian, 1979, Terry Jones, 94 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Meaning of Life, 1983, Terry Jones, 107 mins
+ 
+The six Monty Python cast members
+The Holy Grail, 1975, Terry Jones & Terry Gilliam, 91 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Life of Brian, 1979, Terry Jones, 94 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Meaning of Life, 1983, Terry Jones, 107 mins
+ 
+The six Monty Python cast members
+The Holy Grail, 1975, Terry Jones & Terry Gilliam, 91 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Life of Brian, 1979, Terry Jones, 94 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Meaning of Life, 1983, Terry Jones, 107 mins
+ 
+The six Monty Python cast members
+I’ve been making lists of 
+movie data for years and 
+would love to be able to 
+process it on my laptop...
+The Holy Grail, 1975, Terry Jones & Terry Gilliam, 91 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Life of Brian, 1979, Terry Jones, 94 mins
+ 
+Graham Chapman
+ 
+ 
+Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+The Meaning of Life, 1983, Terry Jones, 107 mins
+ 
+The six Monty Python cast members
+ 
+ 
+Graham Chapman, Michael Palin, John Cleese, Terry Gilliam, Eric Idle & Terry Jones
+There sure is 
+a lot of data 
+listed here.
+This data is complex, too.
+A highly 
+organized 
+movie buff
+On first glance, this collection of data does indeed look quite complex. 
+However, the data appears to conform to some sort of structure: there’s a line 
+for a list of basic movie facts, then another line for the lead actor(s), followed 
+by a third line listing the movie’s supporting actors. 
+This looks like a structure you can work with…
+you are here 4  7
+meet python
+Create simple Python lists
+Let’s start with the following simple list of movie titles and work up from 
+there:
+The Holy Grail
+The Life of Brian
+The Meaning of Life
+A short list of some 
+Monty Python movies
+Here’s the same list written in a way that Python understands:
+  movies = ["The Holy Grail",
+ 
+ 
+"The Life of Brian",
+ 
+ 
+"The Meaning of Life"]
+To turn the human-friendly list into a Python-friendly one, follow this four-
+step process:
+It’s perfectly OK to put your list creation code all on one line, assuming, of 
+course, that you have room:
+  movies = ["The Holy Grail", "The Life of Brian", "The Meaning of Life"]
+This works, too.
+Convert each of the names into strings by surrounding the data with quotes.
+1
+Separate each of the list items from the next with a comma.
+2
+Surround the list of items with opening and closing square brackets.
+3
+Assign the list to an identifier (movies in the preceding code) using the 
+assignment operator (=).
+4
+8  Chapter 1
+not my type
+Hang on a second! Aren’t you 
+forgetting something? Don’t you need to 
+declare type information for your list?
+No, because Python’s variable identifiers 
+don’t have a type.
+Many other programming languages insist that every 
+identifier used in code has type information declared for 
+it. Not so with Python: identifiers are simply names that 
+refer to a data object of  some type. 
+Think of Python’s list as a high-level collection. The 
+type of the data items is not important to the list. It’s 
+OK to state that your movies list is a “collection of 
+strings,” but Python doesn’t need to be told this. All 
+Python needs to know is that you need a list, you’ve 
+given it a name, and the list has some data items in it.
+you are here 4  9
+meet python
+  The Life of Brian
+Lists are like arrays
+When you create a list in Python, the interpreter creates an array-like data 
+structure in memory to hold your data, with your data items stacked from 
+the bottom up. Like array technology in other programming languages, the 
+first slot in the stack is numbered 0, the second is numbered 1, the third is 
+numbered 2, and so on: 
+This is your “movies” 
+list in memory.
+This is your 
+“movies” list in 
+code.
+Each data item 
+in the list has a 
+numeric OFFSET 
+associated with it.
+Python starts counting 
+from zero.
+Access list data using the square bracket notation
+As with arrays, you can access the data item in a list slot using the standard 
+square bracket offset notation:
+ print(movies[1])
+  movies = ["The Holy Grail", "The Life of Brian", "The Meaning of Life"]
+"The Holy Grail"
+"The Life of Brian"
+"The Meaning of Life"
+ 2
+1
+  0
+Item #0
+Item #1
+Item #2
+Use the “print()” BIF to display a 
+data item on screen.
+No surprise here, really…the 
+requested data appears on screen.
+Let’s use IDLE to learn a bit about how lists work.

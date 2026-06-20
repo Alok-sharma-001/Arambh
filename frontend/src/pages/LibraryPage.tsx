@@ -36,6 +36,8 @@ const TOC_SECTIONS = [
   { id: 'best-practices', label: 'Best Practices' },
   { id: 'mistakes', label: 'Common Mistakes' },
   { id: 'quiz', label: 'Concept Check' },
+  { id: 'rpg-progression', label: 'RPG Progression' },
+  { id: 'training-ground', label: 'Training Ground' },
 ];
 
 export default function LibraryPage() {
@@ -470,6 +472,80 @@ export default function LibraryPage() {
                           </div>
                         );
                       })}
+                    </div>
+                  </section>
+                )}
+
+                {/* ── RPG Progression: Boss & Artifacts ── */}
+                {(selectedTopic.bossBattle || selectedTopic.artifacts) && (
+                  <section data-section="rpg-progression" className="mb-12">
+                    <h2 className="flex items-center gap-2.5 font-display text-2xl font-bold text-warm-white mb-6">
+                      <Target className="text-red-500" size={22} />
+                      RPG Progression
+                    </h2>
+                    
+                    <div className="grid gap-6 md:grid-cols-2">
+                      {/* Boss Battle */}
+                      {selectedTopic.bossBattle && (
+                        <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-5">
+                          <h3 className="flex items-center gap-2 text-lg font-bold text-red-400 mb-2">
+                            Boss Battle: {selectedTopic.bossBattle.name}
+                          </h3>
+                          <p className="text-sm text-warm-white/80 mb-3 leading-relaxed">
+                            {selectedTopic.bossBattle.description}
+                          </p>
+                          <div className="rounded border border-red-500/20 bg-black/40 px-3 py-2 text-xs font-mono text-red-300/80">
+                            Mechanic: {selectedTopic.bossBattle.mechanic}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Artifacts */}
+                      {selectedTopic.artifacts && selectedTopic.artifacts.length > 0 && (
+                        <div className="rounded-lg border border-gold/20 bg-gold/5 p-5">
+                          <h3 className="flex items-center gap-2 text-lg font-bold text-gold mb-2">
+                            Unlockable Artifacts
+                          </h3>
+                          <div className="space-y-3">
+                            {selectedTopic.artifacts.map((art, i) => (
+                              <div key={i} className="flex gap-3">
+                                <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded bg-gold/10 text-gold">
+                                  ★
+                                </div>
+                                <div>
+                                  <p className="text-sm font-bold text-warm-white">{art.name}</p>
+                                  <p className="text-xs text-warm-white/60">{art.description}</p>
+                                  <span className="mt-1 inline-block text-[10px] uppercase tracking-widest text-gold/70">
+                                    {art.rarity}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </section>
+                )}
+
+                {/* ── Training Ground ── */}
+                {selectedTopic.trainingGround && (
+                  <section data-section="training-ground" className="mb-12">
+                    <h2 className="flex items-center gap-2.5 font-display text-2xl font-bold text-warm-white mb-6">
+                      <Terminal className="text-blue-400" size={22} />
+                      Training Ground
+                    </h2>
+                    <div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-5">
+                      <p className="text-sm text-warm-white/80 mb-4">
+                        Master this concept through these interactive exercises:
+                      </p>
+                      <div className="flex flex-wrap gap-2">
+                        {selectedTopic.trainingGround.exercises.map((ex, i) => (
+                          <span key={i} className="rounded bg-blue-500/10 px-3 py-1.5 text-xs font-mono text-blue-300">
+                            {ex}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </section>
                 )}

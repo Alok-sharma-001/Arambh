@@ -1,0 +1,26 @@
+{
+  "subject": "python",
+  "concepts": [
+    {
+      "conceptId": "python-lists",
+      "title": "Lists",
+      "subject": "python",
+      "difficultyScore": 15,
+      "estimatedLearningTime": 25,
+      "prerequisiteConcepts": ["variables", "data-types"],
+      "nextConcepts": ["loops"],
+      "masteryRequirements": [
+        "I can create a list of items.",
+        "I understand that lists are zero-indexed.",
+        "I can retrieve a specific item from a list.",
+        "I can add new items to a list using .append().",
+        "I know what an IndexError is and why it happens."
+      ],
+      "commonFailurePoints": [
+        "Forgetting that lists are zero-indexed.",
+        "Using parentheses () instead of square brackets []."
+      ],
+      "recommendedPracticeCount": 4
+    }
+  ]
+}

@@ -83,12 +83,12 @@ export default function AnalyticsDashboard() {
         {/* Top RPG Stats Row */}
         <motion.div variants={itemVariants} className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {/* XP Card */}
-          <div className="relative overflow-hidden rounded-2xl border border-warm-white/[0.06] p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
+          <div className="relative overflow-hidden rounded-2xl border border-[#FFE8DB]/10 p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
                style={{ background: 'linear-gradient(160deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98))' }}>
-            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20 bg-gold" />
+            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20" style={{ backgroundColor: '#FFE8DB' }} />
             <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 rounded-xl bg-gold/[0.06] border border-gold/20 flex items-center justify-center">
-                <Zap className="w-6 h-6 text-gold" />
+              <div className="w-12 h-12 rounded-xl bg-[#FFE8DB]/[0.06] border border-[#FFE8DB]/20 flex items-center justify-center">
+                <Zap className="w-6 h-6" style={{ color: '#FFE8DB' }} />
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-mid-gray">Total XP</p>
@@ -98,12 +98,12 @@ export default function AnalyticsDashboard() {
           </div>
           
           {/* Rank Card */}
-          <div className="relative overflow-hidden rounded-2xl border border-warm-white/[0.06] p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
+          <div className="relative overflow-hidden rounded-2xl border border-[#5682B1]/15 p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
                style={{ background: 'linear-gradient(160deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98))' }}>
-            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20 bg-[#60a5fa]" />
+            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20" style={{ backgroundColor: '#5682B1' }} />
             <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 rounded-xl bg-[#60a5fa]/[0.06] border border-[#60a5fa]/20 flex items-center justify-center">
-                <Shield className="w-6 h-6 text-[#60a5fa]" />
+              <div className="w-12 h-12 rounded-xl bg-[#5682B1]/[0.06] border border-[#5682B1]/20 flex items-center justify-center">
+                <Shield className="w-6 h-6" style={{ color: '#5682B1' }} />
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-mid-gray">Current Rank</p>
@@ -113,12 +113,12 @@ export default function AnalyticsDashboard() {
           </div>
 
           {/* Level Card */}
-          <div className="relative overflow-hidden rounded-2xl border border-warm-white/[0.06] p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
+          <div className="relative overflow-hidden rounded-2xl border border-[#739EC9]/15 p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
                style={{ background: 'linear-gradient(160deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98))' }}>
-            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20 bg-[#34d399]" />
+            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20" style={{ backgroundColor: '#739EC9' }} />
             <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 rounded-xl bg-[#34d399]/[0.06] border border-[#34d399]/20 flex items-center justify-center">
-                <Sparkles className="w-6 h-6 text-[#34d399]" />
+              <div className="w-12 h-12 rounded-xl bg-[#739EC9]/[0.06] border border-[#739EC9]/20 flex items-center justify-center">
+                <Sparkles className="w-6 h-6" style={{ color: '#739EC9' }} />
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-mid-gray">Current Level</p>
@@ -128,12 +128,12 @@ export default function AnalyticsDashboard() {
           </div>
 
           {/* Streak Card */}
-          <div className="relative overflow-hidden rounded-2xl border border-warm-white/[0.06] p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
+          <div className="relative overflow-hidden rounded-2xl border border-[#FFE8DB]/10 p-6 text-left transition-all hover:-translate-y-1 hover:shadow-card-hover"
                style={{ background: 'linear-gradient(160deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98))' }}>
-            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20 bg-[#f97316]" />
+            <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full blur-2xl opacity-20" style={{ backgroundColor: '#FFE8DB' }} />
             <div className="flex items-center gap-4 relative z-10">
-              <div className="w-12 h-12 rounded-xl bg-[#f97316]/[0.06] border border-[#f97316]/20 flex items-center justify-center">
-                <Flame className="w-6 h-6 text-[#f97316]" />
+              <div className="w-12 h-12 rounded-xl bg-[#FFE8DB]/[0.06] border border-[#FFE8DB]/20 flex items-center justify-center">
+                <Flame className="w-6 h-6" style={{ color: '#FFE8DB' }} />
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-mid-gray">Streak</p>
@@ -147,20 +147,20 @@ export default function AnalyticsDashboard() {
           
           {/* Knowledge Radar Matrix */}
           <motion.div variants={itemVariants} className="lg:col-span-2">
-            <div className="relative h-full rounded-2xl border border-warm-white/[0.06] p-8 overflow-hidden"
+            <div className="relative h-full rounded-2xl border border-[#5682B1]/15 p-8 overflow-hidden"
                  style={{ background: 'linear-gradient(160deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98))' }}>
               <div className="absolute inset-x-0 top-0 h-px opacity-70"
-                   style={{ background: `linear-gradient(90deg, transparent, #8b5cf6, transparent)` }} />
+                   style={{ background: `linear-gradient(90deg, transparent, #5682B1, transparent)` }} />
               
               <div className="flex items-center gap-3 mb-8">
-                <Target className="w-6 h-6 text-[#8b5cf6]" />
+                <Target className="w-6 h-6" style={{ color: '#5682B1' }} />
                 <h2 className="text-2xl font-display font-bold text-warm-white">The Knowledge Matrix</h2>
               </div>
               
               <div className="h-[450px] w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart cx="50%" cy="50%" outerRadius="75%" data={radarData}>
-                    <PolarGrid stroke="rgba(255, 252, 242, 0.08)" />
+                    <PolarGrid stroke="rgba(86, 130, 177, 0.12)" />
                     <PolarAngleAxis 
                       dataKey="subject" 
                       tick={{ fill: 'rgba(255, 252, 242, 0.7)', fontSize: 13, fontWeight: 500, fontFamily: 'Inter, sans-serif' }} 
@@ -169,19 +169,19 @@ export default function AnalyticsDashboard() {
                       angle={30} 
                       domain={[0, 100]} 
                       tick={{ fill: 'rgba(255, 252, 242, 0.3)' }} 
-                      stroke="rgba(255, 252, 242, 0.08)"
+                      stroke="rgba(86, 130, 177, 0.12)"
                     />
                     <Radar 
                       name="Mastery" 
                       dataKey="A" 
-                      stroke="#8b5cf6" 
+                      stroke="#739EC9" 
                       strokeWidth={2}
-                      fill="#8b5cf6" 
-                      fillOpacity={0.3} 
+                      fill="#5682B1" 
+                      fillOpacity={0.25} 
                     />
                     <Tooltip 
-                      contentStyle={{ backgroundColor: 'rgba(20, 20, 20, 0.95)', borderColor: 'rgba(139, 92, 246, 0.4)', borderRadius: '12px', color: '#fffcf2' }}
-                      itemStyle={{ color: '#8b5cf6', fontWeight: 'bold' }}
+                      contentStyle={{ backgroundColor: 'rgba(20, 20, 20, 0.95)', borderColor: 'rgba(86, 130, 177, 0.4)', borderRadius: '12px', color: '#fffcf2' }}
+                      itemStyle={{ color: '#739EC9', fontWeight: 'bold' }}
                     />
                   </RadarChart>
                 </ResponsiveContainer>
@@ -193,17 +193,17 @@ export default function AnalyticsDashboard() {
           <motion.div variants={itemVariants} className="space-y-6">
             
             {/* Strengths */}
-            <div className="relative rounded-2xl border border-[#34d399]/20 bg-[#34d399]/[0.02] p-6">
+            <div className="relative rounded-2xl border border-[#739EC9]/20 bg-[#739EC9]/[0.02] p-6">
               <div className="absolute inset-x-0 top-0 h-px opacity-50"
-                   style={{ background: `linear-gradient(90deg, transparent, #34d399, transparent)` }} />
+                   style={{ background: `linear-gradient(90deg, transparent, #739EC9, transparent)` }} />
               <h3 className="text-lg font-display font-bold text-warm-white mb-5 flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-[#34d399]" /> Greatest Strengths
+                <TrendingUp className="w-5 h-5" style={{ color: '#739EC9' }} /> Greatest Strengths
               </h3>
               <div className="space-y-3">
                 {strengths.length > 0 ? strengths.map((s, i) => (
-                  <div key={i} className="flex justify-between items-center rounded-xl border border-warm-white/[0.06] bg-warm-white/[0.02] p-4 transition-colors hover:bg-warm-white/[0.04]">
+                  <div key={i} className="flex justify-between items-center rounded-xl border border-[#739EC9]/10 bg-[#739EC9]/[0.03] p-4 transition-colors hover:bg-[#739EC9]/[0.06]">
                     <span className="text-sm font-medium text-warm-white/80">{s.subject}</span>
-                    <span className="text-sm font-mono font-bold text-[#34d399]">{s.A}%</span>
+                    <span className="text-sm font-mono font-bold" style={{ color: '#739EC9' }}>{s.A}%</span>
                   </div>
                 )) : (
                   <p className="text-mid-gray text-sm italic">Complete lessons to discover strengths.</p>
@@ -212,17 +212,17 @@ export default function AnalyticsDashboard() {
             </div>
 
             {/* Weaknesses */}
-            <div className="relative rounded-2xl border border-[#f43f5e]/20 bg-[#f43f5e]/[0.02] p-6">
+            <div className="relative rounded-2xl border border-[#FFE8DB]/15 bg-[#FFE8DB]/[0.02] p-6">
               <div className="absolute inset-x-0 top-0 h-px opacity-50"
-                   style={{ background: `linear-gradient(90deg, transparent, #f43f5e, transparent)` }} />
+                   style={{ background: `linear-gradient(90deg, transparent, #FFE8DB, transparent)` }} />
               <h3 className="text-lg font-display font-bold text-warm-white mb-5 flex items-center gap-2">
-                <Brain className="w-5 h-5 text-[#f43f5e]" /> Areas of Focus
+                <Brain className="w-5 h-5" style={{ color: '#FFE8DB' }} /> Areas of Focus
               </h3>
               <div className="space-y-3">
                 {weaknesses.length > 0 ? weaknesses.map((w, i) => (
-                  <div key={i} className="flex justify-between items-center rounded-xl border border-warm-white/[0.06] bg-warm-white/[0.02] p-4 transition-colors hover:bg-warm-white/[0.04]">
+                  <div key={i} className="flex justify-between items-center rounded-xl border border-[#FFE8DB]/10 bg-[#FFE8DB]/[0.03] p-4 transition-colors hover:bg-[#FFE8DB]/[0.06]">
                     <span className="text-sm font-medium text-warm-white/80">{w.subject}</span>
-                    <span className="text-sm font-mono font-bold text-[#f43f5e]">{w.A}%</span>
+                    <span className="text-sm font-mono font-bold" style={{ color: '#FFE8DB' }}>{w.A}%</span>
                   </div>
                 )) : (
                   <p className="text-mid-gray text-sm italic">You are a perfect master.</p>

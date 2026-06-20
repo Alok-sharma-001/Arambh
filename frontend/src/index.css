@@ -57,34 +57,34 @@
 
 @layer utilities {
   .text-gradient-gold-purple {
-    background: linear-gradient(90deg, #c8a45e, #7c5cff);
+    background: linear-gradient(90deg, #FFE8DB, #5682B1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-hero-overlay {
-    background: linear-gradient(to bottom, rgba(10,9,8,0.3) 0%, rgba(10,9,8,0.5) 60%, rgba(10,9,8,0.95) 100%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.5) 60%, rgba(0,0,0,0.95) 100%);
   }
 
   .gradient-purple-glow {
-    background: radial-gradient(circle, rgba(124,92,255,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(86,130,177,0.15) 0%, transparent 70%);
   }
 
   .gradient-gold-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(200,164,94,0.1), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,232,219,0.1), transparent);
   }
 
   .gradient-boss-card {
-    background: linear-gradient(135deg, #7c5cff 0%, #5b21b6 100%);
+    background: linear-gradient(135deg, #5682B1 0%, #11161B 100%);
   }
 
   .gradient-completion-bar {
-    background: linear-gradient(90deg, #34d399 0%, #c8a45e 100%);
+    background: linear-gradient(90deg, #739EC9 0%, #FFE8DB 100%);
   }
 
   .gradient-map-cta {
-    background: linear-gradient(180deg, #0a0908 0%, #1a1030 50%, #0f0a1a 100%);
+    background: linear-gradient(180deg, #000000 0%, #11161B 50%, #000000 100%);
   }
 
   .ease-out-expo {
@@ -113,14 +113,14 @@
 }
 
 /* Syntax highlighting colors */
-.token-keyword { color: #c8a45e; }
-.token-builtin { color: #7c5cff; }
-.token-string { color: #34d399; }
-.token-number { color: #fbbf24; }
-.token-variable { color: #fffcf2; }
-.token-operator { color: #c8a45e; }
-.token-comment { color: #8a8a8a; }
-.token-function { color: #fffcf2; }
+.token-keyword { color: #FFE8DB; }
+.token-builtin { color: #739EC9; }
+.token-string { color: #5682B1; }
+.token-number { color: #739EC9; }
+.token-variable { color: #f4f4f5; }
+.token-operator { color: #FFE8DB; }
+.token-comment { color: #94a3b8; }
+.token-function { color: #f4f4f5; }
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {

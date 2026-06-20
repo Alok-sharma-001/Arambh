@@ -92,7 +92,7 @@ export const AutoSync = () => {
     <div className="fixed bottom-4 right-4 z-50 text-[10px] font-mono flex items-center gap-2 bg-black/60 backdrop-blur px-3 py-1 rounded-full border border-white/10">
       {status === 'synced' && <><div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,1)]" /> <span className="text-emerald-400">Cloud Synced</span></>}
       {status === 'syncing' && <><div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,1)]" /> <span className="text-amber-400">Saving...</span></>}
-      {status === 'offline' && <><div className="w-2 h-2 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,1)]" /> <span className="text-orange-400">Offline (Local)</span></>}
+      {status === 'offline' && <><div className="w-2 h-2 rounded-full bg-slate-500 shadow-[0_0_8px_rgba(148,163,184,0.5)]" /> <span className="text-slate-400">Offline (Local)</span></>}
       {status === 'error' && <><div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,1)]" /> <span className="text-red-400">Sync Error</span></>}
     </div>
   );

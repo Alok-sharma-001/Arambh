@@ -18,7 +18,8 @@ import {
   Search,
   Loader2,
   BarChart2,
-  Globe
+  Globe,
+  BrainCircuit
 } from 'lucide-react';
 
 type SortField = 'rank' | 'total_xp' | 'regions_completed' | 'artifacts_collected' | 'streak';
@@ -111,14 +112,23 @@ export default function LeaderboardPage() {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-royal-purple/20 bg-royal-purple/[0.06] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-royal-purple mb-4">
-                <Trophy size={12} /> Leaderboard
+                {view === 'global' ? (
+                  <>
+                    <Trophy size={12} /> Leaderboard
+                  </>
+                ) : (
+                  <>
+                    <BrainCircuit size={12} /> Analytics
+                  </>
+                )}
               </span>
               <h1 className="font-display text-4xl lg:text-5xl font-bold text-warm-white leading-tight">
-                Global Rankings
+                {view === 'global' ? 'Global Rankings' : "Oracle's Insights"}
               </h1>
               <p className="mt-3 text-mid-gray text-base max-w-[55ch] leading-relaxed">
-                Compete with fellow adventurers. Climb the ranks by earning XP, completing regions,
-                and collecting artifacts.
+                {view === 'global'
+                  ? 'Compete with fellow adventurers. Climb the ranks by earning XP, completing regions, and collecting artifacts.'
+                  : "Consult the Oracle's data matrix. Track your concept mastery, strengths, and target regions for progression."}
               </p>
             </div>
 
@@ -159,8 +169,8 @@ export default function LeaderboardPage() {
               onClick={() => setView('analytics')}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-colors ${
                 view === 'analytics' 
-                  ? 'bg-[#8b5cf6] text-white' 
-                  : 'bg-[#8b5cf6]/[0.04] text-mid-gray hover:text-warm-white hover:bg-[#8b5cf6]/[0.08]'
+                  ? 'bg-royal-purple text-near-black' 
+                  : 'bg-royal-purple/[0.04] text-mid-gray hover:text-warm-white hover:bg-royal-purple/[0.08]'
               }`}
             >
               <BarChart2 size={16} /> My Analytics
