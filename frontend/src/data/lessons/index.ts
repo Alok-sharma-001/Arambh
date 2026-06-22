@@ -552,54 +552,261 @@ export const lessons: Record<string, LessonDebugContent> = {
     ]
 },
   'c1': {
-    "title": "Intro to Lists",
-    "hook": "Ordered data.",
-    "concept": "Arrays.",
-    "code": "items = [\"sword\", \"bow\"]\\nprint(items[0])",
+    "title": "Everyone Loves Lists",
+    "hook": "Python's most powerful data structure starts with two simple brackets: []",
+    "concept": "A list stores multiple items in order. You create one with square brackets, access items by their index number (starting from 0), and grow it dynamically with .append().",
+    "code": "cast = []\\ncast.append(\"Cleese\")\\ncast.append(\"Palin\")\\ncast.append(\"Jones\")\\nprint(\"Cast:\", cast)\\nprint(\"Lead:\", cast[0])",
     "mentalModel": [
-        "Indexing"
+        "A list is created empty with [].",
+        ".append() adds one item to the end of the list.",
+        "Items are numbered starting from 0 (zero-indexed).",
+        "print() can display the entire list or a single item by index."
     ],
     "debuggerSteps": [
         {
             "line": 1,
-            "action": "Executing: items = [\"sword\", \"bow\"]\\nprint(items[0])",
-            "why": "Python processes this statement.",
+            "action": "Create an empty list and label it 'cast'.",
+            "why": "Square brackets [] tell Python to create a new, empty list in memory. The name 'cast' now points to this list.",
             "memory": [
                 {
-                    "name": "status",
-                    "value": "\"running\"",
-                    "type": "str",
-                    "note": "Line 1",
-                    "accent": "#60a5fa"
+                    "name": "cast",
+                    "value": "[]",
+                    "type": "list",
+                    "note": "Empty list created",
+                    "accent": "#c8a45e"
                 }
             ],
-            "output": "..."
+            "output": ""
+        },
+        {
+            "line": 2,
+            "action": "Append \"Cleese\" to the cast list.",
+            "why": ".append() adds the string \"Cleese\" as the first item (index 0). The list now has 1 item.",
+            "memory": [
+                {
+                    "name": "cast",
+                    "value": "[\"Cleese\"]",
+                    "type": "list",
+                    "note": "1 item — index 0",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 3,
+            "action": "Append \"Palin\" to the cast list.",
+            "why": ".append() adds \"Palin\" after \"Cleese\". It becomes index 1. The list now has 2 items.",
+            "memory": [
+                {
+                    "name": "cast",
+                    "value": "[\"Cleese\", \"Palin\"]",
+                    "type": "list",
+                    "note": "2 items — indices 0, 1",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 4,
+            "action": "Append \"Jones\" to the cast list.",
+            "why": "\"Jones\" takes index 2. Notice: indices always go 0, 1, 2… never starting from 1!",
+            "memory": [
+                {
+                    "name": "cast",
+                    "value": "[\"Cleese\", \"Palin\", \"Jones\"]",
+                    "type": "list",
+                    "note": "3 items — indices 0, 1, 2",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 5,
+            "action": "Print the entire cast list.",
+            "why": "print() with a list shows all items including the brackets. This is useful for debugging.",
+            "memory": [
+                {
+                    "name": "cast",
+                    "value": "[\"Cleese\", \"Palin\", \"Jones\"]",
+                    "type": "list",
+                    "note": "Unchanged — print only reads",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": "Cast: ['Cleese', 'Palin', 'Jones']"
+        },
+        {
+            "line": 6,
+            "action": "Print the item at index 0 of the cast list.",
+            "why": "cast[0] reads the first item without removing it. Index 0 always means 'the first item'.",
+            "memory": [
+                {
+                    "name": "cast",
+                    "value": "[\"Cleese\", \"Palin\", \"Jones\"]",
+                    "type": "list",
+                    "note": "Read at index 0",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": "Cast: ['Cleese', 'Palin', 'Jones']\\nLead: Cleese"
         }
     ]
 },
   'c2': {
-    "title": "List Methods",
-    "hook": "Append, pop.",
-    "concept": "Mutation.",
-    "code": "arr = []\\narr.append(1)\\nprint(arr)",
+    "title": "Adding Data to Your List",
+    "hook": "Lists grow and shrink dynamically — master append, extend, insert, and pop.",
+    "concept": "Lists are mutable: you can add items with .append() and .extend(), insert at any position with .insert(), and remove the last item with .pop(). Each operation changes the list in place.",
+    "code": "movies = []\\nmovies.append(\"Holy Grail\")\\nmovies.append(\"Life of Brian\")\\nmovies.extend([\"Meaning of Life\", \"Spamalot\"])\\nprint(\"All:\", movies)\\nremoved = movies.pop()\\nprint(\"Removed:\", removed)\\nprint(\"Remaining:\", movies)\\nprint(\"Count:\", len(movies))",
     "mentalModel": [
-        "Modifying"
+        ".append(x) adds ONE item x to the end.",
+        ".extend([a, b]) adds EACH item from the list individually.",
+        ".pop() removes and returns the last item.",
+        "len(list) tells you how many items remain."
     ],
     "debuggerSteps": [
         {
             "line": 1,
-            "action": "Executing: arr = []\\narr.append(1)\\nprint(arr)",
-            "why": "Python processes this statement.",
+            "action": "Create an empty list called 'movies'.",
+            "why": "We start with nothing. The list exists but has zero items inside.",
             "memory": [
                 {
-                    "name": "status",
-                    "value": "\"running\"",
-                    "type": "str",
-                    "note": "Line 1",
-                    "accent": "#60a5fa"
+                    "name": "movies",
+                    "value": "[]",
+                    "type": "list",
+                    "note": "Empty — length 0",
+                    "accent": "#c8a45e"
                 }
             ],
-            "output": "..."
+            "output": ""
+        },
+        {
+            "line": 2,
+            "action": "Append \"Holy Grail\" to movies.",
+            "why": ".append() places \"Holy Grail\" at index 0. The list now has 1 item.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\"]",
+                    "type": "list",
+                    "note": "1 item after append",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 3,
+            "action": "Append \"Life of Brian\" to movies.",
+            "why": "\"Life of Brian\" goes to index 1. Items are always appended to the END.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\", \"Life of Brian\"]",
+                    "type": "list",
+                    "note": "2 items after append",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 4,
+            "action": "Extend movies with [\"Meaning of Life\", \"Spamalot\"].",
+            "why": ".extend() unpacks the given list and adds EACH item individually. This is different from .append() which would add the entire list as one nested item.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\", \"Life of Brian\", \"Meaning of Life\", \"Spamalot\"]",
+                    "type": "list",
+                    "note": "4 items after extend",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 5,
+            "action": "Print all movies.",
+            "why": "Displays the full list contents to confirm our additions worked.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\", \"Life of Brian\", \"Meaning of Life\", \"Spamalot\"]",
+                    "type": "list",
+                    "note": "Read by print",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": "All: ['Holy Grail', 'Life of Brian', 'Meaning of Life', 'Spamalot']"
+        },
+        {
+            "line": 6,
+            "action": "Pop the last item from movies and store it in 'removed'.",
+            "why": ".pop() removes the LAST item and returns it. The list shrinks by 1. The removed value is saved in 'removed'.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\", \"Life of Brian\", \"Meaning of Life\"]",
+                    "type": "list",
+                    "note": "3 items after pop",
+                    "accent": "#c8a45e"
+                },
+                {
+                    "name": "removed",
+                    "value": "\"Spamalot\"",
+                    "type": "str",
+                    "note": "Returned by .pop()",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": "All: ['Holy Grail', 'Life of Brian', 'Meaning of Life', 'Spamalot']"
+        },
+        {
+            "line": 7,
+            "action": "Print the removed item.",
+            "why": "Confirms that .pop() both removed and returned 'Spamalot'.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\", \"Life of Brian\", \"Meaning of Life\"]",
+                    "type": "list",
+                    "note": "Unchanged",
+                    "accent": "#c8a45e"
+                },
+                {
+                    "name": "removed",
+                    "value": "\"Spamalot\"",
+                    "type": "str",
+                    "note": "Still in memory",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": "All: ['Holy Grail', 'Life of Brian', 'Meaning of Life', 'Spamalot']\\nRemoved: Spamalot"
+        },
+        {
+            "line": 8,
+            "action": "Print the remaining movies list.",
+            "why": "The list now has 3 items. 'Spamalot' is gone — .pop() permanently removed it.",
+            "memory": [
+                {
+                    "name": "movies",
+                    "value": "[\"Holy Grail\", \"Life of Brian\", \"Meaning of Life\"]",
+                    "type": "list",
+                    "note": "Final state",
+                    "accent": "#c8a45e"
+                },
+                {
+                    "name": "removed",
+                    "value": "\"Spamalot\"",
+                    "type": "str",
+                    "note": "Still accessible",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": "All: ['Holy Grail', 'Life of Brian', 'Meaning of Life', 'Spamalot']\\nRemoved: Spamalot\\nRemaining: ['Holy Grail', 'Life of Brian', 'Meaning of Life']"
         }
     ]
 },

@@ -407,30 +407,39 @@ export const topics: LibraryTopic[] = [
     difficulty: 'Intermediate',
     estimatedTime: '25 min read',
     completion: 0,
-    overview: 'A list is a high-level collection data structure that stores multiple items in an ordered sequence. Unlike variables that can only hold a single value, a list acts like a container that can hold zero, one, or thousands of values all under a single name.',
-    whyExists: 'In Python, lists are incredibly flexible—you can mix text, numbers, and even other lists inside them. You define them using square brackets [] and separate items with commas. They automatically resize themselves in memory as you add or remove elements.',
+    overview: 'A list is Python\'s most versatile and widely-used data structure. It stores multiple items in an ordered, numbered sequence under a single name. Unlike a plain variable that holds one value, a list can hold zero, one, or thousands of values — and Python lets you freely mix strings, numbers, booleans, and even other lists inside the same list. Lists are mutable, meaning you can add, remove, and change items after creation. In Head First Python, the very first thing you build is a list of Monty Python movie cast members — because everyone loves lists.',
+    whyExists: 'Almost every real program deals with collections of things: a playlist of songs, a roster of players, a log of events, or a shopping cart of items. Without lists, you would need a separate variable for every single item (player1, player2, player3…) which is impractical when the number of items is unknown or changes at runtime. Lists solve this by giving you a single, resizable container. You define them with square brackets [], add items with .append(), remove with .pop(), and access any item instantly by its index number. Python handles the memory management behind the scenes — the list grows and shrinks automatically.',
     realLifeAnalogy: {
       title: 'A Train of Cargo Cars',
-      description: 'Imagine a freight train. The train itself is the list. Attached to the train are numbered cargo cars starting from car 0, car 1, car 2, etc. You can look inside car 0 to see what it\'s carrying, or you can attach a brand new car to the end of the train (using append).',
+      description: 'Imagine a freight train. The train itself is the list. Attached to the train are numbered cargo cars starting from car 0, car 1, car 2, etc. You can look inside car 0 to see what it\'s carrying, attach a brand new car to the end (using .append()), detach the last car (.pop()), or even insert a car in the middle (.insert()). The train can carry any mix of cargo — boxes of text, crates of numbers, even smaller trains nested inside (lists within lists).',
     },
-    syntax: 'my_list = [item1, item2, item3]',
-    example: 'inventory = ["sword", "shield", "potion"]\ninventory.append("key")\nprint(inventory[0])',
+    syntax: '# Creating a list\\nmy_list = [item1, item2, item3]\\n\\n# Common operations\\nmy_list.append(item)      # Add to end\\nmy_list.extend([a, b])    # Add multiple items\\nmy_list.insert(0, item)   # Insert at position\\nmy_list.pop()             # Remove & return last\\nmy_list.remove(item)      # Remove by value\\nmy_list[0]                # Access by index\\nmy_list[-1]               # Last item\\nmy_list[1:3]              # Slice (items 1-2)\\nlen(my_list)              # Count items',
+    example: '# Head First Python Chapter 1: The Monty Python Cast\\ncast = ["Cleese", "Palin", "Jones", "Idle", "Chapman", "Gilliam"]\\nprint("Full cast:", cast)\\nprint("First actor:", cast[0])\\nprint("Last actor:", cast[-1])\\n\\n# Add a guest star\\ncast.append("Rushton")\\nprint("Cast size:", len(cast))\\n\\n# Nested lists — movies within a list\\nmovies = [\\n    ["Holy Grail", 1975],\\n    ["Life of Brian", 1979],\\n    ["Meaning of Life", 1983]\\n]\\nprint("Best movie:", movies[0][0])',
     bestPractices: [
-      'Try to keep lists homogeneous (all items being the same type) for cleaner code.',
-      'Use list comprehensions for faster and cleaner list building when transforming data.',
+      'Use square brackets [] to create lists — never parentheses (those make tuples) or curly braces (those make sets/dicts).',
+      'Remember that indexing starts at 0. The first item is list[0], the second is list[1], and so on.',
+      'Use negative indexing to access items from the end: list[-1] is the last item, list[-2] is second-to-last.',
+      'Use .append() to add a single item and .extend() to add multiple items from another list.',
+      'Use a for loop to iterate over lists: for item in my_list: processes each item in order.',
+      'Use isinstance(item, list) to check if an element is itself a list — essential for handling nested data.',
     ],
     mistakes: [
-      'Forgetting that lists are zero-indexed, leading to an IndexError.',
-      'Using parentheses () instead of square brackets [] to define a list. (Parentheses create immutable Tuples!).',
-      'Trying to access an index that doesn\'t exist, like my_list[5] when the list only has 3 items.',
+      'Forgetting that lists are zero-indexed — list[1] is the SECOND item, not the first. This is the #1 source of bugs for beginners.',
+      'Using parentheses () instead of square brackets [] to create a list. Parentheses create a tuple, which is immutable!',
+      'Accessing an index that doesn\'t exist, like my_list[5] on a 3-item list — this causes an IndexError crash.',
+      'Confusing .append() with .extend(): append([1,2]) adds a single nested list, while extend([1,2]) adds two separate items.',
+      'Modifying a list while looping over it — this causes items to be skipped or causes infinite loops. Create a copy first.',
     ],
     memoryModel: [
-      { name: 'inventory', value: '["sword", "shield", "key"]', type: 'list', note: 'A mutable collection of pointers', accent: '#c8a45e' },
+      { name: 'cast', value: '["Cleese", "Palin", "Jones"]', type: 'list', note: 'Ordered, mutable, zero-indexed', accent: '#c8a45e' },
+      { name: 'cast[0]', value: '"Cleese"', type: 'str', note: 'Index 0 → first item', accent: '#34d399' },
+      { name: 'cast[1]', value: '"Palin"', type: 'str', note: 'Index 1 → second item', accent: '#60a5fa' },
+      { name: 'cast[2]', value: '"Jones"', type: 'str', note: 'Index 2 → third item', accent: '#a78bfa' },
     ],
     interactiveCode: {
       setup: '',
-      code: 'cast = []\ncast.append("Cleese")\ncast.append("Idle")\nprint("Cast:", cast)\nprint("Item 1 is:", cast[1])',
-      expectedOutput: "Cast: ['Cleese', 'Idle']\nItem 1 is: Idle",
+      code: '# From Head First Python Chapter 1\\n# Build the Monty Python cast list step by step\\ncast = []\\ncast.append("Cleese")\\ncast.append("Palin")\\ncast.append("Jones")\\ncast.append("Idle")\\nprint("Cast:", cast)\\nprint("Lead actor:", cast[0])\\nprint("Total actors:", len(cast))\\n\\n# Check if someone is in the cast\\nprint("Is Cleese in cast?", "Cleese" in cast)\\nprint("Is Chapman in cast?", "Chapman" in cast)',
+      expectedOutput: "Cast: ['Cleese', 'Palin', 'Jones', 'Idle']\nLead actor: Cleese\nTotal actors: 4\nIs Cleese in cast? True\nIs Chapman in cast? False",
     },
     quiz: [
       {
@@ -439,6 +448,37 @@ export const topics: LibraryTopic[] = [
         options: ['numbers = (1, 2, 3)', 'numbers = [1, 2, 3]', 'numbers = {1, 2, 3}', 'numbers = 1, 2, 3'],
         correctIndex: 1,
         explanation: 'Square brackets [] define a list. Parentheses () define a tuple, and curly braces {} define a set or dictionary.'
+      },
+      {
+        id: 'list_q2',
+        question: 'Given cast = ["Cleese", "Palin", "Jones"], what does cast[1] return?',
+        options: ['"Cleese"', '"Palin"', '"Jones"', 'An IndexError'],
+        correctIndex: 1,
+        explanation: 'Lists are zero-indexed. Index 0 is "Cleese", index 1 is "Palin", and index 2 is "Jones".'
+      },
+      {
+        id: 'list_q3',
+        question: 'What is the difference between .append() and .extend()?',
+        options: [
+          'There is no difference',
+          '.append() adds a single item; .extend() adds each item from another list individually',
+          '.append() is faster than .extend()',
+          '.extend() only works with numbers'
+        ],
+        correctIndex: 1,
+        explanation: 'append(x) adds x as a single element (even if x is a list). extend(x) iterates through x and adds each item separately.'
+      },
+      {
+        id: 'list_q4',
+        question: 'What does isinstance(item, list) do?',
+        options: [
+          'Creates a new list from item',
+          'Checks if item is a list (returns True or False)',
+          'Converts item to a list',
+          'Removes item from a list'
+        ],
+        correctIndex: 1,
+        explanation: 'isinstance() checks whether an object is an instance of a specific type. isinstance([1,2], list) returns True. This is crucial for handling nested lists.'
       }
     ],
     relatedConcepts: ['variables', 'dictionaries'],
@@ -447,18 +487,23 @@ export const topics: LibraryTopic[] = [
     icon: ListTree,
     bossBattle: {
       name: 'The Index Demon',
-      description: 'A creature that shifts all your data and attacks with out-of-bounds exceptions! You must prove your understanding of zero-indexing to defeat it.',
-      mechanic: 'Code validation puzzle where you must dynamically calculate the last index of a constantly changing list.'
+      description: 'A fearsome creature born from off-by-one errors and out-of-bounds exceptions. It constantly shifts the contents and size of your lists, trying to trick you into accessing invalid indices. It attacks with IndexError, feeds on confusion about zero-indexing, and hides nested lists within lists to confuse your iteration. Only by proving your mastery of list indexing, negative indices, and len() can you defeat it.',
+      mechanic: 'A multi-round code challenge: Round 1 — calculate the correct index for the last item of a growing list. Round 2 — navigate a nested list to extract a deeply hidden value. Round 3 — fix a broken for-loop that crashes on a list of mixed types using isinstance().'
     },
     artifacts: [
       {
         name: 'The Bracket of Holding',
-        description: 'A magical container capable of storing an infinite array of mixed items.',
+        description: 'A magical container forged from square brackets. Capable of storing an infinite array of mixed items — strings, numbers, booleans, and even other Brackets of Holding nested within.',
         rarity: 'Common'
+      },
+      {
+        name: 'The Recursive Scroll',
+        description: 'An ancient parchment that teaches the art of processing arbitrarily nested lists. When a list contains lists which contain lists, this scroll reveals the recursive pattern to process them all.',
+        rarity: 'Uncommon'
       }
     ],
     trainingGround: {
-      exercises: ['list-creation', 'list-indexing', 'list-appending', 'list-popping']
+      exercises: ['list-creation', 'list-indexing', 'list-appending', 'list-iteration', 'nested-lists', 'list-isinstance-check']
     }
   },
   {

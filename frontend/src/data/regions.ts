@@ -183,7 +183,7 @@ export const regions: Region[] = [
       artifactReward: 'Stone Tablet',
       locked: true,
     },
-    position: { x: 20, y: 65 },
+    position: { x: 20, y: 67 },
   },
   {
     id: 'modules-harbor',
@@ -206,7 +206,7 @@ export const regions: Region[] = [
       artifactReward: 'Harbor Compass',
       locked: true,
     },
-    position: { x: 80, y: 72 },
+    position: { x: 80, y: 73 },
   },
   {
     id: 'algorithm-arena',
@@ -229,7 +229,7 @@ export const regions: Region[] = [
       artifactReward: 'Arena Trophy',
       locked: true,
     },
-    position: { x: 30, y: 79 },
+    position: { x: 30, y: 80 },
   },
   {
     id: 'bossgate-saga',
@@ -252,7 +252,7 @@ export const regions: Region[] = [
       artifactReward: 'Legend\'s Crown',
       locked: true,
     },
-    position: { x: 50, y: 86 },
+    position: { x: 50, y: 89 },
   },
 ];
 
