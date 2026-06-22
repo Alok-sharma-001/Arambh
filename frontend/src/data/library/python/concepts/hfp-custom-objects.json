@@ -1,0 +1,178 @@
+{
+  "conceptId": "python-hfp-custom-objects",
+  "title": "Classes & Objects (OOP)",
+  "difficultyScore": 30,
+  "estimatedLearningTime": 25,
+  "prerequisiteConcepts": [
+    "functions",
+    "dictionaries",
+    "hfp-comprehensions"
+  ],
+  "nextConcepts": [],
+  "beginnerExplanation": "Classes let you create your own custom data types that bundle data (attributes) and behavior (methods) together. Instead of passing loose variables around, you create objects that know what they are and what they can do. This is the foundation of Object-Oriented Programming (OOP).",
+  "intermediateExplanation": "As programs grow, managing data with just lists and dicts becomes messy. Classes let you model real-world things: a Player has a name, health, and can attack(). An Inventory has items and can add_item(). OOP keeps related data and logic together.",
+  "advancedExplanation": "class Player:\\n    def __init__(self, name, hp=100):\\n        self.name = name\\n        self.hp = hp\\n\\n    def take_damage(self, amount):\\n        self.hp -= amount",
+  "realWorldAnalogy": {
+    "title": "A Blueprint for Building Houses",
+    "description": "A class is like an architectural blueprint. The blueprint defines what every house will have (rooms, doors, windows). Each actual house built from that blueprint is an object (instance). Every house has the same structure but different contents."
+  },
+  "mentalModel": "A class is like an architectural blueprint. The blueprint defines what every house will have (rooms, doors, windows). Each actual house built from that blueprint is an object (instance). Every house has the same structure but different contents.",
+  "visualDiagram": "graph TD\n  Start --> Process[Classes & Objects (OOP)]\n  Process --> End",
+  "executionWalkthrough": [
+    "1. Python interpreter compiles the statement.",
+    "2. Scopes and local namespaces are verified.",
+    "3. Target variables are allocated or updated."
+  ],
+  "memoryState": [
+    {
+      "variable": "Warrior",
+      "value": "<class>",
+      "type": "class",
+      "note": "The blueprint"
+    },
+    {
+      "variable": "hero",
+      "value": "{name: \"Kael\", hp: 100}",
+      "type": "Warrior",
+      "note": "Instance created from class"
+    }
+  ],
+  "commonMistakes": [
+    "Forgetting self as the first parameter of every method.",
+    "Confusing the class (blueprint) with an instance (actual object).",
+    "Modifying class-level attributes thinking they are instance attributes.",
+    "Not calling __init__ properly when creating subclasses."
+  ],
+  "debuggingMission": {
+    "scenario": "An adventurer is trying to use Classes & Objects (OOP) but hit a common pitfall: Forgetting self as the first parameter of every method.",
+    "brokenCode": "class Player:\\n    def __init__(self, name, hp=100):\\n        self.name = name\\n        self.hp = hp\\n\\n    def take_damage(self, amount):\\n        self.hp -= amount",
+    "solution": "class Warrior:\\n    def __init__(self, name):\\n        self.name = name\\n        self.hp = 100\\n\\n    def attack(self):\\n        return f\"{self.name} swings sword!\"\\n\\nhero = Warrior(\"Kael\")\\nprint(hero.attack())",
+    "explanation": "Make sure to follow the best practices: Always define __init__ to set up initial attributes."
+  },
+  "practiceQuestions": [
+    {
+      "question": "What is \"self\" in a Python class?",
+      "options": [
+        "A keyword that creates new classes",
+        "A reference to the current instance of the class",
+        "A built-in function",
+        "The class name"
+      ],
+      "correctIndex": 1,
+      "explanation": "\"self\" is a reference to the specific object that called the method. It lets each instance access its own attributes and methods."
+    },
+    {
+      "question": "What does __init__ do?",
+      "options": [
+        "Deletes the object",
+        "Initializes the object when it is created",
+        "Imports a module",
+        "Converts data types"
+      ],
+      "correctIndex": 1,
+      "explanation": "__init__ is the constructor method. It runs automatically when you create a new instance, setting up its initial state."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "What is the correct keyword or operator most commonly associated with Classes & Objects (OOP)?",
+      "hints": [
+        "Look at the syntax summary of the topic.",
+        "Check standard keyword usage in Python."
+      ],
+      "solution": "def"
+    }
+  ],
+  "projectExercise": {
+    "title": "Mastering Classes & Objects (OOP)",
+    "description": "Implement a clean snippet demonstrating the use of Classes & Objects (OOP).",
+    "requirements": [
+      "Write a snippet utilizing the syntax: class Player:\\n    def __init__(self, name, hp=100):\\n        self.name = name\\n        self.hp = hp\\n\\n    def take_damage(self, amount):\\n        self.hp -= amount",
+      "Ensure variables are properly named."
+    ],
+    "starterCode": "class Player:\\n    def __init__(self, name, hp=100):\\n        self.name = name\\n        self.hp = hp\\n\\n    def take_damage(self, amount):\\n        self.hp -= amount"
+  },
+  "bossBattle": {
+    "name": "The Shapeless Mimic",
+    "description": "An amorphous entity that has no structure. It steals your data and scatters it across loose variables. You must impose order by designing a class hierarchy that captures and organizes all the chaos.",
+    "mechanic": "Refactor messy procedural code into clean OOP design with proper classes, attributes, and methods."
+  },
+  "rewards": [
+    "The Self Crystal"
+  ],
+  "artifacts": [
+    {
+      "name": "The Self Crystal",
+      "description": "A luminous crystal that binds data to behavior, creating objects that are aware of their own identity.",
+      "rarity": "Rare"
+    }
+  ],
+  "trainingGround": {
+    "exercises": [
+      "create-class",
+      "add-methods",
+      "inheritance-basics",
+      "dunder-methods"
+    ]
+  },
+  "masteryChecklist": [
+    "I understand how to implement Classes & Objects (OOP).",
+    "I can avoid Forgetting self as the first parameter of every method.."
+  ],
+  "confusionPoints": [
+    "Forgetting self as the first parameter of every method.",
+    "Confusing the class (blueprint) with an instance (actual object).",
+    "Modifying class-level attributes thinking they are instance attributes.",
+    "Not calling __init__ properly when creating subclasses."
+  ],
+  "simplifiedExplanation": "Classes let you create your own custom data types that bundle data (attributes) and behavior (methods) together. Instead of passing loose variables around, you create objects that know what they are and what they can do. This is the foundation of Object-Oriented Programming (OOP).",
+  "analogyLibrary": [
+    "A Blueprint for Building Houses"
+  ],
+  "hintSystem": [
+    "class Player:\\n    def __init__(self, name, hp=100):\\n        self.name = name\\n        self.hp = hp\\n\\n    def take_damage(self, amount):\\n        self.hp -= amount"
+  ],
+  "stepByStepHints": [
+    "class Player:\\n    def __init__(self, name, hp=100):\\n        self.name = name\\n        self.hp = hp\\n\\n    def take_damage(self, amount):\\n        self.hp -= amount"
+  ],
+  "retentionSystem": {
+    "revision1": "Define the core syntax of Classes & Objects (OOP).",
+    "revision2": "Name one common mistake when using Classes & Objects (OOP)."
+  },
+  "developerMode": {
+    "industryUsage": "Classes & Objects (OOP) is widely used in standard library scripts and enterprise Python programs.",
+    "performanceConsiderations": "Optimized by standard compiler rules in modern Python environments.",
+    "bestPractices": [
+      "Always define __init__ to set up initial attributes.",
+      "Use self to refer to the instance's own data inside methods.",
+      "Keep classes focused \u2014 a Player class shouldn't also manage the game map.",
+      "Use __str__ or __repr__ to make your objects printable and debuggable."
+    ],
+    "antiPatterns": [
+      "Forgetting self as the first parameter of every method.",
+      "Confusing the class (blueprint) with an instance (actual object).",
+      "Modifying class-level attributes thinking they are instance attributes.",
+      "Not calling __init__ properly when creating subclasses."
+    ],
+    "architectureNotes": "Interpreted and executed in the primary application call loop."
+  },
+  "xpEngine": {
+    "conceptWeight": 1.5,
+    "challengeMultiplier": 1.0,
+    "generatedXP": 50
+  },
+  "analyticsMetadata": {
+    "confusionScore": 0,
+    "completionRate": 0,
+    "averageAttempts": 0,
+    "dropoffPoints": [],
+    "mostMissedQuestions": []
+  },
+  "sources": [
+    {
+      "book": "Head First Python",
+      "chapter": "Relevant Chapters",
+      "confidence": 0.9
+    }
+  ]
+}

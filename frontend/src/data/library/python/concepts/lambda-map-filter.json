@@ -1,0 +1,169 @@
+{
+  "conceptId": "python-lambda-map-filter",
+  "title": "Lambda, Map & Filter",
+  "difficultyScore": 30,
+  "estimatedLearningTime": 12,
+  "prerequisiteConcepts": [
+    "functions",
+    "hfp-comprehensions",
+    "lists"
+  ],
+  "nextConcepts": [],
+  "beginnerExplanation": "Lambda creates small anonymous (nameless) functions in one line. Map applies a function to every item in a list. Filter selects items that pass a test. Together, they enable functional-style data processing without writing explicit loops.",
+  "intermediateExplanation": "Sometimes you need a tiny function just once \u2014 like a sort key or a quick transformation. Writing a full def for it is overkill. Lambda + map/filter let you express \"transform every item\" or \"keep items where...\" in a single, readable line.",
+  "advancedExplanation": "# Lambda\\nsquare = lambda x: x ** 2\\n\\n# Map \u2014 apply function to all items\\nresult = list(map(lambda x: x * 2, [1, 2, 3]))\\n\\n# Filter \u2014 keep items where function returns True\\nevens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))",
+  "realWorldAnalogy": {
+    "title": "Assembly Line Workers",
+    "description": "map() is an assembly line where each worker applies the same operation to every item. filter() is quality control \u2014 it inspects each item and only lets the good ones pass. lambda is a temporary worker you hire for just one task."
+  },
+  "mentalModel": "map() is an assembly line where each worker applies the same operation to every item. filter() is quality control \u2014 it inspects each item and only lets the good ones pass. lambda is a temporary worker you hire for just one task.",
+  "visualDiagram": "graph TD\n  Start --> Process[Lambda, Map & Filter]\n  Process --> End",
+  "executionWalkthrough": [
+    "1. Python interpreter compiles the statement.",
+    "2. Scopes and local namespaces are verified.",
+    "3. Target variables are allocated or updated."
+  ],
+  "memoryState": [
+    {
+      "variable": "square",
+      "value": "<lambda>",
+      "type": "function",
+      "note": "Anonymous function: x => x\u00b2"
+    },
+    {
+      "variable": "map()",
+      "value": "<map iterator>",
+      "type": "iterator",
+      "note": "Lazily transforms each item"
+    },
+    {
+      "variable": "result",
+      "value": "[2, 4, 6]",
+      "type": "list",
+      "note": "Materialized with list()"
+    }
+  ],
+  "commonMistakes": [
+    "Putting statements (print, return, if/else blocks) in a lambda \u2014 only expressions allowed.",
+    "Forgetting to wrap map()/filter() in list() \u2014 printing the raw iterator shows an object address.",
+    "Making lambda too complex \u2014 if it needs multiple lines, use a regular function."
+  ],
+  "debuggingMission": {
+    "scenario": "An adventurer is trying to use Lambda, Map & Filter but hit a common pitfall: Putting statements (print, return, if/else blocks) in a lambda \u2014 only expressions allowed.",
+    "brokenCode": "# Lambda\\nsquare = lambda x: x ** 2\\n\\n# Map \u2014 apply function to all items\\nresult = list(map(lambda x: x * 2, [1, 2, 3]))\\n\\n# Filter \u2014 keep items where function returns True\\nevens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))",
+    "solution": "names = [\"kael\", \"ARIA\", \"Zor\"]\\ntitled = list(map(lambda n: n.title(), names))\\nprint(titled)  # [\"Kael\", \"Aria\", \"Zor\"]\\n\\nscores = [45, 82, 91, 33, 78]\\npassed = list(filter(lambda s: s >= 60, scores))\\nprint(passed)  # [82, 91, 78]",
+    "explanation": "Make sure to follow the best practices: Use lambda only for simple one-line operations \u2014 use def for complex logic."
+  },
+  "practiceQuestions": [
+    {
+      "question": "What does filter(lambda x: x > 5, [3, 7, 2, 8]) return after list()?",
+      "options": [
+        "[3, 2]",
+        "[7, 8]",
+        "[True, True]",
+        "[3, 7, 2, 8]"
+      ],
+      "correctIndex": 1,
+      "explanation": "filter() keeps only items where the function returns True. 7 > 5 and 8 > 5 are True, so [7, 8] is returned."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "What is the correct keyword or operator most commonly associated with Lambda, Map & Filter?",
+      "hints": [
+        "Look at the syntax summary of the topic.",
+        "Check standard keyword usage in Python."
+      ],
+      "solution": "def"
+    }
+  ],
+  "projectExercise": {
+    "title": "Mastering Lambda, Map & Filter",
+    "description": "Implement a clean snippet demonstrating the use of Lambda, Map & Filter.",
+    "requirements": [
+      "Write a snippet utilizing the syntax: # Lambda\\nsquare = lambda x: x ** 2\\n\\n# Map \u2014 apply function to all items\\nresult = list(map(lambda x: x * 2, [1, 2, 3]))\\n\\n# Filter \u2014 keep items where function returns True\\nevens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))",
+      "Ensure variables are properly named."
+    ],
+    "starterCode": "# Lambda\\nsquare = lambda x: x ** 2\\n\\n# Map \u2014 apply function to all items\\nresult = list(map(lambda x: x * 2, [1, 2, 3]))\\n\\n# Filter \u2014 keep items where function returns True\\nevens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))"
+  },
+  "bossBattle": {
+    "name": "The Lambda, Map & Filter Guardian",
+    "description": "A guardian protecting the secrets of Lambda, Map & Filter. Use your knowledge to bypass its security gates.",
+    "mechanic": "Resolve syntax bugs and refactor code structure."
+  },
+  "rewards": [
+    "Scroll of Lambda, Map & Filter",
+    "50 Gold"
+  ],
+  "artifacts": [
+    {
+      "name": "Scroll of Lambda, Map & Filter",
+      "description": "A scroll detailing the core principles of Lambda, Map & Filter.",
+      "rarity": "Common"
+    }
+  ],
+  "trainingGround": {
+    "exercises": [
+      "lambda-map-filter-basic",
+      "lambda-map-filter-advanced"
+    ]
+  },
+  "masteryChecklist": [
+    "I understand how to implement Lambda, Map & Filter.",
+    "I can avoid Putting statements (print, return, if/else blocks) in a lambda \u2014 only expressions allowed.."
+  ],
+  "confusionPoints": [
+    "Putting statements (print, return, if/else blocks) in a lambda \u2014 only expressions allowed.",
+    "Forgetting to wrap map()/filter() in list() \u2014 printing the raw iterator shows an object address.",
+    "Making lambda too complex \u2014 if it needs multiple lines, use a regular function."
+  ],
+  "simplifiedExplanation": "Lambda creates small anonymous (nameless) functions in one line. Map applies a function to every item in a list. Filter selects items that pass a test. Together, they enable functional-style data processing without writing explicit loops.",
+  "analogyLibrary": [
+    "Assembly Line Workers"
+  ],
+  "hintSystem": [
+    "# Lambda\\nsquare = lambda x: x ** 2\\n\\n# Map \u2014 apply function to all items\\nresult = list(map(lambda x: x * 2, [1, 2, 3]))\\n\\n# Filter \u2014 keep items where function returns True\\nevens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))"
+  ],
+  "stepByStepHints": [
+    "# Lambda\\nsquare = lambda x: x ** 2\\n\\n# Map \u2014 apply function to all items\\nresult = list(map(lambda x: x * 2, [1, 2, 3]))\\n\\n# Filter \u2014 keep items where function returns True\\nevens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4]))"
+  ],
+  "retentionSystem": {
+    "revision1": "Define the core syntax of Lambda, Map & Filter.",
+    "revision2": "Name one common mistake when using Lambda, Map & Filter."
+  },
+  "developerMode": {
+    "industryUsage": "Lambda, Map & Filter is widely used in standard library scripts and enterprise Python programs.",
+    "performanceConsiderations": "Optimized by standard compiler rules in modern Python environments.",
+    "bestPractices": [
+      "Use lambda only for simple one-line operations \u2014 use def for complex logic.",
+      "Prefer list comprehensions over map/filter for readability in most cases.",
+      "Remember that map() and filter() return iterators \u2014 wrap with list() to see results.",
+      "Lambda functions can take multiple arguments: lambda x, y: x + y."
+    ],
+    "antiPatterns": [
+      "Putting statements (print, return, if/else blocks) in a lambda \u2014 only expressions allowed.",
+      "Forgetting to wrap map()/filter() in list() \u2014 printing the raw iterator shows an object address.",
+      "Making lambda too complex \u2014 if it needs multiple lines, use a regular function."
+    ],
+    "architectureNotes": "Interpreted and executed in the primary application call loop."
+  },
+  "xpEngine": {
+    "conceptWeight": 1.5,
+    "challengeMultiplier": 1.0,
+    "generatedXP": 50
+  },
+  "analyticsMetadata": {
+    "confusionScore": 0,
+    "completionRate": 0,
+    "averageAttempts": 0,
+    "dropoffPoints": [],
+    "mostMissedQuestions": []
+  },
+  "sources": [
+    {
+      "book": "Head First Python",
+      "chapter": "Relevant Chapters",
+      "confidence": 0.9
+    }
+  ]
+}

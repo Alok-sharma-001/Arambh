@@ -1,0 +1,160 @@
+{
+  "conceptId": "python-data-types",
+  "title": "Data Types",
+  "difficultyScore": 15,
+  "estimatedLearningTime": 6,
+  "prerequisiteConcepts": [
+    "variables",
+    "lists"
+  ],
+  "nextConcepts": [],
+  "beginnerExplanation": "Data types define the kind of value Python is working with. Knowing the type helps Python understand what operations make sense.",
+  "intermediateExplanation": "Adding two numbers makes sense (5 + 5 = 10). Adding two words joins them (\"fire\" + \"ball\" = \"fireball\"). Python needs to know the type to execute operations correctly.",
+  "advancedExplanation": "type(value)",
+  "realWorldAnalogy": {
+    "title": "Different Containers",
+    "description": "You wouldn't put soup in an envelope or mail a letter in a bowl. Different things require different containers. Similarly, Python uses specific structures (types) for text, whole numbers, and true/false logic."
+  },
+  "mentalModel": "You wouldn't put soup in an envelope or mail a letter in a bowl. Different things require different containers. Similarly, Python uses specific structures (types) for text, whole numbers, and true/false logic.",
+  "visualDiagram": "graph TD\n  Start --> Process[Data Types]\n  Process --> End",
+  "executionWalkthrough": [
+    "1. Python interpreter compiles the statement.",
+    "2. Scopes and local namespaces are verified.",
+    "3. Target variables are allocated or updated."
+  ],
+  "memoryState": [
+    {
+      "variable": "name",
+      "value": "\"Ava\"",
+      "type": "str",
+      "note": "String type"
+    },
+    {
+      "variable": "age",
+      "value": "12",
+      "type": "int",
+      "note": "Integer type"
+    }
+  ],
+  "commonMistakes": [
+    "Forgetting quotes around strings.",
+    "Confusing \"12\" (text) with 12 (number).",
+    "Writing true instead of True."
+  ],
+  "debuggingMission": {
+    "scenario": "An adventurer is trying to use Data Types but hit a common pitfall: Forgetting quotes around strings.",
+    "brokenCode": "type(value)",
+    "solution": "name = \"Ava\"\nage = 12\nis_ready = True",
+    "explanation": "Make sure to follow the best practices: Be mindful of what type a function returns."
+  },
+  "practiceQuestions": [
+    {
+      "question": "What data type is the value \"15\"?",
+      "options": [
+        "Integer",
+        "String",
+        "Boolean",
+        "Float"
+      ],
+      "correctIndex": 1,
+      "explanation": "Because it is wrapped in quotes, it is treated as text (a String), even though it looks like a number."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "What is the correct keyword or operator most commonly associated with Data Types?",
+      "hints": [
+        "Look at the syntax summary of the topic.",
+        "Check standard keyword usage in Python."
+      ],
+      "solution": "def"
+    }
+  ],
+  "projectExercise": {
+    "title": "Mastering Data Types",
+    "description": "Implement a clean snippet demonstrating the use of Data Types.",
+    "requirements": [
+      "Write a snippet utilizing the syntax: type(value)",
+      "Ensure variables are properly named."
+    ],
+    "starterCode": "type(value)"
+  },
+  "bossBattle": {
+    "name": "The Data Types Guardian",
+    "description": "A guardian protecting the secrets of Data Types. Use your knowledge to bypass its security gates.",
+    "mechanic": "Resolve syntax bugs and refactor code structure."
+  },
+  "rewards": [
+    "Scroll of Data Types",
+    "50 Gold"
+  ],
+  "artifacts": [
+    {
+      "name": "Scroll of Data Types",
+      "description": "A scroll detailing the core principles of Data Types.",
+      "rarity": "Common"
+    }
+  ],
+  "trainingGround": {
+    "exercises": [
+      "data-types-basic",
+      "data-types-advanced"
+    ]
+  },
+  "masteryChecklist": [
+    "I understand how to implement Data Types.",
+    "I can avoid Forgetting quotes around strings.."
+  ],
+  "confusionPoints": [
+    "Forgetting quotes around strings.",
+    "Confusing \"12\" (text) with 12 (number).",
+    "Writing true instead of True."
+  ],
+  "simplifiedExplanation": "Data types define the kind of value Python is working with. Knowing the type helps Python understand what operations make sense.",
+  "analogyLibrary": [
+    "Different Containers"
+  ],
+  "hintSystem": [
+    "type(value)"
+  ],
+  "stepByStepHints": [
+    "type(value)"
+  ],
+  "retentionSystem": {
+    "revision1": "Define the core syntax of Data Types.",
+    "revision2": "Name one common mistake when using Data Types."
+  },
+  "developerMode": {
+    "industryUsage": "Data Types is widely used in standard library scripts and enterprise Python programs.",
+    "performanceConsiderations": "Optimized by standard compiler rules in modern Python environments.",
+    "bestPractices": [
+      "Be mindful of what type a function returns.",
+      "Convert types explicitly when needed, using str(), int(), or float()."
+    ],
+    "antiPatterns": [
+      "Forgetting quotes around strings.",
+      "Confusing \"12\" (text) with 12 (number).",
+      "Writing true instead of True."
+    ],
+    "architectureNotes": "Interpreted and executed in the primary application call loop."
+  },
+  "xpEngine": {
+    "conceptWeight": 1.5,
+    "challengeMultiplier": 1.0,
+    "generatedXP": 50
+  },
+  "analyticsMetadata": {
+    "confusionScore": 0,
+    "completionRate": 0,
+    "averageAttempts": 0,
+    "dropoffPoints": [],
+    "mostMissedQuestions": []
+  },
+  "sources": [
+    {
+      "book": "Head First Python",
+      "chapter": "Relevant Chapters",
+      "confidence": 0.9
+    }
+  ]
+}
