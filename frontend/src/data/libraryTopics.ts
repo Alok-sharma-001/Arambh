@@ -558,8 +558,8 @@ export const topics: LibraryTopic[] = [
       },
     ],
     relatedConcepts: ['functions', 'lists'],
-    learnPath: '/lesson/modules-workshop/m1',
-    trainingPath: '/training/modules-workshop',
+    learnPath: '/lesson/modules-harbor/m1',
+    trainingPath: '/training/modules-harbor',
     icon: Code2,
     bossBattle: {
       name: 'The Import Phantom',

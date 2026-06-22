@@ -1175,106 +1175,419 @@ export const lessons: Record<string, LessonDebugContent> = {
     ]
 },
   'm1': {
-    "title": "Import Statements",
-    "hook": "Using others code.",
-    "concept": "import x",
-    "code": "import math\\nprint(math.pi)",
+    "title": "The Module Namespace",
+    "hook": "Keep your code tidy by loading functions from separate files.",
+    "concept": "The import statement loads a module into its own namespace. To call a function inside it, you must use dot notation.",
+    "code": "import nester\n\nmovies = [\"The Holy Grail\", \"Life of Brian\"]\nnester.print_lol(movies)",
     "mentalModel": [
-        "Reusability"
+        "import nester creates a container named nester.",
+        "All functions in the module are stored inside that container.",
+        "Use nester.print_lol to fetch and run the function."
     ],
     "debuggerSteps": [
         {
             "line": 1,
-            "action": "Executing: import math\\nprint(math.pi)",
-            "why": "Python processes this statement.",
+            "action": "Load the nester module.",
+            "why": "Python looks for a file named nester.py, runs it, and registers the name 'nester' in the global scope pointing to the module.",
             "memory": [
                 {
-                    "name": "status",
-                    "value": "\"running\"",
-                    "type": "str",
-                    "note": "Line 1",
-                    "accent": "#60a5fa"
+                    "name": "nester",
+                    "value": "<module 'nester' from 'nester.py'>",
+                    "type": "module",
+                    "note": "Imported namespace",
+                    "accent": "#a78bfa"
                 }
             ],
-            "output": "..."
+            "output": ""
+        },
+        {
+            "line": 3,
+            "action": "Create a list of movie titles.",
+            "why": "Assigns a two-element list to the variable 'movies' in global memory.",
+            "memory": [
+                {
+                    "name": "nester",
+                    "value": "<module 'nester' from 'nester.py'>",
+                    "type": "module",
+                    "note": "Imported namespace",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "movies",
+                    "value": "[\"The Holy Grail\", \"Life of Brian\"]",
+                    "type": "list",
+                    "note": "List of strings",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 4,
+            "action": "Call print_lol inside the nester module namespace.",
+            "why": "Accesses print_lol inside the nester namespace and executes it with movies as the argument.",
+            "memory": [
+                {
+                    "name": "nester",
+                    "value": "<module 'nester' from 'nester.py'>",
+                    "type": "module",
+                    "note": "Imported namespace",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "movies",
+                    "value": "[\"The Holy Grail\", \"Life of Brian\"]",
+                    "type": "list",
+                    "note": "Passed to print_lol",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": "The Holy Grail\nLife of Brian"
         }
     ]
 },
   'm2': {
-    "title": "Standard Library",
-    "hook": "Batteries included.",
-    "concept": "os, sys, math.",
-    "code": "import os",
+    "title": "Flexible Functions",
+    "hook": "Default arguments let you call functions with fewer values, while keywords let you specify arguments in any order.",
+    "concept": "Parameters can have default values. If you omit them, the default is used. Keyword arguments let you name parameters during the call.",
+    "code": "def greet(name, greeting=\"Hello\"):\n    print(greeting + \", \" + name)\n\ngreet(\"Ava\")\ngreet(\"Ava\", greeting=\"Hail\")",
     "mentalModel": [
-        "Built-ins"
+        "Parameters with '=' are optional.",
+        "Keyword arguments override defaults by name."
     ],
     "debuggerSteps": [
         {
             "line": 1,
-            "action": "Executing: import os",
-            "why": "Python processes this statement.",
+            "action": "Define the greet function with a default parameter.",
+            "why": "Registers the function 'greet' with parameters 'name' and 'greeting' (defaulting to 'Hello').",
             "memory": [
                 {
-                    "name": "status",
-                    "value": "\"running\"",
+                    "name": "greet",
+                    "value": "<function greet at 0x7f8>",
+                    "type": "function",
+                    "note": "greeting default is 'Hello'",
+                    "accent": "#a78bfa"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 4,
+            "action": "Call greet with one argument.",
+            "why": "name is bound to 'Ava'. Since greeting is omitted, it defaults to 'Hello'.",
+            "memory": [
+                {
+                    "name": "greet",
+                    "value": "<function greet at 0x7f8>",
+                    "type": "function",
+                    "note": "Function registered",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "name",
+                    "value": "\"Ava\"",
                     "type": "str",
-                    "note": "Line 1",
+                    "note": "Positional param",
+                    "accent": "#34d399"
+                },
+                {
+                    "name": "greeting",
+                    "value": "\"Hello\"",
+                    "type": "str",
+                    "note": "Used default",
                     "accent": "#60a5fa"
                 }
             ],
-            "output": "..."
+            "output": "Hello, Ava"
+        },
+        {
+            "line": 5,
+            "action": "Call greet with a keyword argument.",
+            "why": "We pass greeting='Hail' explicitly. This overrides the default value.",
+            "memory": [
+                {
+                    "name": "greet",
+                    "value": "<function greet at 0x7f8>",
+                    "type": "function",
+                    "note": "Function registered",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "name",
+                    "value": "\"Ava\"",
+                    "type": "str",
+                    "note": "Positional param",
+                    "accent": "#34d399"
+                },
+                {
+                    "name": "greeting",
+                    "value": "\"Hail\"",
+                    "type": "str",
+                    "note": "Overridden default",
+                    "accent": "#60a5fa"
+                }
+            ],
+            "output": "Hello, Ava\nHail, Ava"
         }
     ]
 },
   'm3': {
-    "title": "Creating Modules",
-    "hook": "Your own files.",
-    "concept": "import my_file",
-    "code": "print(\"My module\")",
+    "title": "The Recursion Stack",
+    "hook": "Watch the call stack grow and shrink as a function calls itself to flatten a nested list.",
+    "concept": "A function can call itself. Each recursive call pushes a new frame onto Python's Call Stack to hold its local variables.",
+    "code": "def print_lol(the_list):\n    for item in the_list:\n        if isinstance(item, list):\n            print_lol(item)\n        else:\n            print(item)\n\ndata = [\"Cleese\", [\"Palin\"]]\nprint_lol(data)",
     "mentalModel": [
-        "Organization"
+        "Each call pushes a new layer (frame) onto the stack.",
+        "Local variable 'the_list' is separate in each stack frame."
     ],
     "debuggerSteps": [
         {
             "line": 1,
-            "action": "Executing: print(\"My module\")",
-            "why": "Python processes this statement.",
+            "action": "Define the print_lol function.",
+            "why": "Registers the print_lol function in global memory.",
             "memory": [
                 {
-                    "name": "status",
-                    "value": "\"running\"",
-                    "type": "str",
-                    "note": "Line 1",
+                    "name": "print_lol",
+                    "value": "<function print_lol at 0x8a1>",
+                    "type": "function",
+                    "note": "Recursive function",
+                    "accent": "#a78bfa"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 8,
+            "action": "Create the nested data list.",
+            "why": "Creates a list with a string at index 0 and a nested list at index 1.",
+            "memory": [
+                {
+                    "name": "print_lol",
+                    "value": "<function print_lol at 0x8a1>",
+                    "type": "function",
+                    "note": "Recursive function",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "data",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Nested list",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 9,
+            "action": "Call print_lol(data) - Level 1 frame created.",
+            "why": "Pushes the first frame for print_lol. inside this frame, the_list points to data.",
+            "memory": [
+                {
+                    "name": "data",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Global list",
+                    "accent": "#c8a45e"
+                },
+                {
+                    "name": "[print_lol L1] the_list",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "First stack frame",
                     "accent": "#60a5fa"
                 }
             ],
-            "output": "..."
+            "output": ""
+        },
+        {
+            "line": 2,
+            "action": "Process first item of the_list: \"Cleese\".",
+            "why": "Since 'Cleese' is a string and not a list, Python jumps to the else block.",
+            "memory": [
+                {
+                    "name": "[print_lol L1] the_list",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Active frame",
+                    "accent": "#60a5fa"
+                },
+                {
+                    "name": "[print_lol L1] item",
+                    "value": "\"Cleese\"",
+                    "type": "str",
+                    "note": "String value",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": ""
+        },
+        {
+            "line": 6,
+            "action": "Print \"Cleese\".",
+            "why": "Prints the string directly to stdout.",
+            "memory": [
+                {
+                    "name": "[print_lol L1] the_list",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Active frame",
+                    "accent": "#60a5fa"
+                },
+                {
+                    "name": "[print_lol L1] item",
+                    "value": "\"Cleese\"",
+                    "type": "str",
+                    "note": "Printed",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": "Cleese"
+        },
+        {
+            "line": 2,
+            "action": "Process second item: [\"Palin\"].",
+            "why": "Since the item is a list, isinstance(item, list) is True.",
+            "memory": [
+                {
+                    "name": "[print_lol L1] the_list",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Active frame",
+                    "accent": "#60a5fa"
+                },
+                {
+                    "name": "[print_lol L1] item",
+                    "value": "[\"Palin\"]",
+                    "type": "list",
+                    "note": "List found",
+                    "accent": "#c8a45e"
+                }
+            ],
+            "output": "Cleese"
+        },
+        {
+            "line": 4,
+            "action": "Call print_lol recursively - Level 2 frame created.",
+            "why": "Pushes a new stack frame for print_lol(item). inside this L2 frame, the_list is ['Palin'].",
+            "memory": [
+                {
+                    "name": "[print_lol L1] the_list",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Suspended frame",
+                    "accent": "#60a5fa"
+                },
+                {
+                    "name": "[print_lol L2] the_list",
+                    "value": "[\"Palin\"]",
+                    "type": "list",
+                    "note": "Active recursive frame",
+                    "accent": "#a78bfa"
+                }
+            ],
+            "output": "Cleese"
+        },
+        {
+            "line": 2,
+            "action": "Process item in L2 the_list: \"Palin\".",
+            "why": "Palin is a string, so go to the else block.",
+            "memory": [
+                {
+                    "name": "[print_lol L2] the_list",
+                    "value": "[\"Palin\"]",
+                    "type": "list",
+                    "note": "Active frame",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "[print_lol L2] item",
+                    "value": "\"Palin\"",
+                    "type": "str",
+                    "note": "String value",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": "Cleese"
+        },
+        {
+            "line": 6,
+            "action": "Print \"Palin\".",
+            "why": "Prints to stdout.",
+            "memory": [
+                {
+                    "name": "[print_lol L2] the_list",
+                    "value": "[\"Palin\"]",
+                    "type": "list",
+                    "note": "Active frame",
+                    "accent": "#a78bfa"
+                },
+                {
+                    "name": "[print_lol L2] item",
+                    "value": "\"Palin\"",
+                    "type": "str",
+                    "note": "Printed",
+                    "accent": "#34d399"
+                }
+            ],
+            "output": "Cleese\nPalin"
+        },
+        {
+            "line": 9,
+            "action": "L2 completes. Stack shrinks back to L1.",
+            "why": "The L2 frame is destroyed. Execution resumes in the L1 frame at line 4.",
+            "memory": [
+                {
+                    "name": "[print_lol L1] the_list",
+                    "value": "[\"Cleese\", [\"Palin\"]]",
+                    "type": "list",
+                    "note": "Resumed L1 frame",
+                    "accent": "#60a5fa"
+                }
+            ],
+            "output": "Cleese\nPalin"
         }
     ]
 },
   'm4': {
-    "title": "Packages",
-    "hook": "Folders of modules.",
-    "concept": "__init__.py",
-    "code": "print(\"Packages\")",
+    "title": "Packages & Distribution",
+    "hook": "Prepare your code for the world using setup.py.",
+    "concept": "A package is a folder with modules. We use a setup.py file to configure installation via pip.",
+    "code": "from distutils.core import setup\n\nsetup(\n    name='nester',\n    version='1.0.0',\n    py_modules=['nester'],\n    author='Scribe'\n)",
     "mentalModel": [
-        "Architecture"
+        "setup.py acts as a passport for your code.",
+        "distutils handles building and registering module packages."
     ],
     "debuggerSteps": [
         {
             "line": 1,
-            "action": "Executing: print(\"Packages\")",
-            "why": "Python processes this statement.",
+            "action": "Import the setup function.",
+            "why": "Loads standard distribution utility tool.",
             "memory": [
                 {
-                    "name": "status",
-                    "value": "\"running\"",
-                    "type": "str",
-                    "note": "Line 1",
-                    "accent": "#60a5fa"
+                    "name": "setup",
+                    "value": "<function setup>",
+                    "type": "function",
+                    "note": "Imported helper",
+                    "accent": "#a78bfa"
                 }
             ],
-            "output": "..."
+            "output": ""
+        },
+        {
+            "line": 3,
+            "action": "Call setup with package metadata.",
+            "why": "Generates build files and packages nester.py.",
+            "memory": [
+                {
+                    "name": "setup",
+                    "value": "<function setup>",
+                    "type": "function",
+                    "note": "Called successfully",
+                    "accent": "#a78bfa"
+                }
+            ],
+            "output": "Package built: nester 1.0.0"
         }
     ]
 },
