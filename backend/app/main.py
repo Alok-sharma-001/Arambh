@@ -68,7 +68,13 @@ async def lifespan(app: FastAPI):
                     conn.execute(text("ALTER TABLE user_stats ADD COLUMN rank VARCHAR DEFAULT 'Novice';"))
                 if 'title' not in existing_cols:
                     conn.execute(text("ALTER TABLE user_stats ADD COLUMN title VARCHAR;"))
-                logger.info("Database migration: Verified/Added missing RPG columns to user_stats.")
+                if 'daily_streak' not in existing_cols:
+                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN daily_streak INTEGER DEFAULT 0;"))
+                if 'last_claimed_at' not in existing_cols:
+                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN last_claimed_at TIMESTAMP WITH TIME ZONE;"))
+                if 'total_login_days' not in existing_cols:
+                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN total_login_days INTEGER DEFAULT 0;"))
+                logger.info("Database migration: Verified/Added missing RPG and daily reward columns to user_stats.")
             except Exception as e:
                 logger.warning(f"Database migration for user_stats failed: {e}")
             
