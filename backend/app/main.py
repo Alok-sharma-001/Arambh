@@ -120,6 +120,7 @@ async def db_status():
         "registered_metadata_tables": list(Base.metadata.tables.keys()),
         "actual_database_tables": [],
         "user_stats_columns": [],
+        "alembic_version": None,
         "error": None
     }
     
@@ -133,6 +134,12 @@ async def db_status():
         status["actual_database_tables"] = inspector.get_table_names()
         if "user_stats" in status["actual_database_tables"]:
             status["user_stats_columns"] = [c["name"] for c in inspector.get_columns("user_stats")]
+            
+        # Query alembic version
+        if "alembic_version" in status["actual_database_tables"]:
+            with engine.connect() as connection:
+                res = connection.execute(text("SELECT version_num FROM alembic_version")).fetchone()
+                status["alembic_version"] = res[0] if res else None
         
     except Exception as e:
         status["error"] = str(e)
