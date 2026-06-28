@@ -99,6 +99,7 @@ async def db_status():
         "dialect": engine.dialect.name,
         "registered_metadata_tables": list(Base.metadata.tables.keys()),
         "actual_database_tables": [],
+        "user_stats_columns": [],
         "error": None
     }
     
@@ -110,6 +111,8 @@ async def db_status():
         # Get actual tables
         inspector = inspect(engine)
         status["actual_database_tables"] = inspector.get_table_names()
+        if "user_stats" in status["actual_database_tables"]:
+            status["user_stats_columns"] = [c["name"] for c in inspector.get_columns("user_stats")]
         
     except Exception as e:
         status["error"] = str(e)
