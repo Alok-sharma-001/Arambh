@@ -22,6 +22,26 @@ async def lifespan(app: FastAPI):
         registered_tables = list(Base.metadata.tables.keys())
         logger.info(f"Registered metadata tables: {registered_tables}")
         
+        # Run database migrations
+        import os
+        from alembic.config import Config
+        from alembic import command
+        from app.core.config import settings
+        
+        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        alembic_cfg_path = os.path.join(base_dir, "alembic.ini")
+        if os.path.exists(alembic_cfg_path):
+            logger.info(f"Running Alembic migrations from {alembic_cfg_path}...")
+            try:
+                alembic_cfg = Config(alembic_cfg_path)
+                alembic_cfg.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+                command.upgrade(alembic_cfg, "head")
+                logger.info("Alembic migrations completed successfully.")
+            except Exception as e:
+                logger.error(f"Alembic migration failed: {e}")
+        else:
+            logger.warning(f"alembic.ini not found at {alembic_cfg_path}, skipping automatic migrations.")
+
         # Create tables
         Base.metadata.create_all(bind=engine)
         logger.info("Successfully executed Base.metadata.create_all()")
