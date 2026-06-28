@@ -6,6 +6,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { ToastProvider } from '../ui/ToastProvider';
 import { AutoSync } from '../sync/AutoSync';
+import { BugReportWidget } from '../analytics/BugReportWidget';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -19,6 +20,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <Navigation />
       <ToastProvider />
       <AutoSync />
+      <BugReportWidget />
       <main className="flex-1 overflow-x-hidden min-w-0 flex flex-col relative mt-16">
         <AnimatePresence mode="wait">
           <motion.div

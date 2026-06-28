@@ -8,6 +8,9 @@ export interface UserStats {
   player_class: string | null;
   rank: string;
   title: string | null;
+  daily_streak: number;
+  last_claimed_at: string | null;
+  total_login_days: number;
 }
 
 export interface InventoryItem {
@@ -39,6 +42,11 @@ export const progressionApi = {
 
   addInventoryItem: async (itemId: string) => {
     const response = await api.post<ProgressionResponse>('/progression/inventory', { item_id: itemId });
+    return response.data;
+  },
+
+  claimDailyReward: async () => {
+    const response = await api.post<ProgressionResponse>('/progression/claim-daily');
     return response.data;
   }
 };

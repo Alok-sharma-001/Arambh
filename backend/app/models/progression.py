@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Enum
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean, Enum, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database.session import Base
@@ -86,3 +86,16 @@ class TowerProgress(Base):
     resonance = Column(Integer, default=0)
     
     user = relationship("User", back_populates="tower_progress")
+
+class Revision(Base):
+    __tablename__ = "revisions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    concept_id = Column(String, nullable=False, index=True)
+    next_review_date = Column(DateTime(timezone=True), nullable=False)
+    interval = Column(Integer, default=0)
+    ease_factor = Column(Float, default=2.5)
+    repetitions = Column(Integer, default=0)
+
+    user = relationship("User", back_populates="revisions")

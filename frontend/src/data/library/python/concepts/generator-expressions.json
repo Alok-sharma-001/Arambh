@@ -1,0 +1,107 @@
+{
+  "conceptId": "generator-expressions",
+  "title": "Generator Expressions",
+  "difficultyScore": 42,
+  "estimatedLearningTime": 6,
+  "prerequisiteConcepts": ["generators"],
+  "nextConcepts": ["infinite-streams"],
+  "beginnerExplanation": "A Generator Expression is like a shortcut to write a generator. It looks exactly like a list comprehension, but uses parentheses () instead of brackets []. It produces values one at a time, keeping your computer memory clean.",
+  "intermediateExplanation": "Unlike list comprehensions which evaluate eagerly and create a full list in RAM, generator expressions evaluate lazily, returning a generator iterator object immediately.",
+  "advancedExplanation": "Generator expressions compile to the same bytecode as a generator function with a single yield loop. They can be passed directly as arguments to functions like sum(), min(), or max() without inner parentheses.",
+  "realWorldAnalogy": {
+    "title": "The Bakery vs. The Recipe",
+    "description": "A list comprehension is like buying 100 donuts and storing them in your fridge. A generator expression is like having a recipe for 100 donuts—you only make a donut when someone asks to eat one."
+  },
+  "mentalModel": "Parentheses mean 'prepare the stream', while brackets mean 'create the list now'.",
+  "visualDiagram": "List Comp: [x for x in range] -> allocates full array in memory\nGen Exp: (x for x in range) -> returns generator object with pointer",
+  "executionWalkthrough": [
+    "1. The expression (x * 2 for x in range(3)) is compiled.",
+    "2. A generator object is created instantly without computing products.",
+    "3. Elements are calculated only as next() is called or during iteration."
+  ],
+  "memoryState": [
+    {
+      "variable": "sq_list",
+      "value": "[0, 1, 4, 9]",
+      "type": "list",
+      "note": "Allocates memory for all elements"
+    },
+    {
+      "variable": "sq_gen",
+      "value": "<generator>",
+      "type": "generator",
+      "note": "Only allocates 104 bytes regardless of size"
+    }
+  ],
+  "commonMistakes": [
+    "Thinking a generator expression returns a tuple (use tuple() explicitly if you need a tuple!).",
+    "Consuming the expression once and trying to iterate over it again (it will be empty!)."
+  ],
+  "debuggingMission": {
+    "scenario": "A student gets an empty sum after trying to reuse a generator expression.",
+    "brokenCode": "evens = (x for x in range(10) if x % 2 == 0)\nprint(sum(evens))  # 20\nprint(list(evens)) # [] - Empty!",
+    "solution": "evens_func = lambda: (x for x in range(10) if x % 2 == 0)\nprint(sum(evens_func()))\nprint(list(evens_func()))",
+    "explanation": "Generator expressions are exhaustible. Re-generate the expression or convert it to a list if you need multiple passes."
+  },
+  "practiceQuestions": [
+    {
+      "question": "Which delimiters define a Generator Expression?",
+      "options": [
+        "{}",
+        "[]",
+        "()",
+        "<>"
+      ],
+      "correctIndex": 2,
+      "explanation": "Generator expressions are defined using round parentheses () instead of square brackets []."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "How do you calculate the exact size in bytes of a generator expression in memory?",
+      "hints": [
+        "Import sys and use its size method."
+      ],
+      "solution": "sys.getsizeof"
+    }
+  ],
+  "projectExercise": {
+    "title": "Evaluate Expression Footprint",
+    "description": "Compare list comprehension size against generator size.",
+    "requirements": [
+      "Use sys.getsizeof on list and generator."
+    ],
+    "starterCode": "import sys\nlist_comp = [x for x in range(1000)]\ngen_exp = (x for x in range(1000))\nprint(sys.getsizeof(list_comp) > sys.getsizeof(gen_exp))"
+  },
+  "bossBattle": {
+    "name": "Sentinel of the Stream",
+    "description": "Feed a generator expression to the Sentinel to satisfy its memory restrictions.",
+    "mechanic": "Pass generator expressions inside math filters."
+  },
+  "rewards": [
+    "Scroll of Expressions",
+    "60 Gold"
+  ],
+  "complexityAnalysis": {
+    "timeComplexity": "O(1) initialization. O(N) total traversal time.",
+    "spaceComplexity": "O(1) auxiliary space.",
+    "description": "Saves massive memory when filtering or reducing large collections."
+  },
+  "memoryImpact": {
+    "allocationBytes": "Constant 104 bytes memory overhead.",
+    "scalingFactor": "O(1)",
+    "optimizationNotes": "Excellent for reducing memory pressure in microservices processing massive rows."
+  },
+  "performanceNotes": [
+    "Slightly faster startup time than list comprehensions, but slightly slower iteration speed due to yield overhead."
+  ],
+  "industryUsage": {
+    "useCases": [
+      "Summing fields from massive CSV files",
+      "Inline argument pipelines for sum(), any(), all()"
+    ],
+    "standardLibraries": [
+      "sys"
+    ]
+  }
+}

@@ -13,7 +13,7 @@ export default function TheHollowKing() {
   const [isAnimating, setIsAnimating] = useState(false);
   
   const { completeBoss } = useRegionStore();
-  const { gainItem } = useProgressionStore();
+  const { gainXP, gainItem } = useProgressionStore();
   const navigate = useNavigate();
 
   const handleCast = () => {
@@ -76,8 +76,9 @@ export default function TheHollowKing() {
         // Victory
         setIsVictory(true);
         setTimeout(() => {
-          completeBoss('oop-castle');
-          gainItem('oop_crown');
+          completeBoss('oop-citadel');
+          gainItem('class-sigil');
+          gainXP(600, 'Boss Defeated');
         }, 2000);
       }
       

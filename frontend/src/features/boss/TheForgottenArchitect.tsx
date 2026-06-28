@@ -115,7 +115,7 @@ export default function TheForgottenArchitect() {
     try {
       console.log('handleVictory called');
       gainXP(800, 'Boss Defeated');
-      gainItem('function_scroll');
+      gainItem('summit-crown');
       completeBoss('functions-mountain');
       navigate('/region/functions-mountain');
     } catch (e) {

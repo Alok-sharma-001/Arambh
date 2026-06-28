@@ -1,0 +1,102 @@
+{
+  "conceptId": "iteration-protocol",
+  "title": "The Iteration Protocol",
+  "difficultyScore": 35,
+  "estimatedLearningTime": 7,
+  "prerequisiteConcepts": ["iterable-vs-iterator"],
+  "nextConcepts": ["generators"],
+  "beginnerExplanation": "The Iteration Protocol is a contract: any class implementing __iter__() and __next__() becomes an Iterator and can be used directly in 'for' loops.",
+  "intermediateExplanation": "A loop secretly works by calling iter() on an object, then calling next() inside a try/except block that catches StopIteration to terminate the loop.",
+  "advancedExplanation": "Iterators must return self in their __iter__() implementation. Custom iterators must raise StopIteration inside __next__() when there are no more values.",
+  "realWorldAnalogy": {
+    "title": "Vending Machine",
+    "description": "Inserting a coin activates the machine (iter()). Pressing the button dispenses one item (next()). When empty, the machine shows a SOLD OUT light (StopIteration)."
+  },
+  "mentalModel": "A protocol allows any object to pose as a sequence by answering 'what is next?' until it has no more answers.",
+  "visualDiagram": "for x in obj -> iter(obj) -> next() -> return x -> next() -> StopIteration -> exit loop",
+  "executionWalkthrough": [
+    "1. Loop starts, calling __iter__() on the target.",
+    "2. The returned iterator is queried repeatedly using __next__().",
+    "3. When __next__() raises StopIteration, Python catches the error and cleanly exits the loop."
+  ],
+  "memoryState": [
+    {
+      "variable": "counter",
+      "value": "Countdown(3)",
+      "type": "CustomIterator",
+      "note": "State: n=3"
+    }
+  ],
+  "commonMistakes": [
+    "Forgetting to implement __iter__ in an Iterator (iterators must be iterable too!).",
+    "Infinite loops when custom iterators forget to raise StopIteration."
+  ],
+  "debuggingMission": {
+    "scenario": "A custom iterator loops forever because the StopIteration condition is never hit.",
+    "brokenCode": "class InfiniteThree:\n  def __iter__(self): return self\n  def __next__(self): return 3  # Never stops!",
+    "solution": "class ThreeTimes:\n  def __init__(self): self.c = 0\n  def __iter__(self): return self\n  def __next__(self):\n    self.c += 1\n    if self.c > 3: raise StopIteration\n    return 3",
+    "explanation": "Ensure you increment a counter or check a condition to raise StopIteration."
+  },
+  "practiceQuestions": [
+    {
+      "question": "What must the __iter__() method of an Iterator class return?",
+      "options": [
+        "self",
+        "The first item",
+        "None",
+        "A list"
+      ],
+      "correctIndex": 0,
+      "explanation": "An iterator's __iter__() method must return the iterator itself (self) to allow nested and direct loops."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "What error terminates the default 'for' loop in Python?",
+      "hints": [
+        "Stop..."
+      ],
+      "solution": "StopIteration"
+    }
+  ],
+  "projectExercise": {
+    "title": "Custom Countdown Iterator",
+    "description": "Create a countdown iterator class.",
+    "requirements": [
+      "Implement __iter__ and __next__ returning decreasing values."
+    ],
+    "starterCode": "class Countdown:\n  def __init__(self, start):\n    self.start = start"
+  },
+  "bossBattle": {
+    "name": "Sentinel of the Stream",
+    "description": "Build an iterator class that bypasses the Sentinel's defenses.",
+    "mechanic": "Implement custom iteration steps to count waves."
+  },
+  "rewards": [
+    "Badge of Protocol",
+    "60 Gold"
+  ],
+  "complexityAnalysis": {
+    "timeComplexity": "O(1) per iteration step.",
+    "spaceComplexity": "O(1) space since state variables are updated in place.",
+    "description": "Ideal for constant-space traversal of custom data structures."
+  },
+  "memoryImpact": {
+    "allocationBytes": "Small object footprint. Preserves memory by generating sequence on demand.",
+    "scalingFactor": "O(1)",
+    "optimizationNotes": "Always raise StopIteration as soon as the sequence boundary is crossed."
+  },
+  "performanceNotes": [
+    "Defining custom iterators in Python incurs standard method call overhead. C-extensions use faster slots."
+  ],
+  "industryUsage": {
+    "useCases": [
+      "Traversing custom Binary Search Trees",
+      "Parsing fixed-width binary protocols"
+    ],
+    "standardLibraries": [
+      "sqlite3.Cursor",
+      "csv.reader"
+    ]
+  }
+}

@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { syncManager } from '../services/syncManager';
+import { regions as regionDefinitions } from '../data/regions';
+import { analyticsApi } from '../services/analyticsApi';
 
 export type RegionStatus = 'locked' | 'available' | 'completed';
 export type BossStatus = 'locked' | 'available' | 'completed';
@@ -26,51 +28,32 @@ interface RegionStore {
   hydrate: (serverRegions: any[]) => void;
 }
 
+const REGION_SEQUENCE = regionDefinitions.map((region) => region.id);
+
+const createDefaultRegionState = (regionId: string): RegionState => ({
+  completedLessons: [],
+  currentLesson: regionDefinitions.find((region) => region.id === regionId)?.lessons[0]?.id || '1',
+  bossStatus: 'locked',
+  regionStatus: regionId === REGION_SEQUENCE[0] ? 'available' : 'locked',
+  artifactAcquired: false,
+  completionPercentage: 0,
+});
+
+const createInitialRegions = (): Record<string, RegionState> =>
+  Object.fromEntries(REGION_SEQUENCE.map((regionId) => [regionId, createDefaultRegionState(regionId)]));
+
+const getLessonCount = (regionId: string) =>
+  regionDefinitions.find((region) => region.id === regionId)?.lessons.length || 4;
+
+const getNextRegionId = (regionId: string) => {
+  const currentIndex = REGION_SEQUENCE.indexOf(regionId);
+  return currentIndex >= 0 ? REGION_SEQUENCE[currentIndex + 1] : undefined;
+};
+
 export const useRegionStore = create<RegionStore>()(
   persist(
     (set, get) => ({
-      regions: {
-        'variables-forest': {
-          completedLessons: [],
-          currentLesson: '1',
-          bossStatus: 'locked',
-          regionStatus: 'available',
-          artifactAcquired: false,
-          completionPercentage: 0,
-        },
-        'data-types-valley': {
-          completedLessons: [],
-          currentLesson: '1',
-          bossStatus: 'locked',
-          regionStatus: 'locked',
-          artifactAcquired: false,
-          completionPercentage: 0,
-        },
-        'loops-desert': {
-          completedLessons: [],
-          currentLesson: '1',
-          bossStatus: 'locked',
-          regionStatus: 'locked',
-          artifactAcquired: false,
-          completionPercentage: 0,
-        },
-        'functions-mountain': {
-          completedLessons: [],
-          currentLesson: '16', // Note: currentLesson usually needs to track the offset
-          bossStatus: 'locked',
-          regionStatus: 'locked',
-          artifactAcquired: false,
-          completionPercentage: 0,
-        },
-        'collections-kingdom': {
-          completedLessons: [],
-          currentLesson: '21',
-          bossStatus: 'locked',
-          regionStatus: 'locked',
-          artifactAcquired: false,
-          completionPercentage: 0,
-        }
-      },
+      regions: createInitialRegions(),
       
       hydrate: (serverRegions: any[]) => {
         const newRegions = { ...get().regions };
@@ -106,23 +89,23 @@ export const useRegionStore = create<RegionStore>()(
 
       completeLesson: (regionId, lessonId) => {
         set((state) => {
-          const region = state.regions[regionId];
-          if (!region) return state;
+          const region = state.regions[regionId] || createDefaultRegionState(regionId);
 
           const newCompleted = region.completedLessons.includes(lessonId) 
             ? region.completedLessons 
             : [...region.completedLessons, lessonId];
           
-          // Let's assume there are 5 lessons per region right now
-          const totalLessons = 5;
-          const completionPercentage = (newCompleted.length / totalLessons) * 100;
+          const totalLessons = getLessonCount(regionId);
+          const completionPercentage = Math.min(100, Math.round((newCompleted.length / totalLessons) * 100));
 
           let bossStatus = region.bossStatus;
-          if (newCompleted.length === totalLessons) {
+          if (newCompleted.length >= totalLessons) {
             bossStatus = 'available';
           }
           
-          const nextLessonStr = String(Math.min(totalLessons, newCompleted.length + 1));
+          const nextLesson = regionDefinitions
+            .find((definition) => definition.id === regionId)
+            ?.lessons.find((lesson) => !newCompleted.includes(lesson.id))?.id || lessonId;
 
           return {
             regions: {
@@ -130,7 +113,7 @@ export const useRegionStore = create<RegionStore>()(
               [regionId]: {
                 ...region,
                 completedLessons: newCompleted,
-                currentLesson: nextLessonStr,
+                currentLesson: nextLesson,
                 completionPercentage,
                 bossStatus
               }
@@ -158,25 +141,15 @@ export const useRegionStore = create<RegionStore>()(
       },
 
       completeBoss: (regionId) => {
+        // Track boss victory and region completion
+        analyticsApi.logEvent('boss_victory', { region_id: regionId });
+        analyticsApi.logEvent('region_complete', { region_id: regionId });
+
         set((state) => {
           const region = state.regions[regionId];
           if (!region) return state;
           
-          const nextRegions: Record<string, string> = {
-            'variables-forest': 'data-types-valley',
-            'data-types-valley': 'loops-desert',
-            'loops-desert': 'functions-mountain',
-            'functions-mountain': 'collections-kingdom',
-            'collections-kingdom': 'oop-castle',
-            'oop-castle': 'exception-abyss',
-            'exception-abyss': 'file-system-ruins',
-            'file-system-ruins': 'modules-harbor',
-            'modules-harbor': 'algorithm-arena',
-            'algorithm-arena': 'boss-gate',
-            'boss-gate': 'dsa-dungeon',
-            'dsa-dungeon': 'ai-temple'
-          };
-          const nextRegionId = nextRegions[regionId];
+          const nextRegionId = getNextRegionId(regionId);
           
           const newRegions: Record<string, RegionState> = {
             ...state.regions,
@@ -191,7 +164,8 @@ export const useRegionStore = create<RegionStore>()(
 
           if (nextRegionId) {
             const nextRegionState = newRegions[nextRegionId] || {
-              completedLessons: [], currentLesson: '1', bossStatus: 'locked' as BossStatus, artifactAcquired: false, completionPercentage: 0
+              ...createDefaultRegionState(nextRegionId),
+              regionStatus: 'locked' as RegionStatus,
             };
             newRegions[nextRegionId] = {
               ...nextRegionState,
@@ -206,18 +180,23 @@ export const useRegionStore = create<RegionStore>()(
 
       getRegionProgress: (regionId) => {
         const state = get().regions[regionId];
-        return state || {
-          completedLessons: [],
-          currentLesson: '1',
-          bossStatus: 'locked',
-          regionStatus: 'locked',
-          artifactAcquired: false,
-          completionPercentage: 0
-        };
+        return state || createDefaultRegionState(regionId);
       }
     }),
     {
       name: 'pyquest-region-progress',
+      version: 2,
+      merge: (persisted, current) => {
+        const persistedRegions = (persisted as any)?.state?.regions || {};
+        return {
+          ...current,
+          ...(persisted as any)?.state,
+          regions: {
+            ...createInitialRegions(),
+            ...persistedRegions,
+          },
+        };
+      },
     }
   )
 );

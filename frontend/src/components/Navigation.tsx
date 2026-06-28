@@ -8,6 +8,7 @@ const navLinks = [
   { label: 'World Map', path: '/map' },
   { label: 'Training Ground', path: '/training/loops-desert' },
   { label: 'Library', path: '/library' },
+  { label: 'Memory Vault', path: '/vault' },
   { label: 'Artifacts', path: '/artifacts' },
   { label: 'Leaderboard', path: '/leaderboard' },
 ];
@@ -20,6 +21,22 @@ export default function Navigation() {
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
+
+  const username = (() => {
+    if (!token) return null;
+    try {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(window.atob(base64)).sub || null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const isAdmin = username === 'founder' || username === 'admin';
+  const visibleLinks = isAdmin 
+    ? [...navLinks, { label: 'Founder Dashboard', path: '/admin' }]
+    : navLinks;
 
   const confirmLogout = () => {
     logout();
@@ -39,7 +56,7 @@ export default function Navigation() {
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-10">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.path}
@@ -96,7 +113,7 @@ export default function Navigation() {
       {menuOpen && (
         <div className="md:hidden bg-near-black/95 backdrop-blur-xl border-t border-warm-white/[0.06] px-6 py-6">
           <div className="flex flex-col gap-4">
-            {navLinks.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.path}

@@ -4,6 +4,7 @@ import { useRegionStore } from '../store/regionStore';
 import { useKnowledgeStore } from '../store/knowledgeStore';
 import { useTowerStore } from '../store/towerStore';
 import { useProgressionStore } from '../store/progressionStore';
+import { useRevisionStore } from '../store/revisionStore';
 
 export const syncManager = {
   /** Pulls state from the server and hydrates local stores */
@@ -15,6 +16,7 @@ export const syncManager = {
       if (data.regions) useRegionStore.getState().hydrate(data.regions);
       if (data.knowledge_graph) useKnowledgeStore.getState().hydrate(data.knowledge_graph);
       if (data.tower_progress) useTowerStore.getState().hydrate(data.tower_progress);
+      if (data.revisions) useRevisionStore.getState().setRevisions(data.revisions);
       
       // Progression store (stats/inventory) is currently hydrated via its own fetchProgression()
       // We can also hydrate it here if we want to unify, but for now we focus on the newly wired stores.
@@ -31,6 +33,7 @@ export const syncManager = {
       const regionState = useRegionStore.getState().regions;
       const knowledgeState = useKnowledgeStore.getState().graph;
       const towerState = useTowerStore.getState().progress;
+      const revisionState = useRevisionStore.getState().revisions;
 
       const payload: SyncPayload = {
         timestamp: new Date().toISOString(),
@@ -48,7 +51,8 @@ export const syncManager = {
           completed_at: reg.regionStatus === 'completed' ? new Date().toISOString() : null
         })),
         knowledge_graph: knowledgeState,
-        tower_progress: towerState
+        tower_progress: towerState,
+        revisions: Object.values(revisionState)
       };
 
       await syncApi.pushState(payload);

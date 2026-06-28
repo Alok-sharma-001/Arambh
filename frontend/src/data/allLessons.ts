@@ -25,12 +25,12 @@ export const ALL_LESSONS = {
 };
 
 export function getRegionForLesson(lessonId: string): string {
-  if (bossGateSagaData[lessonId]) return 'boss-gate';
+  if (bossGateSagaData[lessonId]) return 'bossgate-saga';
   if (algorithmArenaData[lessonId]) return 'algorithm-arena';
   if (modulesHarborData[lessonId]) return 'modules-harbor';
-  if (fileSystemRuinsData[lessonId]) return 'file-system-ruins';
+  if (fileSystemRuinsData[lessonId]) return 'filesystem-ruins';
   if (exceptionAbyssData[lessonId]) return 'exception-abyss';
-  if (oopCastleData[lessonId]) return 'oop-castle';
+  if (oopCastleData[lessonId]) return 'oop-citadel';
   if (collectionsKingdomData[lessonId]) return 'collections-kingdom';
   if (functionsMountainData[lessonId]) return 'functions-mountain';
   if (LOOPS_DESERT_LESSONS[lessonId]) return 'loops-desert';

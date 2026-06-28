@@ -13,7 +13,7 @@ export default function TheSmugglerOfSecrets() {
   const [isAnimating, setIsAnimating] = useState(false);
   
   const { completeBoss } = useRegionStore();
-  const { gainItem } = useProgressionStore();
+  const { gainXP, gainItem } = useProgressionStore();
   const navigate = useNavigate();
 
   const handleCast = () => {
@@ -76,7 +76,8 @@ export default function TheSmugglerOfSecrets() {
         setIsVictory(true);
         setTimeout(() => {
           completeBoss('modules-harbor');
-          gainItem('library_compass');
+          gainItem('harbor-compass');
+          gainXP(600, 'Boss Defeated');
         }, 2000);
       }
       

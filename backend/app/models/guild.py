@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, JSON
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, JSON, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database.session import Base
@@ -13,7 +13,7 @@ class Guild(Base):
     level = Column(Integer, default=1)
     total_gxp = Column(Integer, default=0)
     reputation = Column(Integer, default=0)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
 
     members = relationship("GuildMember", back_populates="guild", cascade="all, delete-orphan")
     progress = relationship("GuildProgress", back_populates="guild", uselist=False, cascade="all, delete-orphan")
@@ -25,7 +25,7 @@ class GuildMember(Base):
     guild_id = Column(Integer, ForeignKey("guilds.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True)
     role = Column(String, default="recruit") # 'founder', 'officer', 'member', 'recruit'
-    joined_at = Column(DateTime(timezone=True), server_default=func.now())
+    joined_at = Column(DateTime(timezone=True), server_default=text("CURRENT_TIMESTAMP"))
     contribution_gxp = Column(Integer, default=0)
 
     guild = relationship("Guild", back_populates="members")

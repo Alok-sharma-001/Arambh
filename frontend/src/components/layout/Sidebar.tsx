@@ -34,12 +34,12 @@ export const Sidebar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const setToken = useAuthStore((state) => state.setToken);
+  const logout = useAuthStore((state) => state.logout);
   
   const isLessonRoute = location.pathname.includes('/lesson/');
 
   const handleLogout = () => {
-    setToken(null);
+    logout();
     navigate('/login');
   };
 

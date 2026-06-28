@@ -27,6 +27,11 @@ class UserStats(BaseModel):
     rank: str = "Novice"
     title: Optional[str] = None
 
+    # Daily Login Rewards
+    daily_streak: int = 0
+    last_claimed_at: Optional[datetime] = None
+    total_login_days: int = 0
+
     class Config:
         from_attributes = True
 

@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useProgression } from '../../hooks/useProgression';
 import { Sparkles, Gift, ArrowRight } from 'lucide-react';
+import { playSound } from '../../utils/audio';
+import { regions } from '../../data/regions';
+import { useRegionStore } from '../../store/regionStore';
 
 export const LevelUpModal: React.FC = () => {
   const { levelUpEvent, dismissLevelUp } = useProgression();
+  const storeRegions = useRegionStore((s) => s.regions);
+
+  useEffect(() => {
+    if (levelUpEvent) {
+      playSound.levelUp();
+    }
+  }, [levelUpEvent]);
 
   if (!levelUpEvent) return null;
+
+  // Find the current or available region to show as unlocked
+  const unlockedRegion = regions.find(r => {
+    const status = (storeRegions[r.id]?.regionStatus || r.status) as string;
+    return status === 'available' || status === 'current';
+  });
 
   return (
     <AnimatePresence>
@@ -79,11 +95,20 @@ export const LevelUpModal: React.FC = () => {
             <div className="p-4 rounded-xl bg-[#0D0D12] border border-[#181820] mb-6">
               <div className="flex items-center justify-center gap-2 mb-1">
                 <Gift className="w-4 h-4 text-game-purple" />
-                <span className="text-xs font-bold uppercase tracking-wider text-game-purple">Unlocked</span>
+                <span className="text-xs font-bold uppercase tracking-wider text-game-purple">Unlocked Reward</span>
               </div>
               <p className="text-lg font-bold text-white">
                 <span className="mr-2">{levelUpEvent.reward.icon}</span>
                 {levelUpEvent.reward.name}
+              </p>
+            </div>
+          )}
+
+          {unlockedRegion && (
+            <div className="p-4 rounded-xl bg-game-purple/10 border border-game-purple/30 mb-6">
+              <span className="text-xs font-bold uppercase tracking-wider text-game-purple">Unlocked Region</span>
+              <p className="text-lg font-bold text-white mt-1">
+                🏰 {unlockedRegion.name}
               </p>
             </div>
           )}

@@ -7,7 +7,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.auth.router import router as auth_router
 from app.api.progress import router as progress_router
-from app.api.endpoints import progression, sync, guild
+from app.api.endpoints import progression, sync, guild, revisions, mentor, analytics
 from app.database.session import engine, Base
 import app.models  # This ensures the __init__.py is loaded
 
@@ -37,12 +37,17 @@ async def lifespan(app: FastAPI):
             logger.error("Error: 'users' table was NOT created.")
             
         # Ensure new RPG columns exist in user_stats
-        from sqlalchemy import text
+        from sqlalchemy import text, inspect as sa_inspect
         with engine.begin() as conn:
             try:
-                conn.execute(text("ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS player_class VARCHAR;"))
-                conn.execute(text("ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS rank VARCHAR DEFAULT 'Novice';"))
-                conn.execute(text("ALTER TABLE user_stats ADD COLUMN IF NOT EXISTS title VARCHAR;"))
+                inspector = sa_inspect(engine)
+                existing_cols = {c['name'] for c in inspector.get_columns('user_stats')}
+                if 'player_class' not in existing_cols:
+                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN player_class VARCHAR;"))
+                if 'rank' not in existing_cols:
+                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN rank VARCHAR DEFAULT 'Novice';"))
+                if 'title' not in existing_cols:
+                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN title VARCHAR;"))
                 logger.info("Database migration: Verified/Added missing RPG columns to user_stats.")
             except Exception as e:
                 logger.warning(f"Database migration for user_stats failed: {e}")
@@ -58,7 +63,12 @@ app = FastAPI(title="Arambh API", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -69,6 +79,9 @@ app.include_router(progress_router, prefix="/api")
 app.include_router(progression.router, prefix="/api/progression", tags=["progression"])
 app.include_router(sync.router, prefix="/api/v1/sync", tags=["sync"])
 app.include_router(guild.router, prefix="/api/v1/guilds", tags=["guilds"])
+app.include_router(revisions.router, prefix="/api/v1/revisions", tags=["revisions"])
+app.include_router(mentor.router, prefix="/api/v1/mentor", tags=["mentor"])
+app.include_router(analytics.router, prefix="/api", tags=["analytics"])
 
 @app.get("/")
 async def root():

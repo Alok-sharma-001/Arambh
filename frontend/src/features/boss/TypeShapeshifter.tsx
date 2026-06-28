@@ -106,7 +106,7 @@ export default function TypeShapeshifter() {
     try {
       console.log('handleVictory called');
       gainXP(500, 'Boss Defeated');
-      gainItem('type_prism');
+      gainItem('crystal-lens');
       completeBoss('data-types-valley');
       navigate('/region/data-types-valley');
     } catch (e) {

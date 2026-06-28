@@ -70,7 +70,7 @@ export default function CorruptedGuardian() {
 
   const handleVictory = () => {
     gainXP(500, 'Boss Defeated');
-    gainItem('variables_crystal');
+    gainItem('forest-ring');
     completeBoss('variables-forest');
     navigate('/region/variables-forest');
   };

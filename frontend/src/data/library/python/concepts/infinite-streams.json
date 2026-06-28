@@ -1,0 +1,101 @@
+{
+  "conceptId": "infinite-streams",
+  "title": "Infinite Streams",
+  "difficultyScore": 48,
+  "estimatedLearningTime": 9,
+  "prerequisiteConcepts": ["generator-expressions"],
+  "nextConcepts": [],
+  "beginnerExplanation": "An Infinite Stream is a generator that never stops yielding values. Because generators are lazy, they don't crash your computer—values are only generated as you request them.",
+  "intermediateExplanation": "Infinite streams are generated using while loops without termination inside generators, or using itertools functions like count(), cycle(), and repeat().",
+  "advancedExplanation": "To safely consume an infinite stream, you must use slicing tools like itertools.islice() or custom termination conditions. Never try to convert an infinite stream into a list directly.",
+  "realWorldAnalogy": {
+    "title": "Water Tap",
+    "description": "An infinite stream is like a water tap connected to the ocean. The supply of water is endless, but you only consume what pours into your cup (next()). You don't try to store the whole ocean in your bucket!"
+  },
+  "mentalModel": "Infinite generators represent infinite formulas, not infinite memory allocations.",
+  "visualDiagram": "Infinite tap -> yield -> next() -> next() -> next() -> Stop slice before overflow",
+  "executionWalkthrough": [
+    "1. An infinite generator loop while True is created.",
+    "2. It yields a value and pauses.",
+    "3. Slicing with itertools.islice pulls exactly N values, then stops calling next(), avoiding an infinite loop."
+  ],
+  "memoryState": [
+    {
+      "variable": "infinite_seq",
+      "value": "<generator object count>",
+      "type": "generator",
+      "note": "Represents endless integers but uses only 104 bytes"
+    }
+  ],
+  "commonMistakes": [
+    "Calling list(infinite_generator()) (this runs forever and crashes with Out of Memory!).",
+    "Using normal slice syntax like infinite_generator()[:10] (generators do not support indexing!)."
+  ],
+  "debuggingMission": {
+    "scenario": "A student gets a hang and crash when attempting to extract elements from an infinite sequence.",
+    "brokenCode": "def odds():\n  n = 1\n  while True:\n    yield n\n    n += 2\n# Crash attempt:\nprint(list(odds()))",
+    "solution": "import itertools\nprint(list(itertools.islice(odds(), 5)))",
+    "explanation": "Use itertools.islice to safely extract a slice of elements from an infinite iterator."
+  },
+  "practiceQuestions": [
+    {
+      "question": "Which itertools function lets you safely limit and slice an infinite generator?",
+      "options": [
+        "slice",
+        "islice",
+        "limit",
+        "take"
+      ],
+      "correctIndex": 1,
+      "explanation": "itertools.islice (iterator slice) extracts a specified range of items from any iterable without exhausting memory."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "What itertools function creates an infinite counter starting from a given number?",
+      "hints": [
+        "It sounds like counting."
+      ],
+      "solution": "count"
+    }
+  ],
+  "projectExercise": {
+    "title": "Implement Fibonacci Stream",
+    "description": "Create an infinite Fibonacci generator.",
+    "requirements": [
+      "Define fib() yielding infinite Fibonacci numbers."
+    ],
+    "starterCode": "def fib():\n  a, b = 0, 1\n  while True:\n    yield a\n    a, b = b, a + b"
+  },
+  "bossBattle": {
+    "name": "Sentinel of the Stream",
+    "description": "Feed the Sentinel a sliced infinite sequence of power strikes.",
+    "mechanic": "Use itertools.islice on custom infinite generators."
+  },
+  "rewards": [
+    "Vessel of Infinity",
+    "100 Gold"
+  ],
+  "complexityAnalysis": {
+    "timeComplexity": "O(1) per step. O(K) where K is the number of elements sliced.",
+    "spaceComplexity": "O(1) auxiliary space.",
+    "description": "Enables computing over mathematically endless concepts with zero memory growth."
+  },
+  "memoryImpact": {
+    "allocationBytes": "Constant 104 bytes of runtime state metadata.",
+    "scalingFactor": "O(1)",
+    "optimizationNotes": "Never wrap infinite generators in eager collection calls."
+  },
+  "performanceNotes": [
+    "Highly optimized C loops inside itertools speed up streaming calculations."
+  ],
+  "industryUsage": {
+    "useCases": [
+      "Generating unique sequential IDs in distributed databases",
+      "Representing endless timelines in simulation programs"
+    ],
+    "standardLibraries": [
+      "itertools"
+    ]
+  }
+}

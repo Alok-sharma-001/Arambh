@@ -1,0 +1,108 @@
+{
+  "conceptId": "iterable-vs-iterator",
+  "title": "Iterable vs Iterator",
+  "difficultyScore": 30,
+  "estimatedLearningTime": 6,
+  "prerequisiteConcepts": ["lists", "sets-tuples"],
+  "nextConcepts": ["iteration-protocol"],
+  "beginnerExplanation": "An Iterable is a collection of items that you can loop over (like a list or a tuple). An Iterator is the helper agent that actually does the work of fetching the items one by one.",
+  "intermediateExplanation": "Iterables define the __iter__ method which returns an Iterator. Iterators implement the __next__ method which yields elements and raises StopIteration when depleted. Iterators are stateful—once consumed, they are exhausted.",
+  "advancedExplanation": "Iterables are compatible with collections.abc.Iterable. Iterators subclass collections.abc.Iterator and must implement both __iter__ (returning self) and __next__.",
+  "realWorldAnalogy": {
+    "title": "The Book and the Reader",
+    "description": "An Iterable is like a physical Book (the pages exist, but they don't turn themselves). An Iterator is like a Reader (the person turning page-by-page, holding their current spot with a finger)."
+  },
+  "mentalModel": "Iterables contain the data, but Iterators contain the state (index cursor) of the loop.",
+  "visualDiagram": "Iterable (Book) -> iter() -> Iterator (Reader with pointer) -> next() -> values",
+  "executionWalkthrough": [
+    "1. iter() is called on the list container.",
+    "2. An iterator object is created with its cursor initialized at index 0.",
+    "3. next() is called on the iterator, returning the current element and incrementing the index."
+  ],
+  "memoryState": [
+    {
+      "variable": "spell_book",
+      "value": "['fire', 'ice']",
+      "type": "list (Iterable)",
+      "note": "Holds data but not current iteration cursor"
+    },
+    {
+      "variable": "book_iterator",
+      "value": "<list_iterator>",
+      "type": "Iterator",
+      "note": "Tracks index cursor state"
+    }
+  ],
+  "commonMistakes": [
+    "Trying to reset an iterator (it cannot be reset; you must create a new one).",
+    "Confusing collections.abc.Iterable with collections.abc.Iterator."
+  ],
+  "debuggingMission": {
+    "scenario": "A player tries to loop over an iterator a second time, but gets no elements.",
+    "brokenCode": "nums = [1, 2]\nit = iter(nums)\nlist(it)\nlist(it)  # Empty!",
+    "solution": "nums = [1, 2]\nlist(iter(nums))\nlist(iter(nums))",
+    "explanation": "Iterators are exhausted on first consumption. Always generate a fresh iterator for reuse."
+  },
+  "practiceQuestions": [
+    {
+      "question": "Which method must a custom Iterable class implement to return an Iterator?",
+      "options": [
+        "__next__",
+        "__iter__",
+        "__len__",
+        "__getitem__"
+      ],
+      "correctIndex": 1,
+      "explanation": "Iterables must implement the __iter__ method to build and return their iterator helper."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "Which exception is raised when next() runs out of items?",
+      "hints": [
+        "It starts with Stop."
+      ],
+      "solution": "StopIteration"
+    }
+  ],
+  "projectExercise": {
+    "title": "Verify Iterable Interfaces",
+    "description": "Verify class compatibility with collections.abc.",
+    "requirements": [
+      "Use isinstance to verify if list is an Iterable."
+    ],
+    "starterCode": "from collections.abc import Iterable\nprint(isinstance([], Iterable))"
+  },
+  "bossBattle": {
+    "name": "Sentinel of the Stream",
+    "description": "Bypass the Sentinel's checks by passing stateful iterators.",
+    "mechanic": "Feed lazy sequences to prevent memory explosion."
+  },
+  "rewards": [
+    "Scroll of Streams",
+    "50 Gold"
+  ],
+  "complexityAnalysis": {
+    "timeComplexity": "O(1) to create an iterator, O(1) per step to fetch the next item.",
+    "spaceComplexity": "O(1) auxiliary space, as it only holds a cursor reference.",
+    "description": "Iterators avoid duplicating the source collection in memory."
+  },
+  "memoryImpact": {
+    "allocationBytes": "104 bytes per iterator object, irrespective of the source list size.",
+    "scalingFactor": "O(1)",
+    "optimizationNotes": "Always prefer iterators over lists when streaming millions of DB rows."
+  },
+  "performanceNotes": [
+    "Calling next() has low overhead, but calling it millions of times in Python can be slower than native C loops."
+  ],
+  "industryUsage": {
+    "useCases": [
+      "Streaming large log files line-by-line",
+      "Paginating API responses dynamically"
+    ],
+    "standardLibraries": [
+      "collections.abc",
+      "itertools"
+    ]
+  }
+}

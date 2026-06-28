@@ -13,7 +13,7 @@ export default function TheForgottenArchivist() {
   const [isAnimating, setIsAnimating] = useState(false);
   
   const { completeBoss } = useRegionStore();
-  const { gainItem } = useProgressionStore();
+  const { gainXP, gainItem } = useProgressionStore();
   const navigate = useNavigate();
 
   const handleCast = () => {
@@ -78,8 +78,9 @@ export default function TheForgottenArchivist() {
         // Victory
         setIsVictory(true);
         setTimeout(() => {
-          completeBoss('file-system-ruins');
-          gainItem('archive_key');
+          completeBoss('filesystem-ruins');
+          gainItem('stone-tablet');
+          gainXP(600, 'Boss Defeated');
         }, 2000);
       }
       

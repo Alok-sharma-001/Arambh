@@ -13,7 +13,7 @@ export default function TheChaosCompiler() {
   const [isAnimating, setIsAnimating] = useState(false);
   
   const { completeBoss } = useRegionStore();
-  const { gainItem } = useProgressionStore();
+  const { gainXP, gainItem } = useProgressionStore();
   const navigate = useNavigate();
 
   const handleCast = () => {
@@ -80,7 +80,8 @@ export default function TheChaosCompiler() {
         setIsVictory(true);
         setTimeout(() => {
           completeBoss('exception-abyss');
-          gainItem('error_sigil');
+          gainItem('abyssal-shield');
+          gainXP(600, 'Boss Defeated');
         }, 2000);
       }
       

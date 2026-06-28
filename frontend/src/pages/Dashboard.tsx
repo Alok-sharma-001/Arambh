@@ -7,7 +7,6 @@ import { LevelUpModal } from '../components/progression/LevelUpModal';
 import { ArtifactRevealModal } from '../components/artifacts/ArtifactRevealModal';
 import { DailyGoals } from '../components/dashboard/DailyGoals';
 import { ArtifactWidget } from '../components/artifacts/ArtifactWidget';
-import { AvatarSelection } from '../components/dashboard/AvatarSelection';
 import { ProgressionWidget } from '../components/dashboard/ProgressionWidget';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { Button } from '../components/ui/Button';
@@ -17,17 +16,39 @@ import { motion } from 'framer-motion';
 import { useProgression } from '../hooks/useProgression';
 import { useRegionStore } from '../store/regionStore';
 import { ALL_LESSONS, getRegionForLesson } from '../data/allLessons';
+import { DailyLoginRewards } from '../components/dashboard/DailyLoginRewards';
+import { useProgressionStore } from '../store/progressionStore';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const { fetchProgression } = useProgression();
+  const stats = useProgressionStore((state) => state.stats);
 
   useEffect(() => {
     fetchProgression();
   }, [fetchProgression]);
 
+  useEffect(() => {
+    if (stats && !stats.player_class) {
+      navigate('/onboarding');
+    }
+  }, [stats, navigate]);
+
   const regions = useRegionStore((state) => state.regions);
-  const REGION_ORDER = ['variables-forest', 'data-types-valley', 'loops-desert', 'functions-mountain', 'oop-castle', 'dsa-dungeon', 'ai-temple'];
+  const REGION_ORDER = [
+    'variables-forest',
+    'data-types-valley',
+    'loops-desert',
+    'functions-mountain',
+    'collections-kingdom',
+    'oop-citadel',
+    'exception-abyss',
+    'filesystem-ruins',
+    'modules-harbor',
+    'algorithm-arena',
+    'iterator-isles',
+    'bossgate-saga',
+  ];
   
   let activeRegionId = 'variables-forest';
   for (const rId of REGION_ORDER) {
@@ -46,13 +67,13 @@ export default function Dashboard() {
     } else {
       // Find the first uncompleted lesson for this region
       const regionLessons = Object.keys(ALL_LESSONS).filter(id => getRegionForLesson(id) === activeRegionId);
-      regionLessons.sort((a, b) => parseInt(a) - parseInt(b));
+      regionLessons.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
       
       const uncompletedLessons = regionLessons.filter(id => !activeRegion.completedLessons.includes(id));
       const targetLessonId = uncompletedLessons.length > 0 ? uncompletedLessons[0] : regionLessons[0];
       
       if (targetLessonId) {
-        resumePath = `/lesson/${targetLessonId}`;
+        resumePath = `/lesson/${activeRegionId}/${targetLessonId}`;
       } else {
         resumePath = `/region/${activeRegionId}`;
       }
@@ -84,9 +105,6 @@ export default function Dashboard() {
       {/* Level-up modal (renders only on event) */}
       <LevelUpModal />
 
-      {/* Avatar class selection (renders only if no class set) */}
-      <AvatarSelection />
-
       <ArtifactRevealModal />
 
       <PageHeader 
@@ -98,6 +116,11 @@ export default function Dashboard() {
       {/* Character Profile Card — the RPG hero area */}
       <motion.div variants={itemVariants}>
         <CharacterCard />
+      </motion.div>
+
+      {/* Daily Login Reward Calendar */}
+      <motion.div variants={itemVariants}>
+        <DailyLoginRewards />
       </motion.div>
 
       {/* Artifact Collection Widget */}

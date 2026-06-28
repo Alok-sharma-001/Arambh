@@ -51,7 +51,7 @@ export default function Login() {
       }
       
       // Force reload to re-hydrate stores
-      window.location.href = '/';
+      window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Login failed');
     }

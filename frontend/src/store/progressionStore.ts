@@ -69,6 +69,9 @@ export const useProgressionStore = create<ProgressionState>((set, get) => ({
             player_class: null,
             rank: 'Novice',
             title: null,
+            daily_streak: 0,
+            last_claimed_at: null,
+            total_login_days: 0,
           },
           inventory: [],
           isLoading: false 

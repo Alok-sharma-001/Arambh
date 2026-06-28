@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { analyticsApi } from '@/services/analyticsApi';
 import {
   ArrowLeft,
   ArrowRight,
@@ -15,18 +16,102 @@ import {
 } from 'lucide-react';
 import { regions } from '@/data/regions';
 import { lessons } from '@/data/lessons';
-import type { LessonDebugContent, MemorySlot, DebugStep } from '@/types';
 import SyntaxHighlighter from '@/components/SyntaxHighlighter';
+import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
+import { usePlayer } from '@/context/PlayerContext';
+import { useRevisionStore } from '@/store/revisionStore';
+import { LessonCompletionModal } from '@/components/progression/LessonCompletionModal';
+import { useRegionStore } from '@/store/regionStore';
+import { ExitSurveyModal } from '@/components/ui/ExitSurveyModal';
 
 export default function LessonPage() {
   const { regionId, lessonId } = useParams();
   const navigate = useNavigate();
   const [stepIndex, setStepIndex] = useState(0);
+  const [isCompleting, setIsCompleting] = useState(false);
+  const [completionError, setCompletionError] = useState<string | null>(null);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const { completeLesson, addXP } = usePlayer();
+
+  const [showExitSurvey, setShowExitSurvey] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [hasCompleted, setHasCompleted] = useState(false);
+
+  const handleExitAttempt = (targetUrl: string) => {
+    // If it is the first lesson and not completed yet
+    if (lessonId === 'v1' || lessonId === 'variables-basics' || lessonId === 'v-basic-syntax') {
+      if (!hasCompleted) {
+        setPendingNavigation(targetUrl);
+        setShowExitSurvey(true);
+        return;
+      }
+    }
+    navigate(targetUrl);
+  };
+  const { submitReview } = useRevisionStore();
+  
   const region = regions.find((r) => r.id === regionId);
   const lesson = region?.lessons.find((item) => item.id === lessonId) || region?.lessons[0];
+  const regionProgress = useRegionStore((s) => regionId ? s.regions[regionId] : undefined);
   
   // Dynamic lesson content based on lessonId, falling back to a placeholder if missing
   const content = (lessonId && lessons[lessonId]) ? lessons[lessonId] : lessons['default'];
+  
+  const startTimeRef = useRef<number>(Date.now());
+  const [feedbackSubmitted, setFeedbackSubmitted] = useState(false);
+  const [feedbackHelpful, setFeedbackHelpful] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (regionId && lessonId) {
+      startTimeRef.current = Date.now();
+      setFeedbackSubmitted(false);
+      setFeedbackHelpful(null);
+      setHasCompleted(false);
+      analyticsApi.logEvent('lesson_start', { region_id: regionId, lesson_id: lessonId });
+
+      // Log first_lesson_started telemetry if not already set
+      const loggedStarted = localStorage.getItem('arambh_first_lesson_started');
+      if (!loggedStarted) {
+        analyticsApi.logEvent('first_lesson_started', { region_id: regionId, lesson_id: lessonId });
+        localStorage.setItem('arambh_first_lesson_started', 'true');
+      }
+
+      const handleUnload = () => {
+        const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+        const tokenString = localStorage.getItem('token');
+        if (tokenString) {
+          const payload = JSON.stringify({
+            event_type: 'lesson_time_spent',
+            details: {
+              region_id: regionId,
+              lesson_id: lessonId,
+              duration_seconds: durationSeconds
+            }
+          });
+          const baseUrl = import.meta.env.VITE_API_URL || '/api';
+          const url = baseUrl.startsWith('http') 
+            ? `${baseUrl}/analytics/event` 
+            : `${window.location.origin}${baseUrl}/analytics/event`;
+          
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${tokenString}`
+            },
+            body: payload,
+            keepalive: true
+          }).catch(() => {});
+        }
+      };
+
+      window.addEventListener('beforeunload', handleUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleUnload);
+        handleUnload();
+      };
+    }
+  }, [regionId, lessonId]);
   
   const currentStep = content?.debuggerSteps[stepIndex] || { line: 0, action: 'Loading...', why: '', memory: [] };
   // Fix double-escaped newlines that may come from JSON serialization
@@ -49,27 +134,95 @@ export default function LessonPage() {
   const canGoBack = stepIndex > 0;
   const canGoNext = stepIndex < content.debuggerSteps.length - 1;
 
+  const handleCompleteLesson = async () => {
+    if (!regionId || !lesson?.id || isCompleting) return;
+
+    setIsCompleting(true);
+    setCompletionError(null);
+    try {
+      completeLesson(regionId, lesson.id);
+      addXP(lesson.xpReward);
+      setHasCompleted(true);
+      
+      const durationSeconds = Math.round((Date.now() - startTimeRef.current) / 1000);
+      analyticsApi.logEvent('lesson_complete', {
+        region_id: regionId,
+        lesson_id: lesson.id,
+        duration_seconds: durationSeconds
+      });
+
+      // Log first_lesson_completed telemetry if not already set
+      const loggedCompleted = localStorage.getItem('arambh_first_lesson_completed');
+      if (!loggedCompleted) {
+        analyticsApi.logEvent('first_lesson_completed', { region_id: regionId, lesson_id: lesson.id });
+        localStorage.setItem('arambh_first_lesson_completed', 'true');
+      }
+
+      await submitReview(regionId, 4);
+      setShowCompletionModal(true);
+    } catch {
+      setCompletionError('Progress was saved locally, but revision sync failed. You can keep learning.');
+      setShowCompletionModal(true);
+    } finally {
+      setIsCompleting(false);
+    }
+  };
+
+  const currentLessonIndex = region ? region.lessons.findIndex((l) => l.id === lesson?.id) : -1;
+  const nextLesson = region && currentLessonIndex !== -1 ? region.lessons[currentLessonIndex + 1] : undefined;
+  const nextLessonTitle = nextLesson ? nextLesson.title : null;
+
+  const handleNextLesson = () => {
+    setShowCompletionModal(false);
+    if (nextLesson) {
+      navigate(`/lesson/${regionId}/${nextLesson.id}`);
+      setStepIndex(0);
+    } else {
+      navigate(`/region/${regionId}/boss`);
+    }
+  };
+
+  const handleReturnToMap = () => {
+    setShowCompletionModal(false);
+    navigate('/map');
+  };
+
+  const handleFeedback = async (helpful: boolean) => {
+    if (!regionId || !lessonId) return;
+    try {
+      await analyticsApi.submitFeedback({
+        region_id: regionId,
+        lesson_id: lessonId,
+        helpful,
+      });
+      setFeedbackSubmitted(true);
+      setFeedbackHelpful(helpful);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <main className="min-h-screen bg-near-black pt-[72px]">
       <div className="border-b border-warm-white/[0.06]">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-wrap items-center gap-2 text-sm">
-            <Link to="/map" className="text-mid-gray hover:text-gold transition-colors">World Map</Link>
+            <button onClick={() => handleExitAttempt('/map')} className="text-mid-gray hover:text-gold transition-colors">World Map</button>
             <span className="text-mid-gray">/</span>
             <span className="text-mid-gray">{region.name}</span>
             <span className="text-mid-gray">/</span>
             <span className="text-warm-white font-medium">{content.title}</span>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Link
-              to="/library"
+            <button
+              onClick={() => handleExitAttempt('/library')}
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-warm-white/[0.08] bg-warm-white/[0.03] px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-warm-white hover:border-gold/30 hover:text-gold transition-colors"
             >
               <Library size={15} />
               Library
-            </Link>
+            </button>
             <button
-              onClick={() => navigate(`/training/${region.id}`)}
+              onClick={() => handleExitAttempt(`/training/${region.id}`)}
               className="inline-flex items-center justify-center gap-2 rounded-lg border border-gold/25 bg-gold/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-gold hover:bg-gold/15 transition-colors"
             >
               <Target size={15} />
@@ -173,7 +326,19 @@ export default function LessonPage() {
                       Run Line
                       <ArrowRight size={14} />
                     </button>
+                    {!canGoNext && (
+                      <button
+                        onClick={handleCompleteLesson}
+                        disabled={isCompleting}
+                        className="inline-flex items-center gap-2 rounded-lg border border-emerald/30 bg-emerald/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-emerald disabled:cursor-not-allowed disabled:opacity-45"
+                      >
+                        {isCompleting ? 'Saving...' : `Complete +${lesson.xpReward} XP`}
+                      </button>
+                    )}
                   </div>
+                  {completionError && (
+                    <p className="mt-3 text-xs text-gold">{completionError}</p>
+                  )}
                 </div>
 
                 <div className="p-5">
@@ -224,6 +389,35 @@ export default function LessonPage() {
                 ))}
               </div>
             </div>
+            {/* Feedback Poll */}
+            <div className="rounded-2xl border border-warm-white/[0.08] bg-[#10100f] p-5">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h3 className="font-display text-lg font-bold text-warm-white">Was this lesson helpful?</h3>
+                  <p className="text-xs text-mid-gray mt-1">Your feedback helps improve our curriculum.</p>
+                </div>
+                {!feedbackSubmitted ? (
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => handleFeedback(true)}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg border border-emerald/30 bg-emerald/10 text-emerald hover:bg-emerald/20 transition-all animate-pulse"
+                    >
+                      👍 Yes
+                    </button>
+                    <button
+                      onClick={() => handleFeedback(false)}
+                      className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg border border-gold/30 bg-gold/10 text-gold hover:bg-gold/20 transition-all"
+                    >
+                      👎 No
+                    </button>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gold font-medium">
+                    {feedbackHelpful ? 'Awesome! Glad you found it helpful. ⚔️' : 'Thanks! We will work to improve this lesson. 🛡️'}
+                  </p>
+                )}
+              </div>
+            </div>
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <button
@@ -244,6 +438,35 @@ export default function LessonPage() {
           </div>
         </div>
       </section>
+      <MentorChatPanel 
+        conceptId={regionId} 
+        lessonId={lessonId} 
+        getCodeSnapshot={() => content?.code || ''} 
+      />
+      <LessonCompletionModal
+        isOpen={showCompletionModal}
+        xpReward={lesson?.xpReward || 50}
+        regionTitle={region?.name || 'Variables Forest'}
+        completedCount={regionProgress?.completedLessons.length || 0}
+        totalCount={region?.lessons.length || 4}
+        nextLessonTitle={nextLessonTitle}
+        onNextLesson={handleNextLesson}
+        onReturnToMap={handleReturnToMap}
+        onFeedbackSubmit={handleFeedback}
+        feedbackSubmitted={feedbackSubmitted}
+        feedbackHelpful={feedbackHelpful}
+      />
+
+      <ExitSurveyModal
+        isOpen={showExitSurvey}
+        onClose={() => {
+          setShowExitSurvey(false);
+          if (pendingNavigation) {
+            navigate(pendingNavigation);
+          }
+        }}
+        context="first_lesson"
+      />
     </main>
   );
 }

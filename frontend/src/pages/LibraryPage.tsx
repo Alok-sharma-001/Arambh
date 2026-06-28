@@ -21,6 +21,7 @@ import {
   Hash,
 } from 'lucide-react';
 import SyntaxHighlighter from '@/components/SyntaxHighlighter';
+import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
 import { topics } from '../data/libraryTopics';
 import type { LibraryTopic } from '../data/libraryTopics';
 
@@ -206,6 +207,32 @@ export default function LibraryPage() {
                   <span className="text-gold">{selectedTopic.category}</span>
                   <ChevronRight size={12} />
                   <span className="text-warm-white">{selectedTopic.title}</span>
+                </div>
+
+                {/* Mobile/Tablet Topic Selector */}
+                <div className="block lg:hidden mb-6">
+                  <label htmlFor="mobile-topic-select" className="block text-xs font-bold uppercase tracking-[0.16em] text-mid-gray/70 mb-2">
+                    Select Concept
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="mobile-topic-select"
+                      value={selectedId}
+                      onChange={(e) => switchTopic(e.target.value)}
+                      className="w-full h-11 rounded-lg border border-warm-white/[0.08] bg-deep-charcoal pl-3 pr-10 text-sm text-warm-white outline-none focus:border-gold/40 appearance-none cursor-pointer"
+                    >
+                      {Object.entries(categories).map(([cat, catTopics]) => (
+                        <optgroup key={cat} label={cat} className="bg-near-black text-warm-white">
+                          {catTopics.map((t) => (
+                            <option key={t.id} value={t.id}>
+                              {t.title}
+                            </option>
+                          ))}
+                        </optgroup>
+                      ))}
+                    </select>
+                    <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-mid-gray rotate-90 pointer-events-none" />
+                  </div>
                 </div>
 
                 {/* ── Title block ── */}
@@ -663,6 +690,10 @@ export default function LibraryPage() {
           </aside>
         </div>
       </div>
+      <MentorChatPanel 
+        conceptId={selectedTopic?.id || selectedId} 
+        getCodeSnapshot={() => selectedTopic?.interactiveCode?.code || ''} 
+      />
     </main>
   );
 }

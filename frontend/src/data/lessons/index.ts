@@ -1,4 +1,5 @@
 import type { LessonDebugContent } from '@/types';
+import { ITERATOR_ISLES_LESSONS } from '@/data/iteratorIslesData';
 
 export const lessons: Record<string, LessonDebugContent> = {
   'default': {
@@ -1799,4 +1800,5 @@ export const lessons: Record<string, LessonDebugContent> = {
         }
     ]
 },
+  ...ITERATOR_ISLES_LESSONS,
 };

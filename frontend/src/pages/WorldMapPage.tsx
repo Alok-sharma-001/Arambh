@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePlayer } from '@/context/PlayerContext';
+import { useRegionStore } from '@/store/regionStore';
 import { regions } from '@/data/regions';
 import { BookOpen, Check, Circle, ChevronRight, Lock, Sword, Target, X } from 'lucide-react';
 import type { Region } from '@/types';
@@ -38,7 +39,7 @@ function MapHeader() {
           <span className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-gold">WORLD MAP</span>
           <span className="hidden sm:inline text-warm-white/60">|</span>
           <span className="hidden sm:flex items-center gap-2 text-sm text-warm-white">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors(regions.find((r) => r.id === player.currentRegion)?.status || 'current').accent }} />
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors('current').accent }} />
             {regions.find((r) => r.id === player.currentRegion)?.name}
           </span>
         </div>
@@ -67,13 +68,19 @@ function MapHeader() {
 }
 
 function RegionNode({ region, onClick }: { region: Region; onClick: () => void }) {
+  const storeRegions = useRegionStore((state) => state.regions);
+  const storeRegion = storeRegions[region.id];
+
   const isCompleted = region.status === 'completed';
   const isCurrent = region.status === 'current';
   const isLocked = region.status === 'locked';
   const isBoss = region.number === 11;
 
-  const completedLessons = isCompleted ? region.lessons.length : isCurrent ? 2 : 0;
-  const progressPercent = (completedLessons / region.lessons.length) * 100;
+  const completedLessons = isCompleted ? region.lessons.length : (storeRegion?.completedLessons?.length || 0);
+  const progressPercent = region.lessons.length > 0 ? (completedLessons / region.lessons.length) * 100 : 0;
+  const bossCompleted = storeRegion?.bossStatus === 'completed';
+  const bossAvailable = storeRegion?.bossStatus === 'available';
+
   const glowClass = isCurrent ? 'animate-pulse-glow' : '';
 
   const themeColors = getThemeColors(region.status);
@@ -145,30 +152,40 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
         </h3>
         <p className="relative mt-1 text-xs text-mid-gray">{region.subtitle}</p>
 
-        <div className="relative mt-4 grid grid-cols-2 gap-2">
-          <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-3 py-2">
-            <span className="block font-mono text-sm font-bold" style={{ color: accentColor }}>{region.lessons.length}</span>
-            <span className="text-[0.6rem] uppercase tracking-[0.12em] text-mid-gray">Lessons</span>
+        <div className="relative mt-4 space-y-2">
+          {/* Progress mini-bar */}
+          <div>
+            <div className="flex items-center justify-between text-[0.65rem] text-mid-gray uppercase tracking-wider mb-1 font-bold">
+              <span>Progress</span>
+              <span>{Math.round(progressPercent)}%</span>
+            </div>
+            <div className="relative h-1.5 bg-warm-white/[0.06] rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-500 animate-pulse-fast"
+                style={{
+                  width: `${progressPercent}%`,
+                  backgroundColor: accentColor,
+                }}
+              />
+            </div>
           </div>
-          <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-3 py-2">
-            <span className="block font-mono text-sm font-bold text-gold">+{region.bossChallenge.xpReward}</span>
-            <span className="text-[0.6rem] uppercase tracking-[0.12em] text-mid-gray">Boss XP</span>
-          </div>
-        </div>
 
-        {/* Progress mini-bar */}
-        <div className="relative mt-4 h-1.5 bg-warm-white/[0.06] rounded-full overflow-hidden">
-          <div
-            className="h-full rounded-full transition-all"
-            style={{
-              width: `${progressPercent}%`,
-              backgroundColor: accentColor,
-            }}
-          />
+          <div className="grid grid-cols-2 gap-2 mt-2">
+            <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-2.5 py-1.5 flex flex-col justify-center">
+              <span className="block font-mono text-[11px] font-bold text-warm-white">{completedLessons} / {region.lessons.length}</span>
+              <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold">Lessons</span>
+            </div>
+            <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-2.5 py-1.5 flex flex-col justify-center">
+              <span className="block font-mono text-[11px] font-bold text-gold">
+                {bossCompleted ? 'Defeated' : bossAvailable ? 'Ready' : 'Locked'}
+              </span>
+              <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold">Boss Status</span>
+            </div>
+          </div>
         </div>
 
         {/* Status */}
-        <div className="relative mt-2 flex items-center gap-1.5">
+        <div className="relative mt-4 flex items-center gap-1.5">
           {isCompleted && <><Check size={12} style={{ color: accentColor }} /><span className="text-[0.625rem] uppercase tracking-[0.1em] font-semibold" style={{ color: accentColor }}>COMPLETED</span></>}
           {isCurrent && <><Circle size={12} className="text-gold fill-gold" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-gold font-semibold">IN PROGRESS</span></>}
           {isLocked && <><Lock size={12} className="text-mid-gray" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-mid-gray font-semibold">LOCKED</span></>}
@@ -229,7 +246,8 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
     gsap.to(backdropRef.current, { opacity: 0, duration: 0.3, onComplete: onClose });
   };
 
-  const rp = { completed: region.status === 'completed', lessonsCompleted: region.status === 'completed' ? region.lessons.length : region.status === 'current' ? 2 : 0, totalLessons: region.lessons.length };
+  const lessonsCompleted = region.lessons.filter((l) => l.status === 'completed').length;
+  const rp = { completed: region.status === 'completed', lessonsCompleted, totalLessons: region.lessons.length };
   const progressPercent = (rp.lessonsCompleted / rp.totalLessons) * 100;
 
   return (
@@ -303,7 +321,10 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
               {region.bossChallenge.locked ? (
                 <p className="mt-3 text-xs text-warm-white/50">LOCKED — Complete all lessons first</p>
               ) : (
-                <button className="mt-4 px-6 py-2.5 bg-gold text-near-black font-semibold text-sm rounded-lg hover:bg-[#d4b76e] transition-colors">
+                <button 
+                  onClick={() => navigate(`/region/${region.id}/boss`)}
+                  className="mt-4 px-6 py-2.5 bg-gold text-near-black font-semibold text-sm rounded-lg hover:bg-[#d4b76e] transition-colors"
+                >
                   START BOSS
                 </button>
               )}
@@ -339,7 +360,51 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
 export default function WorldMapPage() {
   const mapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
-  const [selectedRegion, setSelectedRegion] = useState<Region | null>(null);
+  const { player } = usePlayer();
+  const { regions: storeRegions } = useRegionStore();
+  const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
+
+  // Enrich regions with player state
+  const enrichedRegions = regions.map((region) => {
+    const storeRegion = storeRegions[region.id];
+    const regionStatus = storeRegion?.regionStatus || (region.id === 'variables-forest' ? 'available' : 'locked');
+    const isCompleted = regionStatus === 'completed';
+    const isCurrent = player.currentRegion === region.id;
+    const isLocked = regionStatus === 'locked' && !isCurrent && !isCompleted;
+
+    const status: 'completed' | 'current' | 'locked' = isCompleted ? 'completed' : isCurrent ? 'current' : 'locked';
+
+    // Enrich lessons
+    const completedLessons = storeRegion?.completedLessons || [];
+    let foundCurrent = false;
+
+    const enrichedLessons = region.lessons.map((lesson) => {
+      let lessonStatus: 'completed' | 'current' | 'locked' = 'locked';
+      if (isCompleted || completedLessons.includes(lesson.id)) {
+        lessonStatus = 'completed';
+      } else if (!isLocked && !foundCurrent) {
+        lessonStatus = 'current';
+        foundCurrent = true;
+      }
+      return { ...lesson, status: lessonStatus };
+    });
+
+    const isBossLocked = !isCompleted && completedLessons.length < region.lessons.length;
+
+    return {
+      ...region,
+      status,
+      lessons: enrichedLessons,
+      bossChallenge: {
+        ...region.bossChallenge,
+        locked: isBossLocked
+      }
+    };
+  });
+
+  const selectedRegion = selectedRegionId
+    ? enrichedRegions.find((r) => r.id === selectedRegionId) || null
+    : null;
 
   // Build SVG path through all regions
   const buildPath = useCallback(() => {
@@ -431,7 +496,7 @@ export default function WorldMapPage() {
         </svg>
 
         {/* Region Nodes */}
-        {regions.map((region) => (
+        {enrichedRegions.map((region) => (
           <div
             key={region.id}
             className="region-node-wrapper absolute z-10"
@@ -444,7 +509,7 @@ export default function WorldMapPage() {
           >
             <RegionNode
               region={region}
-              onClick={() => setSelectedRegion(region)}
+              onClick={() => setSelectedRegionId(region.id)}
             />
           </div>
         ))}
@@ -470,7 +535,7 @@ export default function WorldMapPage() {
 
       {/* Region Detail Panel */}
       {selectedRegion && (
-        <RegionDetailPanel region={selectedRegion} onClose={() => setSelectedRegion(null)} />
+        <RegionDetailPanel region={selectedRegion} onClose={() => setSelectedRegionId(null)} />
       )}
     </main>
   );

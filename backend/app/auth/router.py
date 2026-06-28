@@ -54,6 +54,12 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     # Initialize stats
     stats = UserStats(user_id=new_user.id)
     db.add(stats)
+    
+    # Log registration event
+    from app.models.analytics import AnalyticsEvent
+    reg_event = AnalyticsEvent(user_id=new_user.id, event_type="registration")
+    db.add(reg_event)
+    
     db.commit()
 
     return new_user
@@ -72,4 +78,11 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
+    
+    # Log login event
+    from app.models.analytics import AnalyticsEvent
+    login_event = AnalyticsEvent(user_id=user.id, event_type="login")
+    db.add(login_event)
+    db.commit()
+
     return {"access_token": access_token, "token_type": "bearer"}

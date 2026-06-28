@@ -127,7 +127,7 @@ export default function TheDataHoarder() {
     try {
       console.log('handleVictory called');
       gainXP(500, 'Boss Defeated');
-      gainItem('collection_core');
+      gainItem('royal-scepter');
       completeBoss('collections-kingdom');
       navigate('/region/collections-kingdom');
     } catch (e) {

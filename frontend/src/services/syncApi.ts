@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 export interface SyncPayload {
   timestamp: string;
@@ -10,6 +10,7 @@ export interface SyncPayload {
   quests?: any[];
   knowledge_graph?: any;
   tower_progress?: any;
+  revisions?: any[];
 }
 
 export const syncApi = {

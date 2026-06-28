@@ -31,23 +31,23 @@ export default function LearningMap() {
       useRegionStore.getState().unlockRegion('collections-kingdom');
     }
     
-    // If Collections Kingdom is not completed, ensure OOP Castle is locked (unless somehow they skipped)
-    const oopStatus = getRegionProgress('oop-castle').regionStatus;
+    // If Collections Kingdom is not completed, ensure later regions are locked (unless somehow they skipped)
+    const oopStatus = getRegionProgress('oop-citadel').regionStatus;
     if (colStatus !== 'completed' && oopStatus !== 'locked') {
-      // Force lock OOP Castle by directly updating state to fix dirty cache
+      // Force lock later regions by directly updating state to fix dirty cache
       useRegionStore.setState(state => ({
         regions: {
           ...state.regions,
-          'oop-castle': {
-            ...state.regions['oop-castle'],
+          'oop-citadel': {
+            ...state.regions['oop-citadel'],
             regionStatus: 'locked'
           },
           'exception-abyss': {
             ...state.regions['exception-abyss'],
             regionStatus: 'locked'
           },
-          'file-system-ruins': {
-            ...state.regions['file-system-ruins'],
+          'filesystem-ruins': {
+            ...state.regions['filesystem-ruins'],
             regionStatus: 'locked'
           },
           'modules-harbor': {
@@ -58,8 +58,8 @@ export default function LearningMap() {
             ...state.regions['algorithm-arena'],
             regionStatus: 'locked'
           },
-          'boss-gate': {
-            ...state.regions['boss-gate'],
+          'bossgate-saga': {
+            ...state.regions['bossgate-saga'],
             regionStatus: 'locked'
           }
         }
@@ -76,7 +76,7 @@ export default function LearningMap() {
       completion: getRegionProgress('variables-forest').completionPercentage, 
       xpReward: 100, 
       difficulty: 'Beginner', 
-      artifactReward: 'variables_crystal' 
+      artifactReward: 'forest-ring' 
     },
     { 
       id: 'data-types-valley', 
@@ -87,15 +87,15 @@ export default function LearningMap() {
       xpReward: 150, 
       difficulty: 'Beginner' 
     },
-    { id: 'loops-desert', title: 'Loops Desert', description: 'Master for and while loops to iterate over data.', status: getMapNodeStatus('loops-desert') as any, completion: getRegionProgress('loops-desert').completionPercentage, xpReward: 200, difficulty: 'Intermediate', artifactReward: 'loop_compass' },
-    { id: 'functions-mountain', title: 'Functions Mountain', description: 'Build reusable blocks of code.', status: getMapNodeStatus('functions-mountain') as any, completion: getRegionProgress('functions-mountain').completionPercentage, xpReward: 250, difficulty: 'Intermediate', artifactReward: 'function_scroll' },
-    { id: 'collections-kingdom', title: 'Collections Kingdom', description: 'Organize the grand archives and master containers.', status: getMapNodeStatus('collections-kingdom') as any, completion: getRegionProgress('collections-kingdom').completionPercentage, xpReward: 300, difficulty: 'Intermediate', artifactReward: 'collection_core' },
-    { id: 'oop-castle', title: 'OOP Castle', description: 'Discover classes, objects, inheritance, and polymorphism.', status: getMapNodeStatus('oop-castle') as any, completion: getRegionProgress('oop-castle').completionPercentage, xpReward: 400, difficulty: 'Advanced', artifactReward: 'oop_crown' },
-    { id: 'exception-abyss', title: 'Exception Abyss', description: 'Survive the corrupted anomalies and stabilize the fractured reality.', status: getMapNodeStatus('exception-abyss') as any, completion: getRegionProgress('exception-abyss').completionPercentage, xpReward: 450, difficulty: 'Advanced', artifactReward: 'error_sigil' },
-    { id: 'file-system-ruins', title: 'File System Ruins', description: 'Recover lost knowledge from ancient archives and memory vaults.', status: getMapNodeStatus('file-system-ruins') as any, completion: getRegionProgress('file-system-ruins').completionPercentage, xpReward: 450, difficulty: 'Advanced', artifactReward: 'archive_key' },
-    { id: 'modules-harbor', title: 'Modules & Libraries Harbor', description: 'Navigate the trade networks to import powerful artifacts and modular magic.', status: getMapNodeStatus('modules-harbor') as any, completion: getRegionProgress('modules-harbor').completionPercentage, xpReward: 500, difficulty: 'Advanced', artifactReward: 'library_compass' },
-    { id: 'algorithm-arena', title: 'Algorithm Arena', description: 'Step into the colosseum of logic and optimize your code to defeat time itself.', status: getMapNodeStatus('algorithm-arena') as any, completion: getRegionProgress('algorithm-arena').completionPercentage, xpReward: 500, difficulty: 'Advanced', artifactReward: 'algorithm_blade' },
-    { id: 'boss-gate', title: 'The Boss Gate Saga', description: 'Unite the seals. Defeat the Ancient Python Dragon.', status: getMapNodeStatus('boss-gate') as any, completion: getRegionProgress('boss-gate').completionPercentage, xpReward: 5000, difficulty: 'Boss', artifactReward: 'master_core' },
+    { id: 'loops-desert', title: 'Loops Desert', description: 'Master for and while loops to iterate over data.', status: getMapNodeStatus('loops-desert') as any, completion: getRegionProgress('loops-desert').completionPercentage, xpReward: 200, difficulty: 'Intermediate', artifactReward: 'dune-scroll' },
+    { id: 'functions-mountain', title: 'Functions Mountain', description: 'Build reusable blocks of code.', status: getMapNodeStatus('functions-mountain') as any, completion: getRegionProgress('functions-mountain').completionPercentage, xpReward: 250, difficulty: 'Intermediate', artifactReward: 'summit-crown' },
+    { id: 'collections-kingdom', title: 'Collections Kingdom', description: 'Organize the grand archives and master containers.', status: getMapNodeStatus('collections-kingdom') as any, completion: getRegionProgress('collections-kingdom').completionPercentage, xpReward: 300, difficulty: 'Intermediate', artifactReward: 'royal-scepter' },
+    { id: 'oop-citadel', title: 'OOP Citadel', description: 'Discover classes, objects, inheritance, and polymorphism.', status: getMapNodeStatus('oop-citadel') as any, completion: getRegionProgress('oop-citadel').completionPercentage, xpReward: 400, difficulty: 'Advanced', artifactReward: 'class-sigil' },
+    { id: 'exception-abyss', title: 'Exception Abyss', description: 'Survive the corrupted anomalies and stabilize the fractured reality.', status: getMapNodeStatus('exception-abyss') as any, completion: getRegionProgress('exception-abyss').completionPercentage, xpReward: 450, difficulty: 'Advanced', artifactReward: 'abyssal-shield' },
+    { id: 'filesystem-ruins', title: 'File System Ruins', description: 'Recover lost knowledge from ancient archives and memory vaults.', status: getMapNodeStatus('filesystem-ruins') as any, completion: getRegionProgress('filesystem-ruins').completionPercentage, xpReward: 450, difficulty: 'Advanced', artifactReward: 'stone-tablet' },
+    { id: 'modules-harbor', title: 'Modules & Libraries Harbor', description: 'Navigate the trade networks to import powerful artifacts and modular magic.', status: getMapNodeStatus('modules-harbor') as any, completion: getRegionProgress('modules-harbor').completionPercentage, xpReward: 500, difficulty: 'Advanced', artifactReward: 'harbor-compass' },
+    { id: 'algorithm-arena', title: 'Algorithm Arena', description: 'Step into the colosseum of logic and optimize your code to defeat time itself.', status: getMapNodeStatus('algorithm-arena') as any, completion: getRegionProgress('algorithm-arena').completionPercentage, xpReward: 500, difficulty: 'Advanced', artifactReward: 'arena-trophy' },
+    { id: 'bossgate-saga', title: 'The Boss Gate Saga', description: 'Unite the seals. Defeat the Ancient Python Dragon.', status: getMapNodeStatus('bossgate-saga') as any, completion: getRegionProgress('bossgate-saga').completionPercentage, xpReward: 5000, difficulty: 'Boss', artifactReward: 'legends-crown' },
     {
       id: 'boss_gate',
       title: 'Boss Gate',

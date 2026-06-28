@@ -1,8 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { MainLayout } from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { analyticsApi } from './services/analyticsApi';
+import AdminDashboardPage from './pages/AdminDashboardPage';
 import LearningArena from './pages/LearningArena';
 import LearningMap from './pages/LearningMap';
 import Quests from './pages/Quests';
@@ -26,7 +29,10 @@ import LessonChallengePage from './pages/LessonChallengePage';
 import LibraryPage from './pages/LibraryPage';
 import ArtifactsPage from './pages/ArtifactsPage';
 import LeaderboardPage from './pages/LeaderboardPage';
+import MemoryVaultPage from './pages/MemoryVaultPage';
 import { PlayerProvider } from './context/PlayerContext';
+import Onboarding from './pages/Onboarding';
+import BetaFeedbackPage from './pages/BetaFeedbackPage';
 
 // Initialize the event triggers (achievements, artifacts, quests)
 TriggerEngine.initialize();
@@ -42,10 +48,61 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const token = useAuthStore((state) => state.token);
   if (token) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/map" replace />;
   }
   return <>{children}</>;
 };
+
+function AnalyticsTracker() {
+  const location = useLocation();
+  const token = useAuthStore((state) => state.token);
+
+  useEffect(() => {
+    if (!token) return;
+
+    analyticsApi.logEvent('session_started');
+    const startTime = Date.now();
+
+    const handleUnload = () => {
+      const durationSeconds = Math.round((Date.now() - startTime) / 1000);
+      const tokenString = localStorage.getItem('token');
+      if (tokenString) {
+        const payload = JSON.stringify({
+          event_type: 'session_ended',
+          details: { duration_seconds: durationSeconds }
+        });
+        const baseUrl = import.meta.env.VITE_API_URL || '/api';
+        const url = baseUrl.startsWith('http') 
+          ? `${baseUrl}/analytics/event` 
+          : `${window.location.origin}${baseUrl}/analytics/event`;
+        
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${tokenString}`
+          },
+          body: payload,
+          keepalive: true
+        }).catch(err => console.warn('Failed to send session ended beacon:', err));
+      }
+    };
+
+    window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+      handleUnload();
+    };
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      analyticsApi.logEvent('page_view', { path: location.pathname });
+    }
+  }, [location.pathname, token]);
+
+  return null;
+}
 
 function App() {
   return (
@@ -53,6 +110,7 @@ function App() {
       <Atmosphere />
       <div className="relative z-10 min-h-screen">
         <Router>
+          <AnalyticsTracker />
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
@@ -69,6 +127,10 @@ function App() {
             <Route path="/library" element={<PrivateRoute><LibraryPage /></PrivateRoute>} />
             <Route path="/artifacts" element={<PrivateRoute><ArtifactsPage /></PrivateRoute>} />
             <Route path="/leaderboard" element={<PrivateRoute><LeaderboardPage /></PrivateRoute>} />
+            <Route path="/vault" element={<PrivateRoute><MemoryVaultPage /></PrivateRoute>} />
+            <Route path="/admin" element={<PrivateRoute><AdminDashboardPage /></PrivateRoute>} />
+            <Route path="/onboarding" element={<PrivateRoute><Onboarding /></PrivateRoute>} />
+            <Route path="/beta-feedback" element={<PrivateRoute><BetaFeedbackPage /></PrivateRoute>} />
 
             {/* Legacy Arambh Private Routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

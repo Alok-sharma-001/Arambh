@@ -111,6 +111,16 @@ def add_xp(
     if new_level > stats.current_level:
         stats.current_level = new_level
     stats.rank = calculate_rank(stats.total_xp)
+    
+    # Log gain_xp event
+    from app.models.analytics import AnalyticsEvent
+    import json
+    xp_event = AnalyticsEvent(
+        user_id=current_user.id,
+        event_type="gain_xp",
+        details=json.dumps({"amount": request.amount})
+    )
+    db.add(xp_event)
         
     db.commit()
     db.refresh(stats)
@@ -126,6 +136,14 @@ def add_inventory_item(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
+    # Ensure stats exist
+    stats = current_user.stats
+    if not stats:
+        stats = UserStats(user_id=current_user.id)
+        db.add(stats)
+        db.commit()
+        db.refresh(stats)
+
     # Check if user already has it
     existing = db.query(InventoryItem).filter(
         InventoryItem.user_id == current_user.id,
@@ -182,4 +200,83 @@ def get_leaderboard(
     return LeaderboardResponse(
         entries=entries,
         last_updated=datetime.now()
+    )
+
+@router.post("/claim-daily", response_model=ProgressionResponse)
+def claim_daily_reward(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    from datetime import datetime, timezone
+    import json
+    from app.models.analytics import AnalyticsEvent
+    
+    stats = current_user.stats
+    if not stats:
+        stats = UserStats(user_id=current_user.id)
+        db.add(stats)
+        db.commit()
+        db.refresh(stats)
+
+    now = datetime.now(timezone.utc)
+    
+    # Check if user can claim (>21 hours since last claim)
+    if stats.last_claimed_at:
+        # Normalize timezone to compare
+        last_claimed = stats.last_claimed_at
+        if last_claimed.tzinfo is None:
+            last_claimed = last_claimed.replace(tzinfo=timezone.utc)
+            
+        hours_since = (now - last_claimed).total_seconds() / 3600
+        if hours_since < 21:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Too early to claim. Wait {round(21 - hours_since, 1)} more hours."
+            )
+    
+    # Check if streak is broken (>48h since last claim)
+    if stats.last_claimed_at:
+        last_claimed = stats.last_claimed_at
+        if last_claimed.tzinfo is None:
+            last_claimed = last_claimed.replace(tzinfo=timezone.utc)
+            
+        if (now - last_claimed).total_seconds() > 48 * 3600:
+            stats.daily_streak = 0  # Reset streak
+    
+    # Increment streak and total login days
+    stats.daily_streak += 1
+    stats.total_login_days = (stats.total_login_days or 0) + 1
+    stats.last_claimed_at = now
+    
+    # Calculate XP reward based on streak day (capped at 7-day cycle)
+    cycle_day = ((stats.daily_streak - 1) % 7) + 1
+    DAILY_XP = {1: 25, 2: 50, 3: 75, 4: 100, 5: 125, 6: 150, 7: 250}
+    xp_reward = DAILY_XP.get(cycle_day, 25)
+    
+    # Award XP
+    stats.total_xp += xp_reward
+    new_level = calculate_level(stats.total_xp)
+    if new_level > stats.current_level:
+        stats.current_level = new_level
+    stats.rank = calculate_rank(stats.total_xp)
+    
+    # Log analytics event
+    event = AnalyticsEvent(
+        user_id=current_user.id,
+        event_type="daily_reward_claimed",
+        details=json.dumps({
+            "day": cycle_day,
+            "xp_awarded": xp_reward,
+            "streak": stats.daily_streak,
+            "total_login_days": stats.total_login_days
+        })
+    )
+    db.add(event)
+    
+    db.commit()
+    db.refresh(stats)
+    
+    return ProgressionResponse(
+        stats=stats,
+        inventory=current_user.inventory
     )

@@ -5,8 +5,8 @@ from datetime import datetime
 from app.database.session import get_db
 from app.auth.router import get_current_user
 from app.models.user import User, UserStats, InventoryItem
-from app.models.progression import LessonProgress, RegionProgress, AchievementProgress, QuestProgress
-from app.schemas.sync import PushPayload, PullResponse, StatsSync, InventorySync, LessonSync, RegionSync, AchievementSync, QuestSync
+from app.models.progression import LessonProgress, RegionProgress, AchievementProgress, QuestProgress, Revision
+from app.schemas.sync import PushPayload, PullResponse, StatsSync, InventorySync, LessonSync, RegionSync, AchievementSync, QuestSync, RevisionSync
 
 router = APIRouter()
 
@@ -23,7 +23,10 @@ def pull_state(db: Session = Depends(get_db), current_user: User = Depends(get_c
             streak_days=stats.streak_days,
             player_class=stats.player_class,
             rank=stats.rank,
-            title=stats.title
+            title=stats.title,
+            daily_streak=stats.daily_streak or 0,
+            last_claimed_at=stats.last_claimed_at,
+            total_login_days=stats.total_login_days or 0
         )
     
     # Gather Inventory
@@ -76,6 +79,18 @@ def pull_state(db: Session = Depends(get_db), current_user: User = Depends(get_c
         for q in current_user.quests
     ]
     
+    # Gather Revisions
+    revisions = [
+        RevisionSync(
+            concept_id=r.concept_id,
+            next_review_date=r.next_review_date,
+            interval=r.interval,
+            ease_factor=r.ease_factor,
+            repetitions=r.repetitions
+        )
+        for r in current_user.revisions
+    ]
+    
     resp = PullResponse(
         timestamp=datetime.utcnow(),
         stats=stats_sync,
@@ -85,7 +100,8 @@ def pull_state(db: Session = Depends(get_db), current_user: User = Depends(get_c
         achievements=achievements,
         quests=quests,
         knowledge_graph=None,
-        tower_progress=None
+        tower_progress=None,
+        revisions=revisions
     )
     
     # Gather Knowledge Graph
@@ -132,6 +148,9 @@ def push_state(payload: PushPayload, db: Session = Depends(get_db), current_user
         stats.player_class = payload.stats.player_class
         stats.rank = payload.stats.rank
         stats.title = payload.stats.title
+        stats.daily_streak = payload.stats.daily_streak
+        stats.last_claimed_at = payload.stats.last_claimed_at
+        stats.total_login_days = payload.stats.total_login_days
         
     # Update Inventory (Upsert)
     if payload.inventory is not None:
@@ -209,6 +228,26 @@ def push_state(payload: PushPayload, db: Session = Depends(get_db), current_user
         tp.max_floor = payload.tower_progress.max_floor
         tp.current_floor = payload.tower_progress.current_floor
         tp.resonance = payload.tower_progress.resonance
+
+    # Update Revisions (Upsert)
+    if payload.revisions is not None:
+        existing = {r.concept_id: r for r in current_user.revisions}
+        for r_data in payload.revisions:
+            if r_data.concept_id in existing:
+                existing[r_data.concept_id].next_review_date = r_data.next_review_date
+                existing[r_data.concept_id].interval = r_data.interval
+                existing[r_data.concept_id].ease_factor = r_data.ease_factor
+                existing[r_data.concept_id].repetitions = r_data.repetitions
+            else:
+                new_revision = Revision(
+                    user_id=current_user.id,
+                    concept_id=r_data.concept_id,
+                    next_review_date=r_data.next_review_date,
+                    interval=r_data.interval,
+                    ease_factor=r_data.ease_factor,
+                    repetitions=r_data.repetitions
+                )
+                db.add(new_revision)
 
     db.commit()
     return {"status": "success", "synced_at": datetime.utcnow()}

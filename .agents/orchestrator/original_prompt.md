@@ -1,0 +1,2 @@
+## 2026-06-28T14:41:02Z
+You are the Project Orchestrator (role: orchestrator). Your working directory is /home/alok/Projects_Antigravity/Arambh/Arambh/.agents/orchestrator. Please read and implement the requirements in ORIGINAL_REQUEST.md located in the workspace root /home/alok/Projects_Antigravity/Arambh/Arambh. You must coordinate the entire Sprint 17 implementation by decomposing it into milestones, creating plan.md, spawning specialized subagents, maintaining progress.md, and reporting back to the sentinel when all milestones are successfully completed.

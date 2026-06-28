@@ -1,4 +1,6 @@
 import { useParams, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { analyticsApi } from '@/services/analyticsApi';
 import CorruptedGuardian from './CorruptedGuardian';
 import TypeShapeshifter from './TypeShapeshifter';
 import InfiniteSerpent from './InfiniteSerpent';
@@ -10,9 +12,16 @@ import TheForgottenArchivist from './TheForgottenArchivist';
 import TheSmugglerOfSecrets from './TheSmugglerOfSecrets';
 import TheTimeEater from './TheTimeEater';
 import AncientPythonDragon from './AncientPythonDragon';
+import InfiniteStreamSentinel from './InfiniteStreamSentinel';
 
 export default function BossBattleRouter() {
   const { regionId } = useParams<{ regionId: string }>();
+
+  useEffect(() => {
+    if (regionId) {
+      analyticsApi.logEvent('boss_attempt', { region_id: regionId });
+    }
+  }, [regionId]);
 
   switch (regionId) {
     case 'variables-forest':
@@ -25,17 +34,19 @@ export default function BossBattleRouter() {
       return <TheForgottenArchitect />;
     case 'collections-kingdom':
       return <TheDataHoarder />;
-    case 'oop-castle':
+    case 'oop-citadel':
       return <TheHollowKing />;
     case 'exception-abyss':
       return <TheChaosCompiler />;
-    case 'file-system-ruins':
+    case 'filesystem-ruins':
       return <TheForgottenArchivist />;
     case 'modules-harbor':
       return <TheSmugglerOfSecrets />;
     case 'algorithm-arena':
       return <TheTimeEater />;
-    case 'boss-gate':
+    case 'iterator-isles':
+      return <InfiniteStreamSentinel />;
+    case 'bossgate-saga':
       return <AncientPythonDragon />;
     default:
       return <Navigate to="/learning-map" replace />;

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import { syncApi } from '../services/syncApi';
+import { analyticsApi } from '../services/analyticsApi';
 
 export default function Register() {
   const [username, setUsername] = useState('');
@@ -66,7 +67,14 @@ export default function Register() {
         console.warn('Migration failed', e);
       }
 
-      window.location.href = '/';
+      // Log signup telemetry
+      try {
+        await analyticsApi.logEvent('signup_completed', { username });
+      } catch (e) {
+        console.warn('Telemetry event logging failed', e);
+      }
+
+      window.location.href = '/onboarding';
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Registration failed');
     }

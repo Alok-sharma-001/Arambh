@@ -10,6 +10,9 @@ class StatsSync(BaseModel):
     player_class: Optional[str] = None
     rank: str
     title: Optional[str] = None
+    daily_streak: int = 0
+    last_claimed_at: Optional[datetime] = None
+    total_login_days: int = 0
 
 class InventorySync(BaseModel):
     item_id: str
@@ -56,6 +59,13 @@ class TowerProgressSync(BaseModel):
     current_floor: int
     resonance: int
 
+class RevisionSync(BaseModel):
+    concept_id: str
+    next_review_date: datetime
+    interval: int
+    ease_factor: float
+    repetitions: int
+
 class PushPayload(BaseModel):
     timestamp: datetime
     stats: Optional[StatsSync] = None
@@ -66,6 +76,7 @@ class PushPayload(BaseModel):
     quests: Optional[List[QuestSync]] = None
     knowledge_graph: Optional[KnowledgeGraphSync] = None
     tower_progress: Optional[TowerProgressSync] = None
+    revisions: Optional[List[RevisionSync]] = None
 
 class PullResponse(BaseModel):
     timestamp: datetime
@@ -77,3 +88,4 @@ class PullResponse(BaseModel):
     quests: List[QuestSync]
     knowledge_graph: Optional[KnowledgeGraphSync]
     tower_progress: Optional[TowerProgressSync]
+    revisions: List[RevisionSync]

@@ -31,3 +31,24 @@
 - [x] End-to-End Integration (Signup -> Login -> Level Up flow verified)
 - [x] Basic Unit and Integration Tests (4/4 Passed)
 - [x] Documentation Cleanup
+
+## Sprint 17: User Onboarding, Daily Rewards & Telemetry - COMPLETE ✅
+- [x] Redirect new users to `/onboarding` instead of `/dashboard` upon registration
+- [x] Implement Welcome To Arambh screen & Character Archetype Class selection on Onboarding page
+- [x] Protect Dashboard and other screens with Onboarding completion check
+- [x] Persist Daily Login Rewards to backend using new database fields (`daily_streak`, `last_claimed_at`, `total_login_days`)
+- [x] Implement `POST /api/progression/claim-daily` endpoint with 21h claim rule and streak logic
+- [x] Update frontend `DailyLoginRewards` component to read/write daily rewards to the backend
+- [x] Track telemetry events `lesson_completion_modal_viewed`, `next_lesson_clicked`, `return_to_map_clicked`
+- [x] Expose telemetry event counts inside Founder Dashboard analytics page
+- [x] Run full verification test suite (`pytest`) and frontend production build (`npm run build`)
+
+## Sprint 18: Real User Validation System - COMPLETE ✅
+- [x] Implement global session telemetry (`session_started`, `session_ended`, session durations)
+- [x] Create `BetaFeedback` and `ExitSurveyResponse` database schemas and POST endpoints
+- [x] Create `/beta-feedback` page allowing users to submit bug/feature feedback
+- [x] Render `ExitSurveyModal` to log dropoff reasons when exiting the first lesson before completion
+- [x] Upgrade Founder Dashboard with retention curves (D1, D3, D7), activation rates, and engagement cards
+- [x] Build Dropoff detection summaries and Friction report hotspots inside Founder Dashboard
+- [x] Design chronological User Journey timelines in Founder Dashboard
+- [x] Pass new integration test suite (`tests/test_validation_system.py`) and frontend compilation checks

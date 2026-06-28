@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Boolean
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float, Boolean, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database.session import Base
@@ -10,7 +10,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
 
     stats = relationship("UserStats", back_populates="user", uselist=False)
     inventory = relationship("InventoryItem", back_populates="user")
@@ -28,6 +28,12 @@ class User(Base):
     # Guilds
     guild_membership = relationship("GuildMember", back_populates="user", uselist=False)
 
+    # Revisions
+    revisions = relationship("Revision", back_populates="user")
+
+    # Mentor
+    mentor_conversations = relationship("MentorConversation", back_populates="user")
+
 class UserStats(Base):
     __tablename__ = "user_stats"
 
@@ -43,6 +49,11 @@ class UserStats(Base):
     rank = Column(String, default="Novice")
     title = Column(String, nullable=True)
 
+    # Daily Login Rewards
+    daily_streak = Column(Integer, default=0)
+    last_claimed_at = Column(DateTime(timezone=True), nullable=True)
+    total_login_days = Column(Integer, default=0)
+
     user = relationship("User", back_populates="stats")
 
 class InventoryItem(Base):
@@ -51,7 +62,7 @@ class InventoryItem(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
     item_id = Column(String, nullable=False) # e.g., "variables_crystal"
-    acquired_at = Column(DateTime(timezone=True), server_default=func.now())
+    acquired_at = Column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
 
     user = relationship("User", back_populates="inventory")
 
@@ -63,7 +74,7 @@ class SpacedRepetition(Base):
     topic_name = Column(String, nullable=False)
     interval_days = Column(Integer, default=1)
     ease_factor = Column(Float, default=2.5)
-    next_review_date = Column(DateTime(timezone=True), server_default=func.now())
+    next_review_date = Column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
 
     user = relationship("User", back_populates="spaced_repetition")
 

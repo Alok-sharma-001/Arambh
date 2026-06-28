@@ -14,7 +14,7 @@ export interface MemoryVariable {
   address: string; // e.g., '0x00'
   name: string;
   value: string;
-  type: 'int' | 'string' | 'bool' | 'float' | 'list' | 'tuple' | 'set' | 'dict' | 'class' | 'object' | 'exception' | 'text_file' | 'json_file' | 'module';
+  type: 'int' | 'string' | 'bool' | 'float' | 'list' | 'tuple' | 'set' | 'dict' | 'class' | 'object' | 'exception' | 'text_file' | 'json_file' | 'module' | 'function' | 'generator';
 }
 
 export interface EvalNode {

@@ -2,11 +2,15 @@ import { useState, useRef, useCallback, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { usePlayer } from '@/context/PlayerContext';
+import { analyticsApi } from '@/services/analyticsApi';
 import { useConfetti } from '@/hooks/useConfetti';
 import { sampleQuestions } from '@/data/regions';
 import { regions } from '@/data/regions';
 import SyntaxHighlighter from '@/components/SyntaxHighlighter';
 import { Flame, Check, X as XIcon, ChevronRight, Lightbulb } from 'lucide-react';
+import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
+import { playSound } from '../utils/audio';
+import { useEffect } from 'react';
 
 export default function LessonChallengePage() {
   const { regionId } = useParams();
@@ -21,6 +25,53 @@ export default function LessonChallengePage() {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [animatingXP, setAnimatingXP] = useState(0);
+
+  useEffect(() => {
+    if (regionId) {
+      analyticsApi.logEvent('training_ground_enter', { region_id: regionId });
+      const startTime = Date.now();
+
+      const loggedStarted = localStorage.getItem('arambh_first_training_ground_started');
+      if (!loggedStarted) {
+        analyticsApi.logEvent('first_training_ground_started', { region_id: regionId });
+        localStorage.setItem('arambh_first_training_ground_started', 'true');
+      }
+
+      const handleUnload = () => {
+        const durationSeconds = Math.round((Date.now() - startTime) / 1000);
+        const tokenString = localStorage.getItem('token');
+        if (tokenString) {
+          const payload = JSON.stringify({
+            event_type: 'training_ground_time_spent',
+            details: {
+              region_id: regionId,
+              duration_seconds: durationSeconds
+            }
+          });
+          const baseUrl = import.meta.env.VITE_API_URL || '/api';
+          const url = baseUrl.startsWith('http') 
+            ? `${baseUrl}/analytics/event` 
+            : `${window.location.origin}${baseUrl}/analytics/event`;
+          
+          fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${tokenString}`
+            },
+            body: payload,
+            keepalive: true
+          }).catch(() => {});
+        }
+      };
+
+      window.addEventListener('beforeunload', handleUnload);
+      return () => {
+        window.removeEventListener('beforeunload', handleUnload);
+        handleUnload();
+      };
+    }
+  }, [regionId]);
   const [trainingMode, setTrainingMode] = useState<'topic' | 'random'>('topic');
 
   const region = regions.find((r) => r.id === regionId);
@@ -35,6 +86,10 @@ export default function LessonChallengePage() {
 
     if (regionId === 'loops-desert') {
       return sampleQuestions.filter((item) => ['q2', 'q5'].includes(item.id));
+    }
+
+    if (regionId === 'iterator-isles') {
+      return sampleQuestions.filter((item) => item.id.startsWith('i-tg-'));
     }
 
     return sampleQuestions.slice(0, 4);
@@ -63,16 +118,31 @@ export default function LessonChallengePage() {
     setIsCorrect(correct);
     setHasSubmitted(true);
 
+    analyticsApi.logEvent('training_attempt', {
+      region_id: regionId,
+      question_id: question.id,
+      is_correct: correct
+    });
+
     if (correct) {
+      const nextStreak = player.streak + 1;
+      playSound.combo(nextStreak);
       incrementStreak();
-      addXP(question.xpReward);
+      
+      let bonusXP = 0;
+      if (nextStreak >= 5) bonusXP = 15;
+      else if (nextStreak >= 3) bonusXP = 10;
+      else if (nextStreak >= 1) bonusXP = 5;
+
+      const totalXP = question.xpReward + bonusXP;
+      addXP(totalXP);
 
       // Animate XP counter
       let xpVal = 0;
       const interval = setInterval(() => {
-        xpVal += Math.ceil(question.xpReward / 20);
-        if (xpVal >= question.xpReward) {
-          xpVal = question.xpReward;
+        xpVal += Math.ceil(totalXP / 20);
+        if (xpVal >= totalXP) {
+          xpVal = totalXP;
           clearInterval(interval);
         }
         setAnimatingXP(xpVal);
@@ -86,7 +156,7 @@ export default function LessonChallengePage() {
     } else {
       resetStreak();
     }
-  }, [selectedAnswer, question, incrementStreak, addXP, resetStreak, burst]);
+  }, [selectedAnswer, question, incrementStreak, addXP, resetStreak, burst, player.streak, regionId]);
 
   const handleNext = () => {
     if (currentQ < questions.length - 1) {
@@ -250,6 +320,22 @@ export default function LessonChallengePage() {
                 ))}
               </div>
 
+              {/* Streak & Combo Flame */}
+              {player.streak > 0 && (
+                <div className="mt-4 flex items-center justify-between p-3 rounded-xl bg-orange-500/10 border border-orange-500/35">
+                  <div className="flex items-center gap-2">
+                    <Flame className="w-5 h-5 text-orange-500 fill-orange-500 animate-bounce" />
+                    <div>
+                      <div className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Streak active</div>
+                      <div className="text-sm font-extrabold text-white">{player.streak} Correct Answers</div>
+                    </div>
+                  </div>
+                  <span className="px-2.5 py-1 text-[10px] font-black uppercase rounded bg-orange-500 text-black">
+                    {player.streak >= 5 ? 'COMBO x3 (+15 XP)' : player.streak >= 3 ? 'COMBO x2 (+10 XP)' : 'COMBO x1 (+5 XP)'}
+                  </span>
+                </div>
+              )}
+
               {/* Question */}
               <h3 className="mt-6 font-display font-bold text-xl text-warm-white leading-snug">
                 {question.question}
@@ -360,6 +446,11 @@ export default function LessonChallengePage() {
           </div>
         </div>
       </div>
+      <MentorChatPanel 
+        conceptId={regionId} 
+        lessonId={question?.id || 'challenge'} 
+        getCodeSnapshot={() => question?.code || ''} 
+      />
     </main>
   );
 }

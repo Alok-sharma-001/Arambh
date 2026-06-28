@@ -1,0 +1,102 @@
+{
+  "conceptId": "generators",
+  "title": "Generators & Yield",
+  "difficultyScore": 40,
+  "estimatedLearningTime": 8,
+  "prerequisiteConcepts": ["iteration-protocol"],
+  "nextConcepts": ["generator-expressions"],
+  "beginnerExplanation": "A generator is a special function that returns an iterator. Instead of using 'return' to exit, it uses 'yield' to pause execution and send a value back, keeping its place for next time.",
+  "intermediateExplanation": "When a generator yields, Python suspends its execution context, saving all local variables and registers on the heap. When next() is called, execution resumes from the line after the yield.",
+  "advancedExplanation": "Generators can yield control to sub-generators using 'yield from sub()'. They support bidirectional communication via send(), throw(), and close() methods.",
+  "realWorldAnalogy": {
+    "title": "Video Game Checkpoint",
+    "description": "Using 'return' is like restarting a game from the main menu. Using 'yield' is like hitting a checkpoint: the game saves exactly where you stand, so you can resume from that spot later."
+  },
+  "mentalModel": "A generator is a state machine disguised as a function.",
+  "visualDiagram": "Call function -> executes to yield -> freezes frame & returns value -> next() -> resumes -> exits on return",
+  "executionWalkthrough": [
+    "1. Calling a generator function returns a generator object without running any code.",
+    "2. next() is called: execution enters the function and runs until it hits 'yield value'.",
+    "3. The value is returned, and the function is paused (stack frame preserved)."
+  ],
+  "memoryState": [
+    {
+      "variable": "g",
+      "value": "<generator object my_gen>",
+      "type": "generator",
+      "note": "Suspended after yielding 1"
+    }
+  ],
+  "commonMistakes": [
+    "Calling the generator function in a loop instead of the generator object (creates endless identical iterators!).",
+    "Expecting a generator function to run immediately on invocation."
+  ],
+  "debuggingMission": {
+    "scenario": "A player tries to loop over a generator but gets stuck in an infinite cycle of first elements.",
+    "brokenCode": "def get_nums():\n  yield 1\n  yield 2\nfor x in range(2):\n  print(next(get_nums()))  # Prints 1, 1",
+    "solution": "gen = get_nums()\nfor x in range(2):\n  print(next(gen))  # Prints 1, 2",
+    "explanation": "Calling get_nums() returns a new generator instance each time. Create it once, then call next() on it."
+  },
+  "practiceQuestions": [
+    {
+      "question": "What keyword is used to pause a generator and return a value?",
+      "options": [
+        "return",
+        "yield",
+        "pause",
+        "freeze"
+      ],
+      "correctIndex": 1,
+      "explanation": "The yield keyword is responsible for returning a value and suspending the generator's execution state."
+    }
+  ],
+  "challengeQuestions": [
+    {
+      "question": "Which syntax delegates generator iteration to another sub-generator?",
+      "hints": [
+        "yield followed by a word indicating source."
+      ],
+      "solution": "yield from"
+    }
+  ],
+  "projectExercise": {
+    "title": "Sub-generator Delegation",
+    "description": "Create a generator using yield from.",
+    "requirements": [
+      "Define my_generator yielding from two sub-sequences."
+    ],
+    "starterCode": "def sub(): yield 1\ndef main(): yield from sub()"
+  },
+  "bossBattle": {
+    "name": "Sentinel of the Stream",
+    "description": "Build a pipeline of generators to process energy waves.",
+    "mechanic": "Use yield and yield from to pipe streams of numbers."
+  },
+  "rewards": [
+    "Crystal of Yield",
+    "70 Gold"
+  ],
+  "complexityAnalysis": {
+    "timeComplexity": "O(1) to yield an item, O(1) to resume.",
+    "spaceComplexity": "O(1) since values are generated on-the-fly without storage.",
+    "description": "Time complexity matches list traversal, but space drops from O(N) to O(1)."
+  },
+  "memoryImpact": {
+    "allocationBytes": "Minimal heap frame footprint (~120 bytes). Constant scale.",
+    "scalingFactor": "O(1)",
+    "optimizationNotes": "Excellent for processing infinite data feeds like telemetry readings."
+  },
+  "performanceNotes": [
+    "Generator creation is extremely fast compared to pre-allocating large lists."
+  ],
+  "industryUsage": {
+    "useCases": [
+      "Stream processing in Big Data pipelines",
+      "Asynchronous tasks in coroutines"
+    ],
+    "standardLibraries": [
+      "contextlib.contextmanager",
+      "asyncio"
+    ]
+  }
+}

@@ -128,7 +128,7 @@ export default function InfiniteSerpent() {
     try {
       console.log('handleVictory called');
       gainXP(600, 'Boss Defeated');
-      gainItem('loop_compass');
+      gainItem('dune-scroll');
       completeBoss('loops-desert');
       navigate('/region/loops-desert');
     } catch (e) {

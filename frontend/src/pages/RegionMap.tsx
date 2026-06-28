@@ -37,47 +37,47 @@ export default function RegionMap() {
   if (regionId === 'variables-forest') {
     currentLessons = VARIABLES_FOREST_LESSONS;
     bossTitle = 'Corrupted Crystal Guardian';
-    bossArtifact = 'variables_crystal';
+    bossArtifact = 'forest-ring';
   } else if (regionId === 'data-types-valley') {
     currentLessons = DATA_TYPES_VALLEY_LESSONS;
     bossTitle = 'The Type Shapeshifter';
-    bossArtifact = 'type_prism';
+    bossArtifact = 'crystal-lens';
   } else if (regionId === 'loops-desert') {
     currentLessons = LOOPS_DESERT_LESSONS;
     bossTitle = 'The Infinite Serpent';
-    bossArtifact = 'loop_compass';
+    bossArtifact = 'dune-scroll';
   } else if (regionId === 'functions-mountain') {
     currentLessons = functionsMountainData;
     bossTitle = 'The Forgotten Architect';
-    bossArtifact = 'function_scroll';
+    bossArtifact = 'summit-crown';
   } else if (regionId === 'collections-kingdom') {
     currentLessons = collectionsKingdomData;
     bossTitle = 'The Data Hoarder';
-    bossArtifact = 'collection_core';
-  } else if (regionId === 'oop-castle') {
+    bossArtifact = 'royal-scepter';
+  } else if (regionId === 'oop-citadel') {
     currentLessons = oopCastleData;
     bossTitle = 'The Hollow King';
-    bossArtifact = 'oop_crown';
+    bossArtifact = 'class-sigil';
   } else if (regionId === 'exception-abyss') {
     currentLessons = exceptionAbyssData;
     bossTitle = 'The Chaos Compiler';
-    bossArtifact = 'error_sigil';
-  } else if (regionId === 'file-system-ruins') {
+    bossArtifact = 'abyssal-shield';
+  } else if (regionId === 'filesystem-ruins') {
     currentLessons = fileSystemRuinsData;
     bossTitle = 'The Forgotten Archivist';
-    bossArtifact = 'archive_key';
+    bossArtifact = 'stone-tablet';
   } else if (regionId === 'modules-harbor') {
     currentLessons = modulesHarborData;
     bossTitle = 'The Smuggler of Secrets';
-    bossArtifact = 'library_compass';
+    bossArtifact = 'harbor-compass';
   } else if (regionId === 'algorithm-arena') {
     currentLessons = algorithmArenaData;
     bossTitle = 'The Time Eater';
-    bossArtifact = 'algorithm_blade';
-  } else if (regionId === 'boss-gate') {
+    bossArtifact = 'arena-trophy';
+  } else if (regionId === 'bossgate-saga') {
     currentLessons = bossGateSagaData;
     bossTitle = 'The Ancient Python Dragon';
-    bossArtifact = 'master_core';
+    bossArtifact = 'legends-crown';
   }
 
   // If region is not implemented yet
@@ -121,12 +121,14 @@ export default function RegionMap() {
     };
   });
 
+  const totalLessons = Object.keys(currentLessons as Record<string, any>).length;
+
   // Add the boss gate
   mapNodes.push({
     id: 'boss',
     title: bossTitle,
     description: progress.bossStatus === 'locked' 
-      ? `Complete all 5 lessons to unlock the guardian.` 
+      ? `Complete all ${totalLessons} lessons to unlock the guardian.` 
       : `Defeat the boss to restore the region!`,
     status: progress.bossStatus === 'completed' ? 'completed' 
           : progress.bossStatus === 'available' ? 'current' 
@@ -145,22 +147,22 @@ export default function RegionMap() {
     regionDesc = 'Ascend the peaks and learn to forge reusable magic blueprints.';
   } else if (regionId === 'collections-kingdom') {
     regionDesc = 'Organize the grand archives and master the containers of knowledge.';
-  } else if (regionId === 'oop-castle') {
+  } else if (regionId === 'oop-citadel') {
     regionDesc = 'Awaken the living constructs and inherit the ancestral blueprints.';
   } else if (regionId === 'exception-abyss') {
     regionDesc = 'Survive the corrupted anomalies and stabilize the fractured reality.';
-  } else if (regionId === 'file-system-ruins') {
+  } else if (regionId === 'filesystem-ruins') {
     regionDesc = 'Recover lost knowledge from ancient archives and memory vaults.';
   } else if (regionId === 'modules-harbor') {
     regionDesc = 'Navigate the trade networks to import powerful artifacts and modular magic.';
   } else if (regionId === 'algorithm-arena') {
     regionDesc = 'Step into the colosseum of logic and optimize your code to defeat time itself.';
-  } else if (regionId === 'boss-gate') {
+  } else if (regionId === 'bossgate-saga') {
     regionDesc = 'The final challenge. Unite the seals and defeat the Ancient Python Dragon.';
   }
 
   // Artifact check for Boss Gate
-  if (regionId === 'boss-gate' && inventory.length < 10) {
+  if (regionId === 'bossgate-saga' && inventory.length < 10) {
     return (
       <div className="min-h-screen bg-[#050505] p-8 flex items-center justify-center font-sans">
         <motion.div 
@@ -228,7 +230,7 @@ export default function RegionMap() {
             </div>
             <div>
               <h3 className="text-xl font-bold text-white">Region Progress</h3>
-              <p className="text-slate-400">{progress.completedLessons.length} / 5 Lessons Completed</p>
+              <p className="text-slate-400">{progress.completedLessons.length} / {totalLessons} Lessons Completed</p>
             </div>
           </div>
           <div className="w-full md:w-1/3">
@@ -317,7 +319,7 @@ export default function RegionMap() {
                         if (mod.isBossGate) {
                           navigate(`/region/${regionId}/boss`);
                         } else {
-                          navigate(`/lesson/${mod.id}`);
+                          navigate(`/lesson/${regionId}/${mod.id}`);
                         }
                       }
                     }}

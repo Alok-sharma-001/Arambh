@@ -75,8 +75,8 @@ export default function AncientPythonDragon() {
         // Victory
         setIsVictory(true);
         setTimeout(() => {
-          completeBoss('boss-gate');
-          gainItem('master_core');
+          completeBoss('bossgate-saga');
+          gainItem('legends-crown');
           gainXP(5000, "Defeated the Ancient Python Dragon!");
         }, 3000);
       }
