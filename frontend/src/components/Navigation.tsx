@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { usePlayer } from '@/context/PlayerContext';
 import { useAuthStore } from '@/store/authStore';
-import { Menu, X, LogOut } from 'lucide-react';
+import { Menu, X, LogOut, MapPin, Swords, BookOpen, Brain, Trophy } from 'lucide-react';
 
 const navLinks = [
   { label: 'World Map', path: '/map' },
@@ -13,8 +13,15 @@ const navLinks = [
   { label: 'Leaderboard', path: '/leaderboard' },
 ];
 
+const mobileTabItems = [
+  { label: 'Map', path: '/map', icon: MapPin },
+  { label: 'Train', path: '/training/loops-desert', icon: Swords },
+  { label: 'Library', path: '/library', icon: BookOpen },
+  { label: 'Vault', path: '/vault', icon: Brain },
+  { label: 'Board', path: '/leaderboard', icon: Trophy },
+];
+
 export default function Navigation() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const { player } = usePlayer();
   const location = useLocation();
@@ -46,7 +53,7 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Navigation Bar */}
+      {/* ─── Top Navigation Bar ─── */}
       <nav className="fixed top-0 left-0 right-0 z-40 h-[72px] bg-near-black/80 backdrop-blur-xl border-b border-warm-white/[0.06]">
         <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-6 lg:px-10">
           {/* Brand */}
@@ -69,7 +76,7 @@ export default function Navigation() {
             ))}
           </div>
 
-          {/* Right Side Actions */}
+          {/* Right Side Actions (desktop) */}
           <div className="hidden md:flex items-center gap-4">
             {token ? (
               <div className="flex items-center gap-4">
@@ -99,53 +106,71 @@ export default function Navigation() {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-warm-white p-2"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label="Toggle menu"
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-near-black/95 backdrop-blur-xl border-t border-warm-white/[0.06] px-6 py-6">
-          <div className="flex flex-col gap-4">
-            {visibleLinks.map((link) => (
-              <Link
-                key={link.label}
-                to={link.path}
-                onClick={() => setMenuOpen(false)}
-                className="text-warm-white hover:text-gold transition-colors font-medium"
-              >
-                {link.label}
-              </Link>
-            ))}
-            <div className="flex items-center gap-3 pt-4 border-t border-warm-white/[0.06]">
-              {token ? (
-                <>
-                  <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center">
-                    <span className="font-mono text-[0.625rem] font-bold text-near-black">{player.level}</span>
+          {/* Mobile: XP badge + logout (top right, no hamburger) */}
+          <div className="md:hidden flex items-center gap-3">
+            {token ? (
+              <>
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-full bg-gold flex items-center justify-center">
+                    <span className="font-mono text-[0.5rem] font-bold text-near-black">{player.level}</span>
                   </div>
-                  <span className="font-mono text-sm text-gold">{player.totalXP.toLocaleString()} XP</span>
-                </>
-              ) : (
-                <div className="flex flex-col gap-3 w-full">
-                  <Link to="/login" className="text-center text-sm font-medium text-warm-white hover:text-gold border border-warm-white/20 py-2 rounded" onClick={() => setMenuOpen(false)}>
-                    Login
-                  </Link>
-                  <Link to="/register" className="text-center text-sm font-bold text-near-black bg-gold py-2 rounded" onClick={() => setMenuOpen(false)}>
-                    Join Guild
-                  </Link>
+                  <span className="font-mono text-xs text-gold tabular-nums">{player.totalXP.toLocaleString()}</span>
                 </div>
-              )}
-            </div>
+                <button 
+                  onClick={() => setShowLogoutConfirm(true)}
+                  className="text-mid-gray hover:text-warm-white transition-colors p-1"
+                  title="Sign Out"
+                >
+                  <LogOut size={16} />
+                </button>
+              </>
+            ) : (
+              <Link to="/login" className="text-xs font-bold text-near-black bg-gold px-3 py-1.5 rounded">
+                Login
+              </Link>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* ─── Mobile Bottom Tab Bar ─── */}
+      {token && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0a0a0a]/95 backdrop-blur-xl border-t border-warm-white/[0.06] safe-area-bottom">
+          <div className="flex items-center justify-around h-16 px-2">
+            {mobileTabItems.map((item) => {
+              const isActive = location.pathname === item.path || 
+                (item.path === '/map' && location.pathname.startsWith('/map')) ||
+                (item.path === '/training/loops-desert' && location.pathname.startsWith('/training'));
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  className="flex flex-col items-center gap-1 py-1 px-3 relative"
+                >
+                  {/* Active indicator pill */}
+                  {isActive && (
+                    <div className="absolute -top-0 left-1/2 -translate-x-1/2 w-8 h-[3px] rounded-full bg-gold" />
+                  )}
+                  <item.icon
+                    size={20}
+                    className={`transition-colors duration-200 ${
+                      isActive ? 'text-gold' : 'text-zinc-500'
+                    }`}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                  />
+                  <span
+                    className={`text-[9px] font-bold uppercase tracking-wider transition-colors duration-200 ${
+                      isActive ? 'text-gold' : 'text-zinc-500'
+                    }`}
+                  >
+                    {item.label}
+                  </span>
+                </NavLink>
+              );
+            })}
           </div>
         </div>
       )}
-    </nav>
 
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (

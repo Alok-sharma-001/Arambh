@@ -1,11 +1,11 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { useNavigate, NavLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePlayer } from '@/context/PlayerContext';
 import { useRegionStore } from '@/store/regionStore';
 import { regions } from '@/data/regions';
-import { BookOpen, Check, Circle, ChevronRight, Lock, Sword, Target, X, MapPin, Box, Trophy, Sparkles } from 'lucide-react';
+import { BookOpen, Check, Circle, ChevronRight, Lock, Sword, Target, X } from 'lucide-react';
 import type { Region } from '@/types';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -33,33 +33,57 @@ function MapHeader() {
   const progressPercent = (completedRegions / regions.length) * 100;
 
   return (
-    <div className="sticky top-[72px] z-40 bg-near-black/90 backdrop-blur-xl border-b border-gold/10 h-16">
-      <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-6 lg:px-10">
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-gold">WORLD MAP</span>
-          <span className="hidden sm:inline text-warm-white/60">|</span>
-          <span className="hidden sm:flex items-center gap-2 text-sm text-warm-white">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors('current').accent }} />
-            {regions.find((r) => r.id === player.currentRegion)?.name}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:block">
-            <div className="w-[200px] h-1.5 bg-warm-white/[0.08] rounded-full overflow-hidden">
-              <div
-                 className="h-full gradient-completion-bar rounded-full transition-all duration-1000"
-                 style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-            <span className="text-[0.625rem] text-mid-gray mt-1 block">Region {completedRegions} of {regions.length}</span>
+    <div className="sticky top-[72px] z-40 bg-near-black/90 backdrop-blur-xl border-b border-gold/10">
+      <div className="max-w-[1280px] mx-auto flex flex-col px-6 lg:px-10">
+        {/* Top row */}
+        <div className="h-14 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-gold">WORLD MAP</span>
+            <span className="hidden sm:inline text-warm-white/60">|</span>
+            <span className="hidden sm:flex items-center gap-2 text-sm text-warm-white">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors('current').accent }} />
+              {regions.find((r) => r.id === player.currentRegion)?.name}
+            </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-gold flex items-center justify-center animate-level-pulse">
-              <span className="font-mono text-[0.625rem] font-bold text-near-black">{player.level}</span>
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:block">
+              <div className="w-[200px] h-1.5 bg-warm-white/[0.08] rounded-full overflow-hidden">
+                <div
+                   className="h-full gradient-completion-bar rounded-full transition-all duration-1000"
+                   style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+              <span className="text-[0.625rem] text-mid-gray mt-1 block">Region {completedRegions} of {regions.length}</span>
             </div>
-            <span className="font-mono text-sm text-gold tabular-nums">{player.totalXP.toLocaleString()} XP</span>
+
+            <div className="hidden sm:flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-gold flex items-center justify-center animate-level-pulse">
+                <span className="font-mono text-[0.625rem] font-bold text-near-black">{player.level}</span>
+              </div>
+              <span className="font-mono text-sm text-gold tabular-nums">{player.totalXP.toLocaleString()} XP</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile progress bar (visible only on small screens) */}
+        <div className="sm:hidden pb-3">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[10px] text-mid-gray font-mono font-bold">
+              Region {completedRegions} of {regions.length}
+            </span>
+            <span className="text-[10px] text-gold font-mono font-bold">
+              {Math.round(progressPercent)}%
+            </span>
+          </div>
+          <div className="w-full h-1 bg-warm-white/[0.06] rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-1000"
+              style={{
+                width: `${progressPercent}%`,
+                background: 'linear-gradient(90deg, #5682B1, #FFE8DB)',
+              }}
+            />
           </div>
         </div>
       </div>
@@ -347,35 +371,7 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
   );
 }
 
-function MobileSubNav() {
-  const navItems = [
-    { label: 'World Map', path: '/map', icon: MapPin },
-    { label: 'Memory Vault', path: '/vault', icon: Box },
-    { label: 'Artifacts', path: '/artifacts', icon: Sparkles },
-    { label: 'Leaderboard', path: '/leaderboard', icon: Trophy },
-  ];
 
-  return (
-    <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-warm-white/[0.05] bg-near-black/40">
-      {navItems.map((item) => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          className={({ isActive }) => 
-            `flex flex-col items-center gap-1.5 transition-colors ${isActive ? 'text-[#5682B1]' : 'text-mid-gray hover:text-warm-white'}`
-          }
-        >
-          {({ isActive }) => (
-            <>
-              <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              <span className="text-[9px] font-bold uppercase tracking-wider">{item.label}</span>
-            </>
-          )}
-        </NavLink>
-      ))}
-    </div>
-  );
-}
 
 export default function WorldMapPage() {
   const mapRef = useRef<HTMLDivElement>(null);
@@ -484,7 +480,6 @@ export default function WorldMapPage() {
   return (
     <main className="bg-near-black min-h-screen">
       <MapHeader />
-      <MobileSubNav />
 
       {/* Desktop view */}
       <div className="hidden lg:block">
@@ -558,29 +553,14 @@ export default function WorldMapPage() {
       </div>
 
       {/* Mobile/Tablet view */}
-      <div className="block lg:hidden max-w-md mx-auto px-6 py-10 relative space-y-8">
-        <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-warm-white/[0.08] -translate-x-1/2 pointer-events-none" />
-        {enrichedRegions.map((region) => {
-          const accentColor = getThemeColors(region.status).accent;
-          return (
-            <div key={region.id} className="relative pl-12">
-              {/* Timeline marker */}
-              <div 
-                className="absolute left-8 -translate-x-1/2 top-8 w-4 h-4 rounded-full border-2 bg-near-black z-10 flex items-center justify-center"
-                style={{ 
-                  borderColor: accentColor,
-                  boxShadow: region.status === 'current' ? `0 0 10px ${accentColor}` : 'none'
-                }}
-              >
-                {region.status === 'completed' && <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }} />}
-              </div>
-              <RegionNode
-                region={region}
-                onClick={() => setSelectedRegionId(region.id)}
-              />
-            </div>
-          );
-        })}
+      <div className="block lg:hidden max-w-lg mx-auto px-4 pt-6 pb-24 space-y-4">
+        {enrichedRegions.map((region) => (
+          <RegionNode
+            key={region.id}
+            region={region}
+            onClick={() => setSelectedRegionId(region.id)}
+          />
+        ))}
       </div>
 
       {/* Region Detail Panel */}
