@@ -77,97 +77,161 @@ export default function Login() {
       </AnimatePresence>
 
       {/* ─── Main Layout: Lamp (left) + Form (right) ─── */}
-      <div className="relative flex flex-col md:flex-row items-center md:items-end justify-center gap-4 md:gap-0 w-full max-w-4xl mx-auto px-4 md:px-8">
+      <div className="relative flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 w-full max-w-4xl mx-auto px-4 md:px-8 z-10">
         
         {/* ─── Desk Lamp (left side) ─── */}
-        <div className="relative flex-shrink-0 flex flex-col items-center md:items-end z-20 md:mr-[-40px]"
-          style={{ minHeight: '380px' }}
-        >
-          {/* Lamp shade + bulb area */}
-          <button
-            onClick={() => setLampOn(!lampOn)}
-            className="relative cursor-pointer focus:outline-none group"
-            aria-label="Toggle lamp"
+        <div className="relative flex-shrink-0 z-20 select-none">
+          <svg
+            width="280"
+            height="460"
+            viewBox="0 0 280 460"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ overflow: 'visible' }}
           >
-            {/* Lamp Arm (angled) */}
-            <div className="flex flex-col items-center">
-              {/* Shade */}
-              <div className="relative">
-                <div
-                  className="w-36 h-16 sm:w-44 sm:h-20 rounded-b-[55%] border-b-2 border-x-2 transition-all duration-700"
-                  style={{
-                    borderColor: lampOn ? 'rgba(255,232,219,0.5)' : 'rgba(63,63,70,0.6)',
-                    background: lampOn
-                      ? 'linear-gradient(180deg, rgba(55,45,35,0.95), rgba(65,52,38,0.9))'
-                      : 'linear-gradient(180deg, rgba(35,35,35,0.95), rgba(22,22,22,0.9))',
-                    boxShadow: lampOn ? '0 10px 50px rgba(255,232,219,0.2)' : 'none',
-                  }}
+            {/* Gradients */}
+            <defs>
+              {/* Gold/Brass metallic shine */}
+              <linearGradient id="brass" x1="0" y1="0" x2="280" y2="460" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#E6C687" />
+                <stop offset="25%" stopColor="#F9E8C7" />
+                <stop offset="50%" stopColor="#C59B4B" />
+                <stop offset="75%" stopColor="#E6C687" />
+                <stop offset="100%" stopColor="#8A6421" />
+              </linearGradient>
+
+              {/* Matte Black textured shadow */}
+              <linearGradient id="dark-metal" x1="0" y1="0" x2="280" y2="460" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#333336" />
+                <stop offset="40%" stopColor="#1E1E20" />
+                <stop offset="70%" stopColor="#121214" />
+                <stop offset="100%" stopColor="#08080A" />
+              </linearGradient>
+
+              {/* Warm internal reflector glow */}
+              <radialGradient id="reflector-glow" cx="60%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#FFF2E6" />
+                <stop offset="40%" stopColor="#FFD9B3" />
+                <stop offset="85%" stopColor="#D4A373" />
+                <stop offset="100%" stopColor="#8A5A36" />
+              </radialGradient>
+
+              {/* Glowing light cone */}
+              <linearGradient id="light-cone" x1="160" y1="130" x2="350" y2="400" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stopColor="#FFE8DB" stopOpacity="0.4" />
+                <stop offset="20%" stopColor="#FFE8DB" stopOpacity="0.25" />
+                <stop offset="60%" stopColor="#FFE8DB" stopOpacity="0.08" />
+                <stop offset="100%" stopColor="#FFE8DB" stopOpacity="0" />
+              </linearGradient>
+
+              {/* Soft blur for the light rays */}
+              <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="16" result="blur" />
+              </filter>
+            </defs>
+
+            {/* Glowing Light Cone (Behind lamp) */}
+            <AnimatePresence>
+              {lampOn && (
+                <motion.polygon
+                  points="160,130 550,220 550,480 100,480"
+                  fill="url(#light-cone)"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6 }}
+                  filter="url(#soft-glow)"
+                  style={{ mixBlendMode: 'screen' }}
                 />
-                {/* Bulb */}
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2">
-                  <motion.div
-                    className="w-6 h-6 rounded-full"
-                    animate={{
-                      backgroundColor: lampOn ? '#FFE8DB' : '#27272a',
-                      boxShadow: lampOn
-                        ? '0 0 40px 15px rgba(255,232,219,0.7), 0 0 100px 40px rgba(255,232,219,0.25), 0 0 160px 60px rgba(255,232,219,0.1)'
-                        : '0 0 0px 0px transparent',
-                    }}
-                    transition={{ duration: 0.7, ease: 'easeOut' }}
-                  />
-                </div>
-              </div>
-            </div>
-          </button>
+              )}
+            </AnimatePresence>
 
-          {/* Pull string */}
-          <motion.div
-            className="flex flex-col items-center mt-1 cursor-pointer z-10"
-            onClick={() => setLampOn(!lampOn)}
-            whileHover={{ y: 5 }}
-            transition={{ type: 'spring', stiffness: 300 }}
-          >
-            <div className="w-[1px] bg-zinc-600" style={{ height: '32px' }} />
-            <div className="w-2.5 h-2.5 rounded-full bg-zinc-500 border border-zinc-400" />
-          </motion.div>
+            {/* ─── Lamp Base ─── */}
+            <g id="lamp-base">
+              {/* Bottom rubber base */}
+              <path d="M 60 435 Q 125 425 190 435 L 195 442 Q 125 450 55 442 Z" fill="#0A0A0B" />
+              {/* Brass base cover */}
+              <path d="M 62 430 Q 125 418 188 430 L 191 436 Q 125 444 59 436 Z" fill="url(#brass)" stroke="#6E5019" strokeWidth="0.5" />
+              {/* Base top ridge */}
+              <path d="M 80 422 Q 125 414 170 422 L 175 428 Q 125 434 75 428 Z" fill="url(#dark-metal)" />
+              <path d="M 80 422 Q 125 414 170 422" stroke="url(#brass)" strokeWidth="1" fill="none" />
+            </g>
 
-          {/* Lamp neck (vertical pole) */}
-          <div className="w-[3px] bg-gradient-to-b from-zinc-600 to-zinc-700 rounded-full" style={{ height: '200px' }} />
+            {/* ─── Stand Structure ─── */}
+            {/* Lower Stand Arm */}
+            <g id="lower-arm">
+              {/* Brass hinge joint at base */}
+              <circle cx="125" cy="414" r="9" fill="url(#brass)" stroke="#6E5019" strokeWidth="0.5" />
+              <circle cx="125" cy="414" r="4" fill="#1E1E20" />
+              {/* Matte black main stand rod */}
+              <line x1="125" y1="414" x2="110" y2="220" stroke="url(#dark-metal)" strokeWidth="8" strokeLinecap="round" />
+              <line x1="123" y1="414" x2="108" y2="220" stroke="url(#brass)" strokeWidth="1.5" strokeOpacity="0.4" />
+            </g>
 
-          {/* Lamp base */}
-          <div className="relative mt-1">
-            <div className="w-28 h-3 rounded-full bg-gradient-to-r from-zinc-700 via-zinc-600 to-zinc-700" />
-            <div className="w-20 h-2 mx-auto mt-0.5 rounded-full bg-zinc-800" />
-          </div>
-        </div>
+            {/* Middle Joint */}
+            <g id="middle-hinge">
+              <circle cx="110" cy="220" r="8" fill="url(#brass)" stroke="#6E5019" strokeWidth="0.5" />
+              <circle cx="110" cy="220" r="3" fill="#121214" />
+            </g>
 
-        {/* ─── Light Cone (from lamp bulb toward the form) ─── */}
-        <AnimatePresence>
-          {lampOn && (
-            <motion.div
-              className="absolute pointer-events-none z-10"
-              style={{
-                left: '50%',
-                top: '20%',
-                transform: 'translateX(-30%)',
-              }}
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.5 }}
-              transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
+            {/* Upper curved arm */}
+            <path d="M 110 220 Q 125 150 168 132" fill="none" stroke="url(#dark-metal)" strokeWidth="6.5" strokeLinecap="round" />
+            <path d="M 111 220 Q 126 150 169 132" fill="none" stroke="url(#brass)" strokeWidth="1.5" strokeOpacity="0.4" />
+
+            {/* Shade Hinge Joint */}
+            <circle cx="168" cy="132" r="6" fill="url(#brass)" stroke="#6E5019" strokeWidth="0.5" />
+
+            {/* ─── Pull String (Interactive) ─── */}
+            <motion.g
+              className="cursor-pointer"
+              onClick={() => setLampOn(!lampOn)}
+              whileHover={{ y: 6 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 12 }}
             >
-              <div
+              {/* Chain thread */}
+              <line x1="150" y1="140" x2="150" y2="240" stroke="#71717A" strokeWidth="1.2" strokeDasharray="3,3" />
+              {/* Brass pull cylinder */}
+              <rect x="146.5" y="240" width="7" height="18" rx="2" fill="url(#brass)" stroke="#6E5019" strokeWidth="0.5" />
+              {/* Tiny ring at string end */}
+              <circle cx="150" cy="258" r="2.5" fill="url(#brass)" />
+            </motion.g>
+
+            {/* ─── Lamp Shade (Beautiful banker's style dome) ─── */}
+            <g id="lamp-shade">
+              {/* Inner golden glow reflector (changes styling based on lampOn) */}
+              <path
+                d="M 132 125 Q 170 100 208 125 L 218 142 Q 170 148 122 142 Z"
+                fill={lampOn ? 'url(#reflector-glow)' : '#33241B'}
+                stroke={lampOn ? '#FFD4B2' : '#22150E'}
+                strokeWidth="0.5"
+              />
+              
+              {/* Glowing Bulb */}
+              <circle
+                cx="170"
+                cy="125"
+                r="10"
+                fill={lampOn ? '#FFFFFF' : '#333335'}
                 style={{
-                  width: '600px',
-                  height: '500px',
-                  background: 'radial-gradient(ellipse 60% 80% at 20% 10%, rgba(255,232,219,0.1) 0%, rgba(255,232,219,0.04) 40%, transparent 70%)',
+                  filter: lampOn ? 'drop-shadow(0 0 12px #FFE8DB)' : 'none',
                 }}
               />
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        {/* Ambient warm glow on background */}
+              {/* Main Outer Dome */}
+              <path
+                d="M 125 125 Q 170 85 215 125 L 225 136 Q 170 142 115 136 Z"
+                fill="url(#dark-metal)"
+                stroke="#0A0A0C"
+                strokeWidth="1"
+              />
+
+              {/* Brass rim accent */}
+              <path d="M 115 136 Q 170 142 225 136" stroke="url(#brass)" strokeWidth="1.8" fill="none" />
+            </g>
+          </svg>
+        </div>
+
+        {/* Ambient warm glow overlay on whole scene */}
         <AnimatePresence>
           {lampOn && (
             <motion.div
@@ -178,13 +242,11 @@ export default function Login() {
               transition={{ duration: 0.8 }}
             >
               <div
-                className="absolute"
+                className="absolute w-[80vw] h-[80vh] rounded-full blur-[120px]"
                 style={{
-                  left: '20%',
+                  left: '10%',
                   top: '10%',
-                  width: '80%',
-                  height: '80%',
-                  background: 'radial-gradient(ellipse at 30% 30%, rgba(255,232,219,0.06) 0%, transparent 60%)',
+                  background: 'radial-gradient(circle at 30% 30%, rgba(255,232,219,0.08) 0%, transparent 70%)',
                 }}
               />
             </motion.div>
