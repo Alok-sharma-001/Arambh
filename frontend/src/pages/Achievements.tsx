@@ -36,7 +36,7 @@ export default function Achievements() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       <PageHeader 
         title="Achievements Vault" 
         description="Showcase your milestones and rare trophies collected throughout your journey."

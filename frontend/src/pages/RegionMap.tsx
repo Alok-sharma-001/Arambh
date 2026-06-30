@@ -206,7 +206,7 @@ export default function RegionMap() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-20">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="flex items-center gap-4 mb-6 pt-8 px-6">
         <button 
           onClick={() => navigate('/learning-map')} 

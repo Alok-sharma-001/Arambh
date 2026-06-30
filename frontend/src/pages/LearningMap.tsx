@@ -120,7 +120,7 @@ export default function LearningMap() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto pb-20">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <PageHeader 
         title="Python Kingdom" 
         description="Your journey through the world of Python. Reclaim the lost artifacts of logic to restore the kingdom."

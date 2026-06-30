@@ -100,7 +100,7 @@ export default function Dashboard() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="max-w-6xl mx-auto space-y-6 md:space-y-8"
+      className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 md:space-y-8"
     >
       {/* Level-up modal (renders only on event) */}
       <LevelUpModal />

@@ -465,72 +465,101 @@ export default function WorldMapPage() {
     <main className="bg-near-black min-h-screen">
       <MapHeader />
 
-      <div ref={mapRef} className="relative pb-40" style={{ height: '4800px' }}>
-        {/* Subtle grid pattern */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{
-            backgroundImage: 'linear-gradient(rgba(255,252,242,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,252,242,0.1) 1px, transparent 1px)',
-            backgroundSize: '50px 50px',
-          }}
-        />
-
-        {/* SVG Path */}
-        <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-          {/* Full route path (always visible as a faint guide) */}
-          <path
-            d={buildPath()}
-            fill="none"
-            stroke="rgba(155,184,216,0.3)"
-            strokeWidth="0.15"
-          />
-          {/* Animated bright path (draws on scroll) */}
-          <path
-            ref={pathRef}
-            d={buildPath()}
-            fill="none"
-            stroke="#9BB8D8"
-            strokeWidth="0.15"
-            style={{ filter: 'drop-shadow(0 0 6px rgba(155,184,216,0.4))' }}
-          />
-        </svg>
-
-        {/* Region Nodes */}
-        {enrichedRegions.map((region) => (
+      {/* Desktop view */}
+      <div className="hidden lg:block">
+        <div ref={mapRef} className="relative pb-40" style={{ height: '4800px' }}>
+          {/* Subtle grid pattern */}
           <div
-            key={region.id}
-            className="region-node-wrapper absolute z-10"
+            className="absolute inset-0 pointer-events-none opacity-[0.03]"
             style={{
-              left: `${region.position.x}%`,
-              top: `${region.position.y}%`,
-              transform: 'translateX(-50%)',
-              width: region.number === 11 ? 'min(320px, calc(100vw - 48px))' : 'min(260px, calc(100vw - 48px))',
+              backgroundImage: 'linear-gradient(rgba(255,252,242,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,252,242,0.1) 1px, transparent 1px)',
+              backgroundSize: '50px 50px',
             }}
-          >
-            <RegionNode
-              region={region}
-              onClick={() => setSelectedRegionId(region.id)}
-            />
-          </div>
-        ))}
+          />
 
-        {/* Ambient floating symbols */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <span
-              key={i}
-              className="absolute font-mono text-gold/[0.08] text-sm animate-float"
+          {/* SVG Path */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+            {/* Full route path (always visible as a faint guide) */}
+            <path
+              d={buildPath()}
+              fill="none"
+              stroke="rgba(155,184,216,0.3)"
+              strokeWidth="0.15"
+            />
+            {/* Animated bright path (draws on scroll) */}
+            <path
+              ref={pathRef}
+              d={buildPath()}
+              fill="none"
+              stroke="#9BB8D8"
+              strokeWidth="0.15"
+              style={{ filter: 'drop-shadow(0 0 6px rgba(155,184,216,0.4))' }}
+            />
+          </svg>
+
+          {/* Region Nodes */}
+          {enrichedRegions.map((region) => (
+            <div
+              key={region.id}
+              className="region-node-wrapper absolute z-10"
               style={{
-                left: `${10 + Math.random() * 80}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 4}s`,
-                animationDuration: `${4 + Math.random() * 4}s`,
+                left: `${region.position.x}%`,
+                top: `${region.position.y}%`,
+                transform: 'translateX(-50%)',
+                width: region.number === 11 ? 'min(320px, calc(100vw - 48px))' : 'min(260px, calc(100vw - 48px))',
               }}
             >
-              {['{', '}', '[', ']', '(', ')'][i % 6]}
-            </span>
+              <RegionNode
+                region={region}
+                onClick={() => setSelectedRegionId(region.id)}
+              />
+            </div>
           ))}
+
+          {/* Ambient floating symbols */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <span
+                key={i}
+                className="absolute font-mono text-gold/[0.08] text-sm animate-float"
+                style={{
+                  left: `${10 + Math.random() * 80}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 4}s`,
+                  animationDuration: `${4 + Math.random() * 4}s`,
+                }}
+              >
+                {['{', '}', '[', ']', '(', ')'][i % 6]}
+              </span>
+            ))}
+          </div>
         </div>
+      </div>
+
+      {/* Mobile/Tablet view */}
+      <div className="block lg:hidden max-w-md mx-auto px-6 py-10 relative space-y-8">
+        <div className="absolute left-8 top-10 bottom-10 w-0.5 bg-warm-white/[0.08] -translate-x-1/2 pointer-events-none" />
+        {enrichedRegions.map((region) => {
+          const accentColor = getThemeColors(region.status).accent;
+          return (
+            <div key={region.id} className="relative pl-12">
+              {/* Timeline marker */}
+              <div 
+                className="absolute left-8 -translate-x-1/2 top-8 w-4 h-4 rounded-full border-2 bg-near-black z-10 flex items-center justify-center"
+                style={{ 
+                  borderColor: accentColor,
+                  boxShadow: region.status === 'current' ? `0 0 10px ${accentColor}` : 'none'
+                }}
+              >
+                {region.status === 'completed' && <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }} />}
+              </div>
+              <RegionNode
+                region={region}
+                onClick={() => setSelectedRegionId(region.id)}
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Region Detail Panel */}

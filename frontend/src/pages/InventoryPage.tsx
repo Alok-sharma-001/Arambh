@@ -31,7 +31,7 @@ export default function InventoryPage() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="max-w-6xl mx-auto space-y-8"
+      className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8"
     >
       <PageHeader 
         title="Artifact Inventory" 

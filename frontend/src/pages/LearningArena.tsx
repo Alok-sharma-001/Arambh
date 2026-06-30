@@ -96,7 +96,7 @@ export default function LearningArena() {
 
       {/* Main Workspace - Vertical Pipeline Layout */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden p-8 relative z-10 w-full">
-        <div className="max-w-4xl mx-auto flex flex-col gap-8 pb-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col gap-8 pb-20">
           
           {/* 1. Code Editor */}
           <motion.div 
