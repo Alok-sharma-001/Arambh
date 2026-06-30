@@ -1,11 +1,11 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { usePlayer } from '@/context/PlayerContext';
 import { useRegionStore } from '@/store/regionStore';
 import { regions } from '@/data/regions';
-import { BookOpen, Check, Circle, ChevronRight, Lock, Sword, Target, X } from 'lucide-react';
+import { BookOpen, Check, Circle, ChevronRight, Lock, Sword, Target, X, MapPin, Box, Trophy, Sparkles } from 'lucide-react';
 import type { Region } from '@/types';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -136,78 +136,68 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
           </span>
         </div>
 
-        {/* Region icon (circle with color) */}
-        <div
-          className="relative mt-4 flex h-14 w-14 items-center justify-center rounded-2xl border"
-          style={{ backgroundColor: `${accentColor}15`, borderColor: `${accentColor}25` }}
-        >
-          <span style={{ color: accentColor }}>
-            {region.number === 11 ? <Sword size={24} /> : <span className="font-mono text-lg font-bold">{region.name.charAt(0)}</span>}
-          </span>
-        </div>
-
-        {/* Region name */}
-        <h3 className={`relative mt-4 font-display font-bold text-warm-white ${isBoss ? 'text-xl' : 'text-lg'}`}>
-          {region.name}
-        </h3>
-        <p className="relative mt-1 text-xs text-mid-gray">{region.subtitle}</p>
-
-        <div className="relative mt-4 space-y-2">
-          {/* Progress mini-bar */}
-          <div>
-            <div className="flex items-center justify-between text-[0.65rem] text-mid-gray uppercase tracking-wider mb-1 font-bold">
-              <span>Progress</span>
-              <span>{Math.round(progressPercent)}%</span>
-            </div>
-            <div className="relative h-1.5 bg-warm-white/[0.06] rounded-full overflow-hidden">
-              <div
-                className="h-full rounded-full transition-all duration-500 animate-pulse-fast"
-                style={{
-                  width: `${progressPercent}%`,
-                  backgroundColor: accentColor,
-                }}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2 mt-2">
-            <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-2.5 py-1.5 flex flex-col justify-center">
-              <span className="block font-mono text-[11px] font-bold text-warm-white">{completedLessons} / {region.lessons.length}</span>
-              <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold">Lessons</span>
-            </div>
-            <div className="rounded-lg border border-warm-white/[0.06] bg-warm-white/[0.025] px-2.5 py-1.5 flex flex-col justify-center">
-              <span className="block font-mono text-[11px] font-bold text-gold">
-                {bossCompleted ? 'Defeated' : bossAvailable ? 'Ready' : 'Locked'}
-              </span>
-              <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold">Boss Status</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Status */}
-        <div className="relative mt-4 flex items-center gap-1.5">
-          {isCompleted && <><Check size={12} style={{ color: accentColor }} /><span className="text-[0.625rem] uppercase tracking-[0.1em] font-semibold" style={{ color: accentColor }}>COMPLETED</span></>}
-          {isCurrent && <><Circle size={12} className="text-gold fill-gold" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-gold font-semibold">IN PROGRESS</span></>}
-          {isLocked && <><Lock size={12} className="text-mid-gray" /><span className="text-[0.625rem] uppercase tracking-[0.1em] text-mid-gray font-semibold">LOCKED</span></>}
-        </div>
-
-        {/* Hover button */}
-        {!isLocked && (
-          <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
-            <span
-              className="inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-xs font-semibold"
-              style={{
-                backgroundColor: `${accentColor}15`,
-                borderColor: `${accentColor}40`,
-                color: accentColor,
-              }}
-            >
-              Open Region <ChevronRight size={14} />
+        {/* Compact Flex Layout for Icon and Title */}
+        <div className="flex items-center gap-4 mt-4">
+          <div
+            className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border"
+            style={{ backgroundColor: `${accentColor}15`, borderColor: `${accentColor}25` }}
+          >
+            <span style={{ color: accentColor }}>
+              {region.number === 11 ? <Sword size={20} /> : <span className="font-mono text-lg font-bold">{region.name.charAt(0)}</span>}
             </span>
           </div>
-        )}
 
-        {/* Boss lock overlay */}
+          <div>
+            <h3 className={`font-display font-bold text-warm-white ${isBoss ? 'text-lg' : 'text-base'}`}>
+              {region.name}
+            </h3>
+            <p className="text-[10px] text-mid-gray mt-0.5">{region.subtitle}</p>
+          </div>
+        </div>
+
+        {/* Progress Bar (Full Width) */}
+        <div className="relative mt-5">
+          <div className="flex justify-end mb-1.5">
+            <span className="text-[9px] font-mono text-mid-gray font-bold">{Math.round(progressPercent)}%</span>
+          </div>
+          <div className="relative h-1 bg-warm-white/[0.06] rounded-full overflow-hidden">
+            <div
+              className="h-full rounded-full transition-all duration-500 animate-pulse-fast"
+              style={{
+                width: `${progressPercent}%`,
+                backgroundColor: accentColor,
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Stats Grid (Minimal text format) */}
+        <div className="flex items-center gap-8 mt-4">
+          <div>
+            <span className="block font-mono text-xs font-bold text-warm-white">{completedLessons} / {region.lessons.length}</span>
+            <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold mt-0.5 block">Lessons</span>
+          </div>
+          <div>
+            <span className="block font-mono text-xs font-bold text-warm-white">
+              {bossCompleted ? 'Defeated' : bossAvailable ? 'Ready' : 'Locked'}
+            </span>
+            <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold mt-0.5 block">Boss Status</span>
+          </div>
+        </div>
+
+        {/* Compact Footer Line */}
+        <div className="relative mt-5 pt-3 border-t border-warm-white/5 flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            {isCompleted && <><Check size={12} style={{ color: accentColor }} /><span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: accentColor }}>COMPLETED</span></>}
+            {isCurrent && <><Circle size={10} className="text-gold fill-gold" /><span className="text-[9px] uppercase tracking-wider text-gold font-semibold">IN PROGRESS</span></>}
+            {isLocked && <><Lock size={12} className="text-mid-gray" /><span className="text-[9px] text-mid-gray font-semibold tracking-wide">Complete previous area to unlock</span></>}
+          </div>
+          {!isLocked && (
+            <ChevronRight size={14} className="text-mid-gray" />
+          )}
+        </div>
+
+        {/* Boss lock overlay (if needed) */}
         {isBoss && isLocked && (
           <div className="absolute inset-0 bg-near-black/80 backdrop-blur-md z-20 rounded-2xl flex flex-col items-center justify-center">
             <Lock size={32} className="text-mid-gray mb-2" />
@@ -464,6 +454,7 @@ export default function WorldMapPage() {
   return (
     <main className="bg-near-black min-h-screen">
       <MapHeader />
+      <MobileSubNav />
 
       {/* Desktop view */}
       <div className="hidden lg:block">
