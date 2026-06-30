@@ -347,6 +347,36 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
   );
 }
 
+function MobileSubNav() {
+  const navItems = [
+    { label: 'World Map', path: '/map', icon: MapPin },
+    { label: 'Memory Vault', path: '/vault', icon: Box },
+    { label: 'Artifacts', path: '/artifacts', icon: Sparkles },
+    { label: 'Leaderboard', path: '/leaderboard', icon: Trophy },
+  ];
+
+  return (
+    <div className="md:hidden flex items-center justify-between px-6 py-4 border-b border-warm-white/[0.05] bg-near-black/40">
+      {navItems.map((item) => (
+        <NavLink
+          key={item.path}
+          to={item.path}
+          className={({ isActive }) => 
+            `flex flex-col items-center gap-1.5 transition-colors ${isActive ? 'text-[#5682B1]' : 'text-mid-gray hover:text-warm-white'}`
+          }
+        >
+          {({ isActive }) => (
+            <>
+              <item.icon size={20} strokeWidth={isActive ? 2.5 : 2} />
+              <span className="text-[9px] font-bold uppercase tracking-wider">{item.label}</span>
+            </>
+          )}
+        </NavLink>
+      ))}
+    </div>
+  );
+}
+
 export default function WorldMapPage() {
   const mapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
