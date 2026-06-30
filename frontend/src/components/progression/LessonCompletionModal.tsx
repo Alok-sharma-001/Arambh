@@ -109,7 +109,7 @@ export const LessonCompletionModal: React.FC<LessonCompletionModalProps> = ({
           transition={{ type: 'spring', stiffness: 200, damping: 22 }}
           className="w-full max-w-lg"
         >
-          <Card className="p-8 bg-[#0D0D12] border-2 border-game-gold/50 shadow-[0_0_80px_rgba(251,191,36,0.25)] text-center relative overflow-hidden">
+          <Card className="p-8 bg-[#0D0D12] border-2 border-game-gold/50 shadow-[0_0_80px_rgba(251,191,36,0.25)] max-h-[90vh] overflow-y-auto text-center relative overflow-hidden">
             {/* Ambient gold glow */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-game-gold/10 blur-[60px] rounded-full pointer-events-none" />
 
