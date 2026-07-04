@@ -11,10 +11,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <motion.div
         ref={ref}
-        whileHover={hoverEffect ? { y: -4 } : {}}
-        className={`bg-[#13131A]/80 backdrop-blur-md border border-[#181820] rounded-2xl overflow-hidden ${
-          glowEffect ? 'shadow-lg shadow-game-purple/20 hover:shadow-game-purple/40 transition-shadow duration-300' : ''
-        } ${className}`}
+        whileHover={hoverEffect ? { y: -2 } : {}}
+        className={`bg-black/60 backdrop-blur-md border border-warm-white/10 rounded-xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_15px_rgba(212,183,110,0.05)] hover:border-gold/30 ${className}`}
         {...props}
       >
         {children}

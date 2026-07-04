@@ -12,11 +12,11 @@ export const ArtifactWidget: React.FC = () => {
   return (
     <Card 
       onClick={() => navigate('/inventory')}
-      className="p-5 md:p-6 bg-[#0D0D12] border-[#181820] hover:border-game-purple/50 transition-colors cursor-pointer group relative overflow-hidden h-full flex flex-col"
+      className="p-4 cursor-pointer group relative overflow-hidden h-full flex flex-col"
     >
-      <div className="flex items-center justify-between mb-5 relative z-10">
-        <h3 className="text-lg font-bold text-white">Collection</h3>
-        <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-game-purple transition-colors" />
+      <div className="flex items-center justify-between mb-4 relative z-10">
+        <h3 className="text-lg font-bold text-warm-white">Collection</h3>
+        <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-gold transition-colors" />
       </div>
 
       <div className="relative z-10 mb-6">
@@ -30,7 +30,7 @@ export const ArtifactWidget: React.FC = () => {
              <span className="text-sm font-bold">All Artifacts Collected!</span>
           </div>
         ) : nextArtifact ? (
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-[#13131A] border border-[#181820]">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[#111111]/50 border border-warm-white/10">
             <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${nextArtifact.bg}`}>
               <nextArtifact.icon className={`w-5 h-5 ${nextArtifact.color}`} />
             </div>
@@ -40,7 +40,7 @@ export const ArtifactWidget: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-[#13131A] border border-[#181820]">
+          <div className="flex items-center gap-3 p-2.5 rounded-lg bg-[#111111]/50 border border-warm-white/10">
              <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-slate-800/50">
                 <Lock className="w-5 h-5 text-slate-600" />
              </div>
@@ -50,7 +50,7 @@ export const ArtifactWidget: React.FC = () => {
       </div>
 
       {/* Hover glow */}
-      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-game-purple/5 blur-[50px] rounded-full pointer-events-none group-hover:bg-game-purple/10 transition-colors" />
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-gold/5 blur-[50px] rounded-full pointer-events-none group-hover:bg-gold/10 transition-colors" />
     </Card>
   );
 };

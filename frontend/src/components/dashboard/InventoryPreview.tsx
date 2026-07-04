@@ -19,7 +19,7 @@ export const InventoryPreview: React.FC = () => {
   const acquiredIds = new Set(inventory.map(item => item.item_id));
 
   return (
-    <Card className="p-6 md:p-8 h-full bg-[#0D0D12] border-[#181820]">
+    <Card className="p-6 md:p-8 h-full bg-[#0A0A0A] border-warm-white/[0.06]">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h3 className="text-xl font-bold text-white">Learning Artifacts</h3>
@@ -38,8 +38,8 @@ export const InventoryPreview: React.FC = () => {
               whileHover={isAcquired ? { y: -5, scale: 1.05 } : {}}
               className={`relative flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all ${
                 isAcquired 
-                  ? `border-[#181820] bg-[#13131A] shadow-[0_0_15px_rgba(0,0,0,0.5)]` 
-                  : 'border-dashed border-slate-800 bg-[#0D0D12] opacity-50 grayscale'
+                  ? `border-warm-white/[0.06] bg-[#111111] shadow-[0_0_15px_rgba(0,0,0,0.5)]` 
+                  : 'border-dashed border-slate-800 bg-[#0A0A0A] opacity-50 grayscale'
               }`}
             >
               {isAcquired && (

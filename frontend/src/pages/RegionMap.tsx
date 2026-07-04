@@ -269,30 +269,36 @@ export default function RegionMap() {
             <div key={mod.id} className="relative w-full max-w-4xl flex flex-col items-center">
               
               {!isLast && (
-                <div className="absolute top-1/2 left-0 right-0 h-48 md:h-64 z-0 pointer-events-none flex justify-center mt-8">
-                  <svg className="w-full h-full" preserveAspectRatio="none">
+                <div className="absolute top-[58%] left-0 right-0 h-32 md:h-48 z-0 pointer-events-none flex justify-center">
+                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-32 md:w-52 h-full">
+                    <defs>
+                      <linearGradient id="timeline-flow-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#5682B1" />
+                        <stop offset="50%" stopColor="#FFE8DB" />
+                        <stop offset="100%" stopColor="#5682B1" />
+                      </linearGradient>
+                    </defs>
                     <path
                       d={isLeft 
-                        ? `M 50% 0 C 80% 20, 80% 80, 50% 100` 
-                        : `M 50% 0 C 20% 20, 20% 80, 50% 100`
+                        ? `M 50 0 C 85 20, 85 80, 50 100` 
+                        : `M 50 0 C 15 20, 15 80, 50 100`
                       }
                       fill="none"
                       className={`${pathColor} transition-colors duration-1000`}
-                      strokeWidth="6"
-                      strokeDasharray="10 10"
+                      strokeWidth="2.5"
+                      strokeDasharray="4 4"
                     />
                     {(mod.status === 'completed' || mod.status === 'current') && (
                        <path
                        d={isLeft 
-                         ? `M 50% 0 C 80% 20, 80% 80, 50% 100` 
-                         : `M 50% 0 C 20% 20, 20% 80, 50% 100`
+                         ? `M 50 0 C 85 20, 85 80, 50 100` 
+                         : `M 50 0 C 15 20, 15 80, 50 100`
                        }
                        fill="none"
-                       stroke="white"
+                       stroke="url(#timeline-flow-grad)"
                        strokeWidth="2"
-                       strokeDasharray="50 1000"
-                       strokeDashoffset="0"
-                       className="animate-[dash_3s_linear_infinite] opacity-50"
+                       strokeDasharray="8 16"
+                       className="animate-timeline-flow opacity-80"
                      />
                     )}
                   </svg>
@@ -301,18 +307,18 @@ export default function RegionMap() {
 
               <motion.div 
                 variants={itemVariants}
-                className={`relative z-10 flex w-full justify-center md:justify-start ${isLeft ? 'md:pl-0' : 'md:justify-end md:pr-0'} mb-24 md:mb-32`}
+                className={`relative z-10 flex w-full justify-center md:justify-start ${isLeft ? 'md:pl-0' : 'md:justify-end md:pr-0'} mb-12 md:mb-20`}
               >
-                <div className={`w-full md:w-[45%] flex items-center justify-center relative ${isLeft ? 'md:ml-auto md:mr-12' : 'md:mr-auto md:ml-12'}`}>
+                <div className={`w-[90%] md:w-[45%] flex items-center justify-center relative ${isLeft ? 'md:ml-auto md:mr-12' : 'md:mr-auto md:ml-12'}`}>
                   
                   <div className={`hidden md:flex absolute ${isLeft ? '-right-12 translate-x-1/2' : '-left-12 -translate-x-1/2'} top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0D0D12] border-4 border-[#181820] items-center justify-center z-20`}>
                     <div className={`w-3 h-3 rounded-full ${
                       mod.status === 'completed' ? 'bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,1)]' 
-                      : mod.status === 'current' ? 'bg-game-purple shadow-[0_0_15px_rgba(139,92,246,1)]' 
+                      : mod.status === 'current' ? 'bg-game-purple shadow-[0_0_15px_rgba(139,92,246,1)] animate-pulse' 
                       : 'bg-slate-700'
                     }`} />
                   </div>
-
+ 
                   <div 
                     onClick={() => {
                       if (mod.status !== 'locked') {

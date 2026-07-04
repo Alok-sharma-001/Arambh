@@ -105,13 +105,13 @@ export default function LeaderboardPage() {
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(124,92,255,0.06) 0%, transparent 70%)',
+              'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(212,183,110,0.06) 0%, transparent 70%)',
           }}
         />
         <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-12 relative">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-royal-purple/20 bg-royal-purple/[0.06] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-royal-purple mb-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-gold/20 bg-gold/[0.06] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-gold mb-4">
                 {view === 'global' ? (
                   <>
                     <Trophy size={12} /> Leaderboard
@@ -169,8 +169,8 @@ export default function LeaderboardPage() {
               onClick={() => setView('analytics')}
               className={`flex items-center gap-2 px-6 py-2.5 rounded-lg font-bold text-sm transition-colors ${
                 view === 'analytics' 
-                  ? 'bg-royal-purple text-near-black' 
-                  : 'bg-royal-purple/[0.04] text-mid-gray hover:text-warm-white hover:bg-royal-purple/[0.08]'
+                  ? 'bg-gold text-near-black' 
+                  : 'bg-gold/[0.04] text-mid-gray hover:text-warm-white hover:bg-gold/[0.08]'
               }`}
             >
               <BarChart2 size={16} /> My Analytics
@@ -260,9 +260,9 @@ export default function LeaderboardPage() {
                   <button
                     key={t}
                     onClick={() => setTimeFilter(t)}
-                    className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-[0.1em] border transition-all ${
+                    className={`rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-[0.15em] border transition-all ${
                       timeFilter === t
-                        ? 'bg-royal-purple/10 border-royal-purple/30 text-royal-purple'
+                        ? 'bg-gold/10 border-gold/30 text-gold'
                         : 'border-warm-white/[0.08] text-mid-gray hover:text-warm-white hover:border-warm-white/20'
                     }`}
                   >
@@ -276,7 +276,7 @@ export default function LeaderboardPage() {
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search players..."
-                  className="h-9 w-full sm:w-[220px] rounded-lg border border-warm-white/[0.08] bg-deep-charcoal/60 pl-9 pr-3 text-xs text-warm-white outline-none placeholder:text-mid-gray/60 focus:border-royal-purple/40 transition-colors"
+                  className="h-9 w-full sm:w-[220px] rounded-lg border border-warm-white/[0.08] bg-deep-charcoal/60 pl-9 pr-3 text-xs text-warm-white outline-none placeholder:text-mid-gray/60 focus:border-gold/40 transition-colors"
                 />
               </div>
             </div>
@@ -381,7 +381,7 @@ export default function LeaderboardPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
               <div className="rounded-xl border border-warm-white/[0.08] bg-deep-charcoal/40 p-5">
                 <div className="flex items-center gap-2 mb-2">
-                  <Users size={14} className="text-royal-purple" />
+                  <Users size={14} className="text-gold" />
                   <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-mid-gray">Total Players</span>
                 </div>
                 <span className="font-mono text-2xl font-bold text-warm-white">{data.length}</span>
@@ -417,7 +417,7 @@ export default function LeaderboardPage() {
           </div>
         </>
       ) : (
-        <div className="mt-8">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-10">
           <AnalyticsDashboard />
         </div>
       )}

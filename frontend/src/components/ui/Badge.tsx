@@ -2,7 +2,7 @@ import React from 'react';
 
 interface BadgeProps {
   children: React.ReactNode;
-  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'purple' | 'slate' | 'emerald' | 'amber' | 'red';
+  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'purple' | 'slate' | 'emerald' | 'amber' | 'red' | 'gold';
   size?: 'sm' | 'md';
   className?: string;
   icon?: React.ReactNode;
@@ -16,11 +16,12 @@ export const Badge: React.FC<BadgeProps> = ({
   icon
 }) => {
   const variants = {
-    primary: "bg-game-purple/10 text-game-purple border-game-purple/20",
+    primary: "bg-gold/10 text-gold border-gold/20",
+    gold: "bg-gold/10 text-gold border-gold/20",
     success: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     warning: "bg-amber-500/10 text-amber-400 border-amber-500/20",
     danger: "bg-red-500/10 text-red-400 border-red-500/20",
-    purple: "bg-purple-500/10 text-purple-400 border-purple-500/20",
+    purple: "bg-gold/10 text-gold border-gold/20", // Aliasing purple to gold to ensure theme compliance
     slate: "bg-slate-700/50 text-slate-300 border-slate-600",
     emerald: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     amber: "bg-amber-500/10 text-amber-400 border-amber-500/20",

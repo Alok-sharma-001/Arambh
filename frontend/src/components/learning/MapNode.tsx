@@ -40,65 +40,69 @@ export const MapNode: React.FC<MapNodeProps> = ({
 
   return (
     <motion.div 
-      whileHover={!isLocked ? { scale: 1.05, y: -5 } : {}}
+      whileHover={!isLocked ? { scale: 1.02, y: -2 } : {}}
+      transition={{ duration: 0.12 }}
       className="relative group w-full"
     >
       {/* Glow for completed nodes */}
       {isCompleted && (
-        <div className="absolute -inset-0.5 bg-emerald-500/20 blur-xl rounded-2xl group-hover:bg-emerald-500/30 transition-all duration-500" />
+        <div className="absolute -inset-0.5 bg-emerald-500/10 blur-xl rounded-2xl group-hover:bg-emerald-500/20 transition-all duration-300" />
       )}
       
-      {/* Pulse for current node */}
+      {/* Pulse ring for current active node */}
       {isCurrent && (
-        <div className="absolute -inset-1 bg-game-purple/30 blur-lg rounded-2xl animate-pulse" />
+        <>
+          <div className="absolute -inset-1 rounded-[22px] animate-pulse-ring z-0" />
+          <div className="absolute -inset-0.5 bg-game-purple/20 blur-xl rounded-2xl animate-pulse" />
+        </>
       )}
 
       <Card 
-        className={`p-6 relative border-2 transition-all duration-300 backdrop-blur-md overflow-hidden ${
+        className={`p-4 md:p-5 relative border-2 transition-apple backdrop-blur-md overflow-hidden rounded-[18px] z-10 ${
           isLocked 
             ? 'border-[#181820] bg-[#0D0D12]/60 grayscale opacity-80' 
             : isCompleted
-            ? 'border-emerald-500/50 bg-[#0D0D12] shadow-[0_0_20px_rgba(16,185,129,0.15)] cursor-pointer hover:border-emerald-400'
-            : 'border-game-purple/50 bg-[#0D0D12] cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.2)] hover:border-game-purple'
+            ? 'border-emerald-500/30 bg-[#070708] shadow-[0_0_15px_rgba(16,185,129,0.08)] cursor-pointer hover:border-emerald-400'
+            : 'border-game-purple/50 bg-[#070708] cursor-pointer shadow-[0_0_20px_rgba(139,92,246,0.25)] hover:border-game-purple'
         }`}
       >
         {/* Fog effect for locked nodes */}
         {isLocked && (
-          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-[2px] z-20 flex items-center justify-center">
-             <Lock className="w-12 h-12 text-slate-600 drop-shadow-2xl" />
+          <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-[1px] z-20 flex items-center justify-center">
+             <Lock className="w-8 h-8 text-slate-700" />
           </div>
         )}
 
-        <div className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center bg-[#0D0D12] border-2 border-[#181820] z-10 shadow-lg">
+        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full flex items-center justify-center bg-[#070708] border-2 border-[#181820] z-10 shadow-lg">
           {isCompleted ? (
-            <CheckCircle className="w-5 h-5 text-emerald-400" />
+            <CheckCircle className="w-4 h-4 text-emerald-400" />
           ) : isCurrent ? (
-            <Unlock className="w-5 h-5 text-game-purple" />
+            <Unlock className="w-4 h-4 text-game-purple animate-pulse" />
           ) : (
-            <Lock className="w-5 h-5 text-slate-600" />
+            <Lock className="w-4 h-4 text-slate-600" />
           )}
         </div>
         
-        <h3 className={`text-xl font-bold mb-2 ${isLocked ? 'text-slate-500' : 'text-white'}`}>
+        <h3 className={`text-lg font-black tracking-tight mb-1.5 ${isLocked ? 'text-slate-500' : 'text-white'}`}>
           {title}
         </h3>
-        <p className="text-slate-400 text-sm mb-5 line-clamp-2">
+        <p className="text-slate-400 text-xs mb-3.5 line-clamp-2 leading-relaxed">
           {description}
         </p>
         
-        <div className="flex flex-wrap gap-2 mb-5">
+        <div className="flex flex-wrap gap-1.5 mb-3.5">
           {difficulty && (
-            <Badge variant={difficultyColors[difficulty]} icon={<Star className="w-3 h-3" />}>
+            <Badge variant={difficultyColors[difficulty]} icon={<Star className="w-3 h-3" />} size="sm">
               {difficulty}
             </Badge>
           )}
           {xpReward && (
-            <Badge variant="warning" icon={<Zap className="w-3 h-3" />}>
+            <Badge variant="warning" icon={<Zap className="w-3 h-3" />} size="sm">
               {xpReward} XP
             </Badge>
           )}
           {artifactReward && !isLocked && !isBossGate && (
-             <Badge variant="purple" icon={<Star className="w-3 h-3" />}>
+             <Badge variant="purple" icon={<Star className="w-3 h-3" />} size="sm">
                Unlocks Artifact
              </Badge>
           )}
@@ -113,7 +117,7 @@ export const MapNode: React.FC<MapNodeProps> = ({
             />
           )}
           {isLocked && (
-             <div className="h-2 w-full bg-[#181820] rounded-full" />
+             <div className="h-1.5 w-full bg-[#181820] rounded-full" />
           )}
         </div>
       </Card>

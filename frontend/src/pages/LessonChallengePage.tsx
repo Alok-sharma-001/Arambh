@@ -217,11 +217,11 @@ export default function LessonChallengePage() {
       </div>
 
       {/* Training Arena */}
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-10 py-10">
-        <div className="mb-6 flex flex-col gap-3 rounded-2xl border border-warm-white/[0.08] bg-deep-charcoal/70 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="max-w-[1280px] mx-auto px-4 lg:px-6 py-6 md:py-8">
+        <div className="mb-4 flex flex-col gap-3 rounded-xl border border-warm-white/[0.08] bg-deep-charcoal/70 p-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="font-display text-2xl font-bold text-warm-white">Training Ground</h1>
-            <p className="mt-1 text-sm text-mid-gray">Choose focused topic practice or a random question mix.</p>
+            <h1 className="font-display text-lg font-black text-white tracking-tight">Training Ground</h1>
+            <p className="mt-0.5 text-xs text-mid-gray/70">Choose focused topic practice or a random question mix.</p>
           </div>
           <div className="inline-flex rounded-lg border border-warm-white/[0.08] bg-near-black p-1">
             {[
@@ -231,7 +231,7 @@ export default function LessonChallengePage() {
               <button
                 key={mode.key}
                 onClick={() => changeTrainingMode(mode.key)}
-                className={`rounded-md px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] transition-colors ${
+                className={`rounded-md px-3.5 py-1.5 text-[10px] font-black uppercase tracking-wider transition-apple-fast ${
                   trainingMode === mode.key
                     ? 'bg-gold text-near-black'
                     : 'text-mid-gray hover:text-warm-white'
@@ -243,23 +243,23 @@ export default function LessonChallengePage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6">
           {/* Left - Code Visualizer */}
-          <div className="bg-code-editor-bg border border-warm-white/[0.08] rounded-2xl overflow-hidden">
+          <div className="bg-code-editor-bg border border-warm-white/[0.08] rounded-xl overflow-hidden">
             {/* Tabs */}
             <div className="flex border-b border-warm-white/[0.06]">
-              <button className="px-6 py-3 text-xs font-semibold uppercase text-gold border-b-2 border-gold">
+              <button className="px-5 py-2.5 text-[10px] font-black uppercase text-gold border-b-2 border-gold tracking-wider">
                 CODE
               </button>
-              <button className="px-6 py-3 text-xs font-semibold uppercase text-mid-gray hover:text-warm-white transition-colors">
+              <button className="px-5 py-2.5 text-[10px] font-black uppercase text-mid-gray hover:text-warm-white transition-apple-fast tracking-wider">
                 VISUALIZATION
               </button>
             </div>
 
             {/* Code display */}
-            <div className="p-6 min-h-[400px]">
+            <div className="p-4 min-h-[300px]">
               <div className="flex">
-                <div className="w-10 pr-4 text-right font-mono text-xs text-warm-white/15 select-none shrink-0">
+                <div className="w-8 pr-3 text-right font-mono text-xs text-warm-white/15 select-none shrink-0">
                   {question.code.split('\n').map((_, i) => (
                     <div key={i}>{i + 1}</div>
                   ))}
@@ -271,16 +271,16 @@ export default function LessonChallengePage() {
             </div>
 
             {/* Hint toggle */}
-            <div className="px-6 pb-4">
+            <div className="px-4 pb-4.5">
               <button
                 onClick={() => setShowHint(!showHint)}
-                className="flex items-center gap-2 text-gold text-sm hover:underline"
+                className="flex items-center gap-2 text-gold text-xs font-bold hover:underline"
               >
-                <Lightbulb size={14} />
+                <Lightbulb size={13} />
                 {showHint ? 'Hide hint' : 'Need a hint?'}
               </button>
               {showHint && (
-                <div className="mt-3 bg-gold/5 border border-gold/15 rounded-lg px-4 py-3 text-sm text-mid-gray">
+                <div className="mt-2.5 bg-gold/5 border border-gold/15 rounded-lg px-3.5 py-2.5 text-xs text-mid-gray/80">
                   Pay attention to the operators used and what they do in Python!
                 </div>
               )}
@@ -292,13 +292,13 @@ export default function LessonChallengePage() {
             ref={cardRef}
             className="relative"
             style={{
-              background: 'radial-gradient(circle at 70% 50%, rgba(124,92,255,0.04) 0%, transparent 50%)',
+              background: 'radial-gradient(circle at 70% 50%, rgba(212,183,110,0.04) 0%, transparent 50%)',
             }}
           >
-            <div className="bg-deep-charcoal border-2 border-gold/15 rounded-[20px] p-8 lg:p-10">
+            <div className="bg-deep-charcoal border-2 border-gold/15 rounded-xl p-5 md:p-6 lg:p-7">
               {/* Header */}
               <div className="flex items-center justify-between">
-                <span className="inline-block px-4 py-1.5 rounded-full border border-royal-purple/30 bg-royal-purple/15 text-royal-purple text-xs font-semibold uppercase tracking-[0.15em]">
+                <span className="inline-block px-3 py-1.5 rounded-full border border-gold/30 bg-gold/15 text-gold text-[9px] font-extrabold uppercase tracking-wider">
                   TRAINING GROUND
                 </span>
                 <span className="font-mono text-xs text-mid-gray">
@@ -307,11 +307,11 @@ export default function LessonChallengePage() {
               </div>
 
               {/* Difficulty */}
-              <div className="flex items-center gap-1.5 mt-3">
+              <div className="flex items-center gap-1.5 mt-2.5">
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className={`w-2 h-2 rounded-full ${
+                    className={`w-1.5 h-1.5 rounded-full ${
                       i <= difficultyDots
                         ? question.difficulty === 'easy' ? 'bg-emerald' : question.difficulty === 'medium' ? 'bg-gold' : 'bg-red-400'
                         : 'border border-warm-white/10'
@@ -322,27 +322,27 @@ export default function LessonChallengePage() {
 
               {/* Streak & Combo Flame */}
               {player.streak > 0 && (
-                <div className="mt-4 flex items-center justify-between p-3 rounded-xl bg-orange-500/10 border border-orange-500/35">
+                <div className="mt-3 flex items-center justify-between p-2.5 rounded-lg bg-orange-500/10 border border-orange-500/25">
                   <div className="flex items-center gap-2">
-                    <Flame className="w-5 h-5 text-orange-500 fill-orange-500 animate-bounce" />
+                    <Flame className="w-4.5 h-4.5 text-orange-500 fill-orange-500 animate-bounce" />
                     <div>
-                      <div className="text-[10px] uppercase font-black text-slate-400 tracking-wider">Streak active</div>
-                      <div className="text-sm font-extrabold text-white">{player.streak} Correct Answers</div>
+                      <div className="text-[9px] uppercase font-black text-slate-400 tracking-wider">Streak active</div>
+                      <div className="text-xs font-black text-white">{player.streak} Correct Answers</div>
                     </div>
                   </div>
-                  <span className="px-2.5 py-1 text-[10px] font-black uppercase rounded bg-orange-500 text-black">
+                  <span className="px-2 py-0.5 text-[9px] font-black uppercase rounded bg-orange-500 text-black">
                     {player.streak >= 5 ? 'COMBO x3 (+15 XP)' : player.streak >= 3 ? 'COMBO x2 (+10 XP)' : 'COMBO x1 (+5 XP)'}
                   </span>
                 </div>
               )}
 
               {/* Question */}
-              <h3 className="mt-6 font-display font-bold text-xl text-warm-white leading-snug">
+              <h3 className="mt-4.5 font-display font-black text-lg text-white tracking-tight leading-snug">
                 {question.question}
               </h3>
 
               {/* Answer Options */}
-              <div className="mt-8 space-y-3">
+              <div className="mt-5 space-y-2.5">
                 {question.options.map((option) => {
                   const isSelected = selectedAnswer === option.letter;
                   const isCorrectOption = hasSubmitted && option.letter === question.correctAnswer;
@@ -375,14 +375,14 @@ export default function LessonChallengePage() {
                       key={option.letter}
                       onClick={() => handleSelect(option.letter)}
                       disabled={hasSubmitted}
-                      className={`w-full flex items-center gap-4 p-4 rounded-xl border ${borderColor} ${bgColor} transition-all duration-200 hover:border-gold/30 hover:bg-gold/[0.03] disabled:cursor-default`}
+                      className={`w-full flex items-center gap-3 p-3 rounded-lg border ${borderColor} ${bgColor} transition-apple-fast hover:border-gold/25 hover:bg-gold/[0.02] disabled:cursor-default`}
                     >
-                      <span className={`w-8 h-8 rounded-full ${labelBg} ${labelText} font-mono text-sm font-bold flex items-center justify-center shrink-0`}>
+                      <span className={`w-7 h-7 rounded-full ${labelBg} ${labelText} font-mono text-xs font-bold flex items-center justify-center shrink-0`}>
                         {option.letter}
                       </span>
-                      <span className="text-sm text-warm-white text-left flex-1">{option.text}</span>
-                      {isCorrectOption && <Check size={18} className="text-emerald shrink-0" />}
-                      {isWrongOption && <XIcon size={18} className="text-red-400 shrink-0" />}
+                      <span className="text-xs text-warm-white text-left flex-1 font-medium">{option.text}</span>
+                      {isCorrectOption && <Check size={16} className="text-emerald shrink-0" />}
+                      {isWrongOption && <XIcon size={16} className="text-red-400 shrink-0" />}
                     </button>
                   );
                 })}
@@ -393,9 +393,9 @@ export default function LessonChallengePage() {
                 <button
                   onClick={handleSubmit}
                   disabled={!selectedAnswer}
-                  className={`w-full mt-8 py-3.5 rounded-lg font-body font-semibold text-sm uppercase tracking-[0.1em] transition-all duration-300 ${
+                  className={`w-full mt-6 py-2.5 rounded-lg font-body font-black text-xs uppercase tracking-wider transition-apple-fast ${
                     selectedAnswer
-                      ? 'bg-gold text-near-black hover:bg-[#d4b76e] hover:-translate-y-0.5 hover:shadow-gold-glow'
+                      ? 'bg-gold text-near-black hover:bg-[#d4b76e]'
                       : 'bg-gold/40 text-near-black/60 cursor-not-allowed'
                   }`}
                 >

@@ -119,40 +119,61 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
 
   return (
     <div
+      id={region.number === 1 ? "world-map-grid" : undefined}
       className={`relative cursor-pointer group z-10 ${glowClass}`}
       onClick={onClick}
     >
       <div
-        className={`relative w-full overflow-hidden rounded-2xl p-5 transition-all duration-300 hover:-translate-y-2 ${
-          isBoss ? 'border-[3px]' : 'border-2'
-        }`}
+        className="relative w-full overflow-hidden rounded-xl p-3.5 transition-apple-fast hover:-translate-y-1"
         style={{
           background: isBoss
-            ? 'linear-gradient(135deg, rgba(28,28,28,0.98), rgba(20,10,30,0.98))'
-            : `linear-gradient(145deg, rgba(28,28,28,0.97), rgba(12,12,12,0.98)), radial-gradient(circle at 20% 0%, ${accentColor}22, transparent 45%)`,
+            ? 'linear-gradient(135deg, rgba(20,20,20,0.98), rgba(15,8,22,0.98))'
+            : `linear-gradient(145deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98)), radial-gradient(circle at 20% 0%, ${accentColor}18, transparent 40%)`,
           borderColor,
           boxShadow: isCurrent
-            ? `0 0 28px ${accentColor}35, 0 18px 60px rgba(0,0,0,0.45)`
+            ? `0 0 20px ${accentColor}25, 0 8px 30px rgba(0,0,0,0.4)`
             : isBoss
-              ? '0 0 30px rgba(255,232,219,0.4), 0 0 60px rgba(86,130,177,0.15)'
-              : '0 16px 48px rgba(0,0,0,0.35)',
+              ? '0 0 20px rgba(255,232,219,0.25), 0 0 40px rgba(86,130,177,0.1)'
+              : '0 8px 24px rgba(0,0,0,0.3)',
         }}
       >
         <div
-          className="absolute -right-12 -top-12 h-32 w-32 rounded-full blur-2xl transition-opacity duration-300 group-hover:opacity-90"
-          style={{ backgroundColor: `${accentColor}24` }}
+          className="absolute -right-12 -top-12 h-28 w-28 rounded-full blur-2xl transition-opacity duration-300 group-hover:opacity-90"
+          style={{ backgroundColor: `${accentColor}15` }}
         />
-        <div className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
+        <div className="absolute inset-x-0 top-0 h-px opacity-60" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
 
-        <div className="relative flex items-start justify-between">
-          <span className="font-mono text-xs font-bold text-mid-gray">
-            {String(region.number).padStart(2, '0')}
-          </span>
+        {/* ROW 1: Icon, Title, Status Badge */}
+        <div className="relative flex items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5 min-w-0">
+            {/* Shrunk Icon */}
+            <div
+              className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border"
+              style={{ backgroundColor: `${accentColor}10`, borderColor: `${accentColor}15` }}
+            >
+              <span style={{ color: accentColor }}>
+                {isBoss ? <Sword size={14} /> : <span className="font-mono text-xs font-bold">{region.name.charAt(0)}</span>}
+              </span>
+            </div>
+
+            <div className="min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono text-[9px] font-bold text-mid-gray/50">
+                  {String(region.number).padStart(2, '0')}
+                </span>
+                <span className="text-warm-white/20 text-[8px]">•</span>
+                <h3 className="font-display font-extrabold text-warm-white tracking-tight truncate text-sm leading-none">
+                  {region.name}
+                </h3>
+              </div>
+            </div>
+          </div>
+
           <span
-            className="rounded-full border px-2.5 py-1 text-[0.58rem] font-bold uppercase tracking-[0.12em]"
+            className="shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider"
             style={{
-              borderColor: `${accentColor}35`,
-              backgroundColor: `${accentColor}10`,
+              borderColor: `${accentColor}20`,
+              backgroundColor: `${accentColor}05`,
               color: isLocked ? '#739EC9' : accentColor,
             }}
           >
@@ -160,72 +181,46 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
           </span>
         </div>
 
-        {/* Compact Flex Layout for Icon and Title */}
-        <div className="flex items-center gap-4 mt-4">
-          <div
-            className="relative flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border"
-            style={{ backgroundColor: `${accentColor}15`, borderColor: `${accentColor}25` }}
-          >
-            <span style={{ color: accentColor }}>
-              {region.number === 11 ? <Sword size={20} /> : <span className="font-mono text-lg font-bold">{region.name.charAt(0)}</span>}
-            </span>
-          </div>
+        {/* ROW 2: Subtitle */}
+        <p className="text-[10px] text-mid-gray/60 font-medium truncate mt-1.5 pl-0.5">
+          {region.subtitle}
+        </p>
 
-          <div>
-            <h3 className={`font-display font-bold text-warm-white ${isBoss ? 'text-lg' : 'text-base'}`}>
-              {region.name}
-            </h3>
-            <p className="text-[10px] text-mid-gray mt-0.5">{region.subtitle}</p>
-          </div>
-        </div>
-
-        {/* Progress Bar (Full Width) */}
-        <div className="relative mt-5">
-          <div className="flex justify-end mb-1.5">
-            <span className="text-[9px] font-mono text-mid-gray font-bold">{Math.round(progressPercent)}%</span>
-          </div>
-          <div className="relative h-1 bg-warm-white/[0.06] rounded-full overflow-hidden">
+        {/* ROW 3: Thinner Progress Bar with Inline percentage */}
+        <div className="relative mt-2.5 flex items-center gap-2.5">
+          <div className="flex-1 relative h-[3px] bg-warm-white/[0.03] rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 animate-pulse-fast"
+              className="h-full rounded-full transition-all duration-300"
               style={{
                 width: `${progressPercent}%`,
                 backgroundColor: accentColor,
               }}
             />
           </div>
+          <span className="text-[9px] font-mono text-mid-gray/50 font-bold shrink-0 min-w-[22px] text-right">
+            {Math.round(progressPercent)}%
+          </span>
         </div>
 
-        {/* Stats Grid (Minimal text format) */}
-        <div className="flex items-center gap-8 mt-4">
-          <div>
-            <span className="block font-mono text-xs font-bold text-warm-white">{completedLessons} / {region.lessons.length}</span>
-            <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold mt-0.5 block">Lessons</span>
+        {/* ROW 4: Footer stats and navigation */}
+        <div className="relative mt-2.5 pt-2 border-t border-warm-white/5 flex items-center justify-between gap-2">
+          {/* Mini Inline Stats (Lessons, Boss Status) */}
+          <div className="flex items-center gap-2 text-[10px] font-bold text-mid-gray/60 pl-0.5">
+            <span>{completedLessons}/{region.lessons.length} Lessons</span>
+            <span className="text-warm-white/10">•</span>
+            <span>{bossCompleted ? 'Defeated' : bossAvailable ? 'Boss Ready' : 'Boss Locked'}</span>
           </div>
-          <div>
-            <span className="block font-mono text-xs font-bold text-warm-white">
-              {bossCompleted ? 'Defeated' : bossAvailable ? 'Ready' : 'Locked'}
-            </span>
-            <span className="text-[8px] uppercase tracking-[0.12em] text-mid-gray font-bold mt-0.5 block">Boss Status</span>
-          </div>
-        </div>
 
-        {/* Compact Footer Line */}
-        <div className="relative mt-5 pt-3 border-t border-warm-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-1.5">
-            {isCompleted && <><Check size={12} style={{ color: accentColor }} /><span className="text-[9px] uppercase tracking-wider font-semibold" style={{ color: accentColor }}>COMPLETED</span></>}
-            {isCurrent && <><Circle size={10} className="text-gold fill-gold" /><span className="text-[9px] uppercase tracking-wider text-gold font-semibold">IN PROGRESS</span></>}
-            {isLocked && <><Lock size={12} className="text-mid-gray" /><span className="text-[9px] text-mid-gray font-semibold tracking-wide">Complete previous area to unlock</span></>}
-          </div>
           {!isLocked && (
-            <ChevronRight size={14} className="text-mid-gray" />
+            <ChevronRight size={12} className="text-mid-gray/40 group-hover:text-warm-white transition-colors" />
           )}
         </div>
 
-        {/* Boss lock overlay (if needed) */}
+        {/* Boss lock overlay */}
         {isBoss && isLocked && (
-          <div className="absolute inset-0 bg-near-black/80 backdrop-blur-md z-20 rounded-2xl flex flex-col items-center justify-center">
-            <Lock size={32} className="text-mid-gray mb-2" />
-            <span className="text-xs text-mid-gray text-center px-4 font-semibold uppercase tracking-wider">Complete All Regions to Unlock</span>
+          <div className="absolute inset-0 bg-near-black/90 backdrop-blur-md z-20 rounded-xl flex flex-col items-center justify-center">
+            <Lock size={20} className="text-mid-gray/50 mb-1" />
+            <span className="text-[9px] text-mid-gray/50 text-center px-4 font-bold uppercase tracking-widest">Locked</span>
           </div>
         )}
       </div>

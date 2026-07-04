@@ -57,7 +57,7 @@
 
 @layer utilities {
   .text-gradient-gold-purple {
-    background: linear-gradient(90deg, #FFE8DB, #5682B1);
+    background: linear-gradient(90deg, #FFE8DB, #D4B76E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -68,7 +68,7 @@
   }
 
   .gradient-purple-glow {
-    background: radial-gradient(circle, rgba(86,130,177,0.15) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(212,183,110,0.15) 0%, transparent 70%);
   }
 
   .gradient-gold-shimmer {
@@ -76,15 +76,15 @@
   }
 
   .gradient-boss-card {
-    background: linear-gradient(135deg, #5682B1 0%, #11161B 100%);
+    background: linear-gradient(135deg, #D4B76E 0%, #161412 100%);
   }
 
   .gradient-completion-bar {
-    background: linear-gradient(90deg, #739EC9 0%, #FFE8DB 100%);
+    background: linear-gradient(90deg, #FFE8DB 0%, #D4B76E 100%);
   }
 
   .gradient-map-cta {
-    background: linear-gradient(180deg, #000000 0%, #11161B 50%, #000000 100%);
+    background: linear-gradient(180deg, #000000 0%, #161412 50%, #000000 100%);
   }
 
   .ease-out-expo {
@@ -114,9 +114,9 @@
 
 /* Syntax highlighting colors */
 .token-keyword { color: #FFE8DB; }
-.token-builtin { color: #739EC9; }
-.token-string { color: #5682B1; }
-.token-number { color: #739EC9; }
+.token-builtin { color: #FFE8DB; }
+.token-string { color: #D4B76E; }
+.token-number { color: #D4B76E; }
 .token-variable { color: #f4f4f5; }
 .token-operator { color: #FFE8DB; }
 .token-comment { color: #94a3b8; }
@@ -129,4 +129,41 @@
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+@keyframes timeline-flow {
+  0% {
+    stroke-dashoffset: 40;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-timeline-flow {
+  animation: timeline-flow 2.5s linear infinite;
+}
+
+@keyframes active-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 183, 110, 0.4), 0 0 10px rgba(212, 183, 110, 0.2);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(212, 183, 110, 0), 0 0 20px rgba(212, 183, 110, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 183, 110, 0), 0 0 10px rgba(212, 183, 110, 0.2);
+  }
+}
+
+.animate-pulse-ring {
+  animation: active-pulse-ring 2s cubic-bezier(0.25, 0, 0, 1) infinite;
+}
+
+.transition-apple {
+  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.transition-apple-fast {
+  transition: all 120ms cubic-bezier(0.16, 1, 0.3, 1);
 }

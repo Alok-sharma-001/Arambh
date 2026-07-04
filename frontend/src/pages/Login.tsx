@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import { syncApi } from '../services/syncApi';
+import { CompanionWizard } from '../components/ui/CompanionWizard';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [lampOn, setLampOn] = useState(false);
+  const [lampOn, setLampOn] = useState(true);
   const setToken = useAuthStore((state) => state.setToken);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,7 +81,7 @@ export default function Login() {
       <div className="relative flex flex-col md:flex-row items-center justify-center gap-12 md:gap-16 w-full max-w-4xl mx-auto px-4 md:px-8 z-10">
         
         {/* ─── Desk Lamp (left side) ─── */}
-        <div className="relative flex-shrink-0 z-20 select-none">
+        <div className="relative flex-shrink-0 z-40 select-none">
           <svg
             width="280"
             height="460"

@@ -16,8 +16,8 @@ export const ArtifactCard: React.FC<ArtifactCardProps> = ({ artifact, isUnlocked
       whileHover={isUnlocked ? { y: -5, scale: 1.05 } : {}}
       className={`relative flex flex-col items-center p-6 rounded-2xl border-2 transition-all ${
         isUnlocked 
-          ? `border-[#181820] bg-[#13131A] shadow-[0_0_20px_rgba(0,0,0,0.5)] cursor-pointer group` 
-          : 'border-dashed border-slate-800 bg-[#0D0D12] opacity-60 grayscale cursor-not-allowed'
+          ? `border-warm-white/[0.06] bg-[#111111] shadow-[0_0_20px_rgba(0,0,0,0.5)] cursor-pointer group` 
+          : 'border-dashed border-slate-800 bg-[#0A0A0A] opacity-60 grayscale cursor-not-allowed'
       }`}
     >
       {/* Background glow for unlocked */}

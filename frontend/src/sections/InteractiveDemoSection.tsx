@@ -90,10 +90,10 @@ export default function InteractiveDemoSection() {
 
   return (
     <section ref={sectionRef} className="w-full bg-near-black py-[120px] px-6 lg:px-20 relative overflow-hidden">
-      {/* Purple glow behind illustration */}
+      {/* Gold glow behind illustration */}
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-[80%] pointer-events-none"
-        style={{ background: 'radial-gradient(circle at 75% 50%, rgba(124,92,255,0.06) 0%, transparent 50%)' }}
+        style={{ background: 'radial-gradient(circle at 75% 50%, rgba(212,183,110,0.06) 0%, transparent 50%)' }}
       />
 
       <div className="max-w-[1280px] mx-auto">
@@ -169,8 +169,8 @@ export default function InteractiveDemoSection() {
               </div>
 
               <div className="absolute bottom-8 -left-4 animate-float" style={{ animationDelay: '1s' }}>
-                <div className="w-10 h-10 rounded-full bg-royal-purple/20 border border-royal-purple flex items-center justify-center">
-                  <span className="font-mono text-xs font-bold text-royal-purple">05</span>
+                <div className="w-10 h-10 rounded-full bg-gold/20 border border-gold flex items-center justify-center">
+                  <span className="font-mono text-xs font-bold text-gold">05</span>
                 </div>
               </div>
 

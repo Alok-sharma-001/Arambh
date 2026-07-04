@@ -24,7 +24,7 @@ export const ArtifactRevealModal: React.FC = () => {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 200, damping: 20 }}
-          className="relative w-full max-w-lg p-10 rounded-3xl bg-[#0D0D12] border border-[#181820] shadow-[0_0_100px_rgba(0,0,0,0.8)] text-center overflow-hidden"
+          className="relative w-full max-w-lg p-10 rounded-3xl bg-[#0A0A0A] border border-warm-white/[0.06] shadow-[0_0_100px_rgba(0,0,0,0.8)] text-center overflow-hidden"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Intense background glow based on artifact color */}
@@ -65,7 +65,7 @@ export const ArtifactRevealModal: React.FC = () => {
             initial={{ rotate: -180, scale: 0 }}
             animate={{ rotate: 0, scale: 1 }}
             transition={{ type: 'spring', stiffness: 100, damping: 15, delay: 0.2 }}
-            className={`mx-auto w-32 h-32 rounded-full flex items-center justify-center mb-8 ${revealedArtifact.bg} border-4 border-[#181820] relative z-10`}
+            className={`mx-auto w-32 h-32 rounded-full flex items-center justify-center mb-8 ${revealedArtifact.bg} border-4 border-warm-white/[0.06] relative z-10`}
           >
             <Icon className={`w-16 h-16 ${revealedArtifact.color} drop-shadow-[0_0_15px_currentColor]`} />
             <div className="absolute inset-0 rounded-full border border-white/20 animate-ping opacity-20" />

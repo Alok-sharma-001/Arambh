@@ -33,10 +33,10 @@ export default function MapCTASection() {
 
   return (
     <section ref={sectionRef} className="w-full gradient-map-cta py-40 px-6 lg:px-20 relative overflow-hidden">
-      {/* Purple atmospheric haze */}
+      {/* Gold atmospheric haze */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(124,92,255,0.12) 0%, transparent 60%)' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 30%, rgba(212,183,110,0.12) 0%, transparent 60%)' }}
       />
 
       <div className="max-w-[800px] mx-auto text-center relative z-10">
@@ -48,7 +48,7 @@ export default function MapCTASection() {
             fontSize: 'clamp(2.5rem, 5vw, 4rem)',
             lineHeight: 1.2,
             letterSpacing: '-0.01em',
-            textShadow: '0 0 40px rgba(124,92,255,0.2)',
+            textShadow: '0 0 40px rgba(212,183,110,0.2)',
           }}
         >
           Explore the World of Python
@@ -74,7 +74,7 @@ export default function MapCTASection() {
         <div className="map-preview mt-16 max-w-[900px] mx-auto">
           <Link to="/map" className="block group">
             <div className="relative rounded-2xl border-2 border-gold/20 overflow-hidden group-hover:border-gold/40 transition-all duration-300"
-              style={{ boxShadow: '0 0 60px rgba(124,92,255,0.15)' }}>
+              style={{ boxShadow: '0 0 60px rgba(212,183,110,0.15)' }}>
               <img
                 src="/assets/map-preview-cta.jpg"
                 alt="PyQuest World Map showing 11 learning regions connected by a golden path"

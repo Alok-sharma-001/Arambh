@@ -13,11 +13,11 @@ export const Atmosphere: React.FC = () => {
   }));
 
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-slate-950">
+    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#050505]">
       
       {/* Base Gradient Layer */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(139,92,246,0.15),rgba(255,255,255,0))]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(251,191,36,0.05),transparent_40%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(212,183,110,0.04),rgba(255,255,255,0))]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(212,183,110,0.02),transparent_40%)]" />
 
       {/* Animated Drifting Fog/Light Blobs */}
       <motion.div 
@@ -28,15 +28,15 @@ export const Atmosphere: React.FC = () => {
         transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
         className="absolute top-0 left-0 w-full h-full opacity-30"
       >
-        <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-game-purple/10 rounded-full blur-[120px] mix-blend-screen" />
-        <div className="absolute bottom-1/4 right-1/4 w-[50rem] h-[50rem] bg-game-gold/5 rounded-full blur-[150px] mix-blend-screen" />
+        <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] bg-[#d4b76e]/3 rounded-full blur-[120px] mix-blend-screen" />
+        <div className="absolute bottom-1/4 right-1/4 w-[50rem] h-[50rem] bg-[#d4b76e]/4 rounded-full blur-[150px] mix-blend-screen" />
       </motion.div>
 
       {/* Floating Particles */}
       {particles.map(p => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-game-purple/40"
+          className="absolute rounded-full bg-[#d4b76e]/20"
           style={{
             width: p.size,
             height: p.size,

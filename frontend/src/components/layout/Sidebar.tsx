@@ -19,7 +19,6 @@ import {
 import { useAuthStore } from '../../store/authStore';
 
 const navItems = [
-  { name: 'Dashboard', path: '/', icon: LayoutDashboard },
   { name: 'Learning Map', path: '/learning-map', icon: MapIcon },
   { name: 'Inventory', path: '/inventory', icon: Grid },
   { name: 'Quests', path: '/quests', icon: Target },
@@ -28,6 +27,7 @@ const navItems = [
   { name: 'Guild Realms', path: '/guild', icon: Users },
   { name: 'Oracle Hub', path: '/oracle', icon: BrainCircuit },
   { name: 'Infinite Tower', path: '/tower', icon: TowerControl },
+  { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -46,22 +46,22 @@ export const Sidebar: React.FC = () => {
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   const sidebarVariants = {
-    open: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
-    closed: { x: '-100%', transition: { type: 'spring', stiffness: 300, damping: 30 } }
+    open: { x: 0, transition: { type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.22 } },
+    closed: { x: '-100%', transition: { type: 'tween', ease: [0.16, 1, 0.3, 1], duration: 0.22 } }
   };
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full bg-[#0D0D12]/60 backdrop-blur-3xl border-r border-[#181820] text-slate-300 w-64 shadow-2xl">
-      <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-game-purple to-indigo-600 flex items-center justify-center shadow-lg shadow-game-purple/20">
-          <Code2 className="w-5 h-5 text-white" />
+    <div className="flex flex-col h-full bg-[#0A0A0A] border-r border-warm-white/10 text-slate-300 w-60 shadow-2xl">
+      <div className="px-5 py-5 flex items-center gap-2.5 border-b border-warm-white/10">
+        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-gold to-[#d4b76e] flex items-center justify-center shadow-lg shadow-gold/10">
+          <Code2 className="w-4 h-4 text-near-black" />
         </div>
-        <span className="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400">
+        <span className="text-lg font-bold font-display tracking-wider text-warm-white">
           PyQuest
         </span>
       </div>
 
-      <div className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+      <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto custom-scrollbar">
         {navItems.map((item) => {
           const Icon = item.icon;
           return (
@@ -70,10 +70,10 @@ export const Sidebar: React.FC = () => {
               to={item.path}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) => `
-                flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group relative
+                flex items-center gap-3 px-3.5 py-2.5 rounded-lg transition-all duration-150 group relative text-sm
                 ${isActive 
-                  ? 'bg-game-purple/10 text-game-purple font-semibold shadow-inner' 
-                  : 'hover:bg-[#13131A] hover:text-white'
+                  ? 'bg-gold/[0.06] text-gold font-semibold' 
+                  : 'text-mid-gray/70 hover:bg-warm-white/[0.03] hover:text-warm-white'
                 }
               `}
             >
@@ -82,14 +82,14 @@ export const Sidebar: React.FC = () => {
                   {isActive && (
                     <motion.div
                       layoutId="active-indicator"
-                      className="absolute left-0 w-1 h-8 bg-game-purple rounded-r-full shadow-[0_0_10px_rgba(139,92,246,0.8)]"
+                      className="absolute left-0 w-0.5 h-6 bg-gold rounded-r-full shadow-[0_0_10px_rgba(255,232,219,0.5)]"
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                  <Icon className={`w-5 h-5 transition-transform duration-200 ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                  <span>{item.name}</span>
+                  <Icon className={`w-4 h-4 shrink-0 transition-transform duration-200 ${isActive ? 'scale-105 text-gold' : 'group-hover:scale-105'}`} />
+                  <span className="truncate">{item.name}</span>
                 </>
               )}
             </NavLink>
@@ -97,17 +97,17 @@ export const Sidebar: React.FC = () => {
         })}
       </div>
 
-      <div className="p-4 border-t border-[#181820] space-y-2">
-        <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-[#13131A] transition-all duration-200 group">
-          <Settings className="w-5 h-5 group-hover:rotate-45 transition-transform duration-300" />
-          <span>Settings</span>
+      <div className="p-3 border-t border-warm-white/10 space-y-1">
+        <button className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm text-mid-gray/70 hover:text-warm-white hover:bg-warm-white/[0.03] transition-all duration-150 group">
+          <Settings className="w-4 h-4 shrink-0 group-hover:rotate-45 transition-transform duration-300" />
+          <span className="truncate">Settings</span>
         </button>
         <button 
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200 group"
+          className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/[0.06] transition-all duration-150 group"
         >
-          <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-200" />
-          <span>Logout</span>
+          <LogOut className="w-4 h-4 shrink-0 group-hover:-translate-x-0.5 transition-transform duration-200" />
+          <span className="truncate">Logout</span>
         </button>
       </div>
     </div>
@@ -119,7 +119,7 @@ export const Sidebar: React.FC = () => {
       {!isLessonRoute && (
         <button 
           onClick={toggleSidebar}
-          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-[#13131A] border border-[#181820] rounded-lg text-white shadow-lg"
+          className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-black/80 backdrop-blur-md border border-warm-white/10 rounded-lg text-white shadow-lg"
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
@@ -133,7 +133,7 @@ export const Sidebar: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsOpen(false)}
-            className="lg:hidden fixed inset-0 z-40 bg-[#0D0D12]/80 backdrop-blur-sm"
+            className="lg:hidden fixed inset-0 z-40 bg-black/80 backdrop-blur-sm"
           />
         )}
       </AnimatePresence>
@@ -148,7 +148,7 @@ export const Sidebar: React.FC = () => {
         <div className="h-full hidden lg:block">
            <SidebarContent />
         </div>
-        <div className="h-full lg:hidden block w-64 bg-[#0D0D12] absolute left-0 top-0">
+        <div className="h-full lg:hidden block w-64 bg-[#0A0A0A] absolute left-0 top-0">
            <SidebarContent />
         </div>
       </motion.aside>

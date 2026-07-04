@@ -48,7 +48,7 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const token = useAuthStore((state) => state.token);
   if (token) {
-    return <Navigate to="/map" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   return <>{children}</>;
 };

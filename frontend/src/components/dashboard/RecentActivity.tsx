@@ -4,28 +4,28 @@ import { History, Trophy, BookOpen, Code2 } from 'lucide-react';
 
 const activities = [
   { id: 1, type: 'achievement', title: 'Earned First Login Achievement', time: '2 hours ago', icon: Trophy, color: 'text-yellow-400', bg: 'bg-yellow-400/10' },
-  { id: 2, type: 'lesson', title: 'Completed Variables Module', time: '5 hours ago', icon: BookOpen, color: 'text-game-purple', bg: 'bg-game-purple/10' },
+  { id: 2, type: 'lesson', title: 'Completed Variables Module', time: '5 hours ago', icon: BookOpen, color: 'text-gold', bg: 'bg-gold/10' },
   { id: 3, type: 'challenge', title: 'Solved "Hello World" Challenge', time: '1 day ago', icon: Code2, color: 'text-emerald-400', bg: 'bg-emerald-400/10' },
 ];
 
 export const RecentActivity: React.FC = () => {
   return (
-    <Card className="p-6 h-full bg-[#0D0D12] border-[#181820]">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="p-2 bg-purple-500/10 rounded-lg">
-          <History className="w-5 h-5 text-purple-500" />
+    <Card className="p-4 h-full">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="p-1.5 bg-gold/10 rounded-lg border border-gold/20">
+          <History className="w-5 h-5 text-gold" />
         </div>
-        <h3 className="text-xl font-bold text-white">Recent Activity</h3>
+        <h3 className="text-lg font-bold text-warm-white">Recent Activity</h3>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4">
         {activities.map((activity, index) => {
           const Icon = activity.icon;
           return (
             <div key={activity.id} className="relative flex gap-4">
               {/* Timeline Line */}
               {index !== activities.length - 1 && (
-                <div className="absolute left-5 top-10 bottom-[-1.5rem] w-px bg-slate-700" />
+                <div className="absolute left-5 top-10 bottom-[-1rem] w-px bg-warm-white/10" />
               )}
               
               <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-slate-700/50 ${activity.bg}`}>

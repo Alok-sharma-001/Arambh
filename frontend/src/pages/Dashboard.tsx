@@ -100,67 +100,63 @@ export default function Dashboard() {
       variants={containerVariants}
       initial="hidden"
       animate="show"
-      className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 md:space-y-8"
+      className="max-w-[1280px] mx-auto px-6 py-6 space-y-6"
     >
       {/* Level-up modal (renders only on event) */}
       <LevelUpModal />
 
       <ArtifactRevealModal />
 
-      <PageHeader 
-        title="Dashboard" 
-        description="Welcome back! Here's an overview of your progress."
-        icon={<LayoutDashboard className="w-6 h-6" />}
-      />
+      {/* Main RPG Dashboard Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-stretch">
+        
+        {/* Row 1: Player (8 cols) & Progression (4 cols) */}
+        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-8">
+          <CharacterCard />
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-4">
+          <ProgressionWidget />
+        </motion.div>
 
-      {/* Character Profile Card — the RPG hero area */}
-      <motion.div variants={itemVariants}>
-        <CharacterCard />
-      </motion.div>
-
-      {/* Daily Login Reward Calendar */}
-      <motion.div variants={itemVariants}>
-        <DailyLoginRewards />
-      </motion.div>
-
-      {/* Artifact Collection Widget */}
-      <motion.div variants={itemVariants}>
-        <ArtifactWidget />
-      </motion.div>
-
-      {/* Main content grid */}
-      <motion.div variants={itemVariants} className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        <div className="lg:col-span-2 space-y-4 md:space-y-6">
-          {/* Continue Learning CTA */}
-          <Card className="p-6 md:p-8 bg-gradient-to-r from-game-purple/20 to-indigo-900/20 border-game-purple/20">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+        {/* Row 2: Continue Learning (12 cols) */}
+        <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-12">
+          <Card className="p-4 relative overflow-hidden">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <h3 className="text-2xl font-bold text-white mb-2">Continue Learning</h3>
-                <p className="text-slate-300">You're currently in the <strong className="text-game-gold">{activeRegionName}</strong> module.</p>
+                <h3 className="text-lg font-bold text-warm-white">Continue Learning</h3>
+                <p className="text-xs text-mid-gray">You're currently in the <strong className="text-gold font-bold">{activeRegionName}</strong> module.</p>
               </div>
-              <Button 
-                size="lg" 
-                rightIcon={<Play className="w-5 h-5" />}
+              <button 
                 onClick={() => navigate(resumePath)}
-                className="w-full sm:w-auto shadow-xl shadow-game-purple/30 bg-game-purple hover:bg-game-purple/80 border-none"
+                className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 hover:border-gold/60 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
               >
                 Resume Quest
-              </Button>
+                <Play className="w-3 h-3 fill-gold" />
+              </button>
             </div>
           </Card>
-          
-          {/* Quests + Activity */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <DailyGoals />
-            <RecentActivity />
-          </div>
-        </div>
+        </motion.div>
 
-        {/* Progression Widget sidebar */}
-        <div className="lg:col-span-1">
-          <ProgressionWidget />
-        </div>
-      </motion.div>
+        {/* Row 3: Daily Quests (6 cols) & Daily Rewards (6 cols) */}
+        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
+          <DailyGoals />
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
+          <DailyLoginRewards />
+        </motion.div>
+
+        {/* Row 4: Collection (6 cols) & Recent Activity (6 cols) */}
+        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
+          <ArtifactWidget />
+        </motion.div>
+        
+        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
+          <RecentActivity />
+        </motion.div>
+
+      </div>
     </motion.div>
   );
 }

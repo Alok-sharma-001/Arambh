@@ -267,19 +267,22 @@ export default function LessonPage() {
           </aside>
 
           <div className="grid gap-6">
-            <div className="overflow-hidden rounded-2xl border border-warm-white/[0.08] bg-code-editor-bg">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-warm-white/[0.06] px-5 py-4">
-                <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-gold">
-                  <Play size={14} />
-                  Step Debugger
+            <div className="overflow-hidden rounded-2xl border border-warm-white/[0.08] bg-code-editor-bg flex flex-col shadow-2xl">
+              {/* HEADER */}
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-warm-white/[0.06] px-5 py-3.5">
+                <span className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-gold">
+                  <Play size={14} className="fill-gold/10" />
+                  Code Sandbox & Debugger
                 </span>
                 <span className="font-mono text-xs text-mid-gray">
                   Step {stepIndex + 1} of {content.debuggerSteps.length}
                 </span>
               </div>
 
-              <div className="grid lg:grid-cols-[1fr_0.9fr]">
-                <div className="border-b border-warm-white/[0.06] p-5 lg:border-b-0 lg:border-r">
+              {/* TOP SECTION: Code Editor & Explanation */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-warm-white/[0.06] divide-y lg:divide-y-0 lg:divide-x divide-warm-white/[0.06]">
+                {/* Code Editor (7/12) */}
+                <div className="lg:col-span-7 p-4">
                   <div className="space-y-1 font-mono text-sm">
                     {codeLines.map((line, index) => {
                       const lineNumber = index + 1;
@@ -287,8 +290,8 @@ export default function LessonPage() {
                       return (
                         <div
                           key={lineNumber}
-                          className={`grid grid-cols-[2.5rem_1fr] rounded-lg px-2 py-1.5 transition-colors ${
-                            isActive ? 'bg-gold/12 ring-1 ring-gold/30' : 'bg-transparent'
+                          className={`grid grid-cols-[2rem_1fr] rounded-lg px-2 py-1.5 transition-apple-fast ${
+                            isActive ? 'bg-gold/10 ring-1 ring-gold/25' : 'bg-transparent'
                           }`}
                         >
                           <span className={`select-none text-right text-xs leading-[1.8] ${isActive ? 'text-gold' : 'text-warm-white/20'}`}>
@@ -301,92 +304,113 @@ export default function LessonPage() {
                       );
                     })}
                   </div>
+                </div>
 
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setStepIndex(0)}
-                      className="inline-flex items-center gap-2 rounded-lg border border-warm-white/[0.08] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-mid-gray hover:text-warm-white"
-                    >
-                      <RotateCcw size={14} />
-                      Reset
-                    </button>
-                    <button
-                      onClick={() => setStepIndex((prev) => Math.max(prev - 1, 0))}
-                      disabled={!canGoBack}
-                      className="inline-flex items-center gap-2 rounded-lg border border-warm-white/[0.08] px-3 py-2 text-xs font-bold uppercase tracking-[0.1em] text-warm-white disabled:cursor-not-allowed disabled:opacity-35"
-                    >
-                      <ArrowLeft size={14} />
-                      Back
-                    </button>
-                    <button
-                      onClick={() => setStepIndex((prev) => Math.min(prev + 1, content.debuggerSteps.length - 1))}
-                      disabled={!canGoNext}
-                      className="inline-flex items-center gap-2 rounded-lg bg-gold px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-near-black disabled:cursor-not-allowed disabled:opacity-45"
-                    >
-                      Run Line
-                      <ArrowRight size={14} />
-                    </button>
-                    {!canGoNext && (
-                      <button
-                        onClick={handleCompleteLesson}
-                        disabled={isCompleting}
-                        className="inline-flex items-center gap-2 rounded-lg border border-emerald/30 bg-emerald/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.1em] text-emerald disabled:cursor-not-allowed disabled:opacity-45"
-                      >
-                        {isCompleting ? 'Saving...' : `Complete +${lesson.xpReward} XP`}
-                      </button>
-                    )}
+                {/* Explanation Panel (5/12) */}
+                <div className="lg:col-span-5 p-4 bg-warm-white/[0.01] flex flex-col justify-center">
+                  <div className="rounded-xl border border-gold/15 bg-gold/[0.02] p-3.5">
+                    <span className="font-mono text-[9px] text-gold font-bold uppercase tracking-wider">Line {currentStep.line} execution</span>
+                    <h2 className="mt-1 font-display text-base font-extrabold text-white tracking-tight leading-tight">{currentStep.action}</h2>
+                    <p className="mt-2 text-xs leading-relaxed text-mid-gray/80 font-medium">{currentStep.why}</p>
                   </div>
-                  {completionError && (
-                    <p className="mt-3 text-xs text-gold">{completionError}</p>
+                </div>
+              </div>
+
+              {/* BOTTOM SECTION: Variables (Live Memory) & Output Console */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-warm-white/[0.06] divide-y lg:divide-y-0 lg:divide-x divide-warm-white/[0.06]">
+                {/* Variables (Live Memory) */}
+                <div className="p-4 flex flex-col bg-[#080809]">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-gold">
+                      <Database size={12} />
+                      Live Memory (Variables)
+                    </div>
+                    <span className="font-mono text-[10px] text-mid-gray/60 font-bold">
+                      {currentStep.memory.length} variables
+                    </span>
+                  </div>
+                  
+                  {currentStep.memory.length === 0 ? (
+                    <div className="flex-1 flex items-center justify-center min-h-[96px] rounded-lg border border-dashed border-warm-white/[0.04] bg-near-black/20 text-[10px] font-medium text-slate-500 uppercase tracking-wider">
+                      No active variables
+                    </div>
+                  ) : (
+                    <div className="grid gap-2 grid-cols-2">
+                      {currentStep.memory.map((slot) => (
+                        <div
+                          key={slot.name}
+                          className="relative overflow-hidden rounded-lg border bg-warm-white/[0.01] p-2.5 flex flex-col justify-between"
+                          style={{ borderColor: `${slot.accent}20` }}
+                        >
+                          <div>
+                            <span className="block font-mono text-[9px] text-mid-gray/60">{slot.name}</span>
+                            <strong className="mt-0.5 block break-all font-mono text-sm text-warm-white leading-tight">{slot.value}</strong>
+                          </div>
+                          <div className="mt-2 flex items-center justify-between">
+                            <span className="inline-flex rounded px-1 py-0.5 font-mono text-[8px] uppercase tracking-wider font-extrabold" style={{ backgroundColor: `${slot.accent}10`, color: slot.accent }}>
+                              {slot.type}
+                            </span>
+                            <span className="text-[9px] text-mid-gray/50 truncate max-w-[60px]" title={slot.note}>
+                              {slot.note}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   )}
                 </div>
 
-                <div className="p-5">
-                  <div className="rounded-xl border border-gold/15 bg-gold/[0.04] p-4">
-                    <span className="font-mono text-xs text-gold">Line {currentStep.line}</span>
-                    <h2 className="mt-2 font-display text-xl font-bold text-warm-white">{currentStep.action}</h2>
-                    <p className="mt-3 text-sm leading-6 text-mid-gray">{currentStep.why}</p>
+                {/* Output Console */}
+                <div className="p-4 flex flex-col bg-near-black">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-gold mb-3">
+                    <Terminal size={12} />
+                    Output Console
                   </div>
-
-                  <div className="mt-5 rounded-xl border border-warm-white/[0.08] bg-near-black p-4">
-                    <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-gold">
-                      <Terminal size={14} />
-                      Output Console
-                    </div>
-                    <pre className="mt-4 min-h-[90px] whitespace-pre-wrap rounded-lg bg-black/35 p-3 font-mono text-sm text-emerald">
-                      {currentStep.output || 'No output yet'}
-                    </pre>
-                  </div>
+                  <pre className="flex-1 min-h-[96px] whitespace-pre-wrap rounded-lg bg-black/50 border border-warm-white/[0.04] p-3 font-mono text-xs text-emerald-400">
+                    {currentStep.output || 'No output console feedback'}
+                  </pre>
                 </div>
               </div>
-            </div>
 
-            <div className="rounded-2xl border border-warm-white/[0.08] bg-[#10100f] p-5">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-gold">
-                  <Database size={14} />
-                  Live Memory
-                </div>
-                <span className="font-mono text-xs text-mid-gray">
-                  {currentStep.memory.length} active variable{currentStep.memory.length === 1 ? '' : 's'}
-                </span>
-              </div>
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                {currentStep.memory.map((slot) => (
-                  <div
-                    key={slot.name}
-                    className="relative min-h-[148px] overflow-hidden rounded-xl border bg-warm-white/[0.025] p-4"
-                    style={{ borderColor: `${slot.accent}45` }}
+              {/* FOOTER ACTIONS BAR */}
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-[#050506] px-5 py-3">
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setStepIndex(0)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-warm-white/[0.08] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-mid-gray hover:text-warm-white transition-apple-fast"
                   >
-                    <div className="absolute -right-8 -top-8 h-20 w-20 rounded-full blur-2xl" style={{ backgroundColor: `${slot.accent}25` }} />
-                    <span className="relative block font-mono text-xs text-mid-gray">{slot.name}</span>
-                    <strong className="relative mt-2 block break-words font-mono text-lg text-warm-white">{slot.value}</strong>
-                    <span className="relative mt-3 inline-flex rounded-full border px-2 py-1 font-mono text-[0.62rem] uppercase tracking-[0.1em]" style={{ borderColor: `${slot.accent}35`, color: slot.accent }}>
-                      {slot.type}
-                    </span>
-                    <p className="relative mt-3 text-xs leading-5 text-mid-gray">{slot.note}</p>
-                  </div>
-                ))}
+                    <RotateCcw size={12} />
+                    Reset
+                  </button>
+                  <button
+                    onClick={() => setStepIndex((prev) => Math.max(prev - 1, 0))}
+                    disabled={!canGoBack}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-warm-white/[0.08] px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-warm-white disabled:cursor-not-allowed disabled:opacity-30 transition-apple-fast"
+                  >
+                    <ArrowLeft size={12} />
+                    Back
+                  </button>
+                  <button
+                    onClick={() => setStepIndex((prev) => Math.min(prev + 1, content.debuggerSteps.length - 1))}
+                    disabled={!canGoNext}
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-gold px-4 py-1.5 text-[10px] font-black uppercase tracking-wider text-near-black disabled:cursor-not-allowed disabled:opacity-40 hover:bg-[#d4b76e] transition-apple-fast"
+                  >
+                    Run Line
+                    <ArrowRight size={12} />
+                  </button>
+                  {!canGoNext && (
+                    <button
+                      onClick={handleCompleteLesson}
+                      disabled={isCompleting}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-emerald/30 bg-emerald/10 px-4 py-1.5 text-[10px] font-black uppercase tracking-wider text-emerald disabled:cursor-not-allowed disabled:opacity-40 hover:bg-emerald/20 transition-apple-fast"
+                    >
+                      {isCompleting ? 'Saving...' : `Complete +${lesson.xpReward} XP`}
+                    </button>
+                  )}
+                </div>
+                {completionError && (
+                  <p className="text-xs text-gold font-bold">{completionError}</p>
+                )}
               </div>
             </div>
             {/* Feedback Poll */}

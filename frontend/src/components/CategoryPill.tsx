@@ -5,7 +5,7 @@ interface CategoryPillProps {
 
 export default function CategoryPill({ text, variant = 'default' }: CategoryPillProps) {
   const styles = {
-    default: 'bg-royal-purple/15 border-royal-purple/30 text-royal-purple',
+    default: 'bg-gold/15 border-gold/30 text-gold',
     gold: 'bg-gold/15 border-gold/30 text-gold',
     emerald: 'bg-emerald/15 border-emerald/30 text-emerald',
   };

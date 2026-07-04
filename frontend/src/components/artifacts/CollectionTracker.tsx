@@ -16,9 +16,9 @@ export const CollectionTracker: React.FC<CollectionTrackerProps> = ({ showLabel 
           {collectedCount} / {totalCount} <span className="text-slate-500 font-medium ml-1">({Math.round(progressPercent)}%)</span>
         </span>
       </div>
-      <div className="w-full h-2.5 bg-[#0D0D12] rounded-full overflow-hidden border border-[#181820]">
+      <div className="w-full h-2.5 bg-[#0A0A0A] rounded-full overflow-hidden border border-warm-white/10">
         <div 
-          className="h-full bg-gradient-to-r from-game-purple to-indigo-500 rounded-full transition-all duration-1000 ease-out relative"
+          className="h-full bg-gradient-to-r from-amber-600 to-amber-400 rounded-full transition-all duration-1000 ease-out relative"
           style={{ width: `${progressPercent}%` }}
         >
           {/* Shine effect */}

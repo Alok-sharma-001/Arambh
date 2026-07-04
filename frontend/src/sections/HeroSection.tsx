@@ -4,6 +4,7 @@ import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useParticleSystem } from '@/hooks/useParticleSystem';
 import CategoryPill from '@/components/CategoryPill';
+import { useAuthStore } from '../store/authStore';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,6 +20,7 @@ const heroCards = [
 ];
 
 export default function HeroSection() {
+  const token = useAuthStore((state) => state.token);
   const sectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
@@ -117,11 +119,11 @@ export default function HeroSection() {
       ref={sectionRef}
       className="relative w-full min-h-[100dvh] overflow-hidden flex items-center justify-center bg-near-black"
     >
-      {/* Purple atmospheric glow */}
+      {/* Gold/Amber atmospheric glow */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(ellipse at 30% 50%, rgba(124,92,255,0.08) 0%, transparent 60%)',
+          background: 'radial-gradient(ellipse at 30% 50%, rgba(212,183,110,0.08) 0%, transparent 60%)',
         }}
       />
 
@@ -177,12 +179,21 @@ export default function HeroSection() {
         </p>
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            to="/map"
-            className="hero-cta inline-flex items-center px-8 py-3.5 bg-gold text-near-black font-body font-semibold text-sm uppercase tracking-[0.1em] rounded-lg hover:bg-[#d4b76e] hover:-translate-y-0.5 hover:shadow-gold-glow transition-all duration-300"
-          >
-            Start Your Adventure
-          </Link>
+          {token ? (
+            <Link
+              to="/dashboard"
+              className="hero-cta inline-flex items-center px-8 py-3.5 bg-gold text-near-black font-body font-semibold text-sm uppercase tracking-[0.1em] rounded-lg hover:bg-[#d4b76e] hover:-translate-y-0.5 hover:shadow-gold-glow transition-all duration-300"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="hero-cta inline-flex items-center px-8 py-3.5 bg-gold text-near-black font-body font-semibold text-sm uppercase tracking-[0.1em] rounded-lg hover:bg-[#d4b76e] hover:-translate-y-0.5 hover:shadow-gold-glow transition-all duration-300"
+            >
+              Start Your Adventure
+            </Link>
+          )}
           <Link
             to="/map"
             className="hero-cta inline-flex items-center px-8 py-3.5 border border-gold text-gold font-body font-semibold text-sm uppercase tracking-[0.1em] rounded-lg hover:bg-gold/10 transition-all duration-300"

@@ -105,38 +105,37 @@ export const DailyLoginRewards: React.FC = () => {
   };
 
   return (
-    <Card className="w-full p-6 bg-[#0D0D12]/90 border border-slate-800/80 rounded-2xl relative overflow-hidden">
+    <Card className="w-full p-4 relative overflow-hidden h-full flex flex-col justify-between">
       {/* Glow background */}
-      <div className="absolute top-0 right-0 w-48 h-48 bg-game-purple/5 blur-[50px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 right-0 w-48 h-48 bg-gold/5 blur-[50px] rounded-full pointer-events-none" />
 
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 relative z-10">
-        <div>
-          <div className="flex items-center gap-2 text-game-purple mb-1">
-            <Calendar className="w-4 h-4" />
-            <span className="text-xs font-black uppercase tracking-wider">Daily Rewards</span>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-3.5 relative z-10">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 bg-gold/10 rounded-lg border border-gold/20">
+            <Calendar className="w-5 h-5 text-gold" />
           </div>
-          <h2 className="text-xl font-extrabold text-white">Daily Login Calendar</h2>
-          <p className="text-xs text-slate-400 mt-1">
-            Claim daily XP bonuses and progress towards the legendary Artifact Chest on Day 7!
-          </p>
+          <div>
+            <h2 className="text-lg font-bold text-warm-white leading-tight">Daily Rewards</h2>
+            <p className="text-[10px] text-slate-500 uppercase tracking-wider font-bold">Login Calendar</p>
+          </div>
         </div>
 
         {canClaimToday && nextClaimableDay <= 7 && (
           <motion.div
-            animate={{ scale: [1, 1.03, 1] }}
+            animate={{ scale: [1, 1.02, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           >
             <button
               onClick={() => handleClaim(REWARDS[nextClaimableDay - 1])}
-              className="px-6 py-2.5 rounded-xl bg-game-gold text-black font-extrabold text-xs uppercase tracking-wider hover:bg-game-gold/90 transition-all shadow-[0_0_15px_rgba(251,191,36,0.3)]"
+              className="px-3 py-1.5 rounded-lg bg-game-gold text-black font-extrabold text-[10px] uppercase tracking-wider hover:bg-game-gold/90 transition-all shadow-[0_0_12px_rgba(251,191,36,0.2)]"
             >
-              Claim Day {nextClaimableDay} Reward
+              Claim Day {nextClaimableDay}
             </button>
           </motion.div>
         )}
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3 relative z-10">
+      <div className="grid grid-cols-4 sm:grid-cols-7 gap-1.5 relative z-10 mt-auto">
         {REWARDS.map((item) => {
           const isClaimed = claimedDays.includes(item.day);
           const isCurrent = item.day === nextClaimableDay && canClaimToday;
@@ -146,36 +145,36 @@ export const DailyLoginRewards: React.FC = () => {
             <div
               key={item.day}
               onClick={() => isCurrent && handleClaim(item)}
-              className={`p-4 rounded-xl border flex flex-col items-center justify-between text-center transition-all duration-300 relative ${
+              className={`p-2 rounded-lg border flex flex-col items-center justify-between text-center transition-apple-fast relative ${
                 isClaimed
-                  ? 'border-emerald-500/20 bg-emerald-500/5 opacity-70'
+                  ? 'border-emerald-500/15 bg-emerald-500/5 opacity-70'
                   : isCurrent
-                  ? 'border-game-gold bg-game-gold/5 cursor-pointer shadow-[0_0_15px_rgba(251,191,36,0.1)] hover:scale-[1.03]'
-                  : 'border-[#181820] bg-[#101015]/60'
+                  ? 'border-game-gold bg-game-gold/5 cursor-pointer shadow-[0_0_8px_rgba(251,191,36,0.05)] hover:scale-[1.02]'
+                  : 'border-warm-white/10 bg-black/40'
               }`}
             >
-              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">
-                {item.title}
+              <span className="text-[8px] font-black uppercase tracking-wider text-slate-500">
+                Day {item.day}
               </span>
 
-              <div className="my-3">
+              <div className="my-1.5">
                 {isClaimed ? (
-                  <div className="w-10 h-10 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center">
-                    <Check className="w-5 h-5 text-emerald-400" />
+                  <div className="w-7 h-7 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
                   </div>
                 ) : item.rewardType === 'chest' ? (
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isCurrent ? 'bg-game-purple/20 border border-game-purple/50' : 'bg-slate-800/40 border border-slate-700/50'}`}>
-                    <Gift className={`w-5 h-5 ${isCurrent ? 'text-game-purple animate-bounce' : 'text-slate-400'}`} />
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center ${isCurrent ? 'bg-gold/20 border border-gold/50' : 'bg-slate-800/40 border border-slate-700/50'}`}>
+                    <Gift className={`w-3.5 h-3.5 ${isCurrent ? 'text-gold animate-bounce' : 'text-slate-400'}`} />
                   </div>
                 ) : (
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isCurrent ? 'bg-game-gold/20 border border-game-gold/50' : 'bg-slate-800/40 border border-slate-700/50'}`}>
-                    <Sparkles className={`w-5 h-5 ${isCurrent ? 'text-game-gold animate-pulse' : 'text-slate-400'}`} />
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center ${isCurrent ? 'bg-game-gold/20 border border-game-gold/50' : 'bg-slate-800/40 border border-slate-700/50'}`}>
+                    <Sparkles className={`w-3.5 h-3.5 ${isCurrent ? 'text-game-gold animate-pulse' : 'text-slate-400'}`} />
                   </div>
                 )}
               </div>
 
-              <span className={`text-xs font-extrabold ${isClaimed ? 'text-emerald-400/80' : isCurrent ? 'text-game-gold' : 'text-slate-400'}`}>
-                {item.rewardType === 'chest' ? 'Chest' : `+${item.xp} XP`}
+              <span className={`text-[9px] font-extrabold ${isClaimed ? 'text-emerald-400/80' : isCurrent ? 'text-game-gold' : 'text-slate-400'}`}>
+                {item.rewardType === 'chest' ? 'Chest' : `+${item.xp}`}
               </span>
             </div>
           );

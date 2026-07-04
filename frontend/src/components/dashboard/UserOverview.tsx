@@ -31,11 +31,11 @@ export const UserOverview: React.FC = () => {
   };
 
   if (isLoading || !stats) {
-    return <Card className="p-8 h-48 animate-pulse bg-[#0D0D12]" />;
+    return <Card className="p-8 h-48 animate-pulse bg-[#0A0A0A]" />;
   }
 
   return (
-    <Card className="p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6 bg-[#0D0D12] border-[#181820] shadow-2xl relative overflow-hidden group">
+    <Card className="p-6 md:p-8 flex flex-col md:flex-row items-center md:items-start gap-6 bg-[#0A0A0A] border-warm-white/[0.06] shadow-2xl relative overflow-hidden group">
       {/* Dynamic background glow */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-game-purple/10 blur-[100px] rounded-full pointer-events-none group-hover:bg-game-purple/20 transition-colors duration-700" />
       
@@ -44,9 +44,9 @@ export const UserOverview: React.FC = () => {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={handleGainXP}
-          className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-[#13131A] to-[#181820] p-1 shadow-2xl shadow-game-purple/50 cursor-pointer relative z-10 border-2 border-[#181820] hover:border-game-purple transition-colors"
+          className="w-24 h-24 md:w-32 md:h-32 rounded-2xl bg-gradient-to-br from-[#13131A] to-[#181820] p-1 shadow-2xl shadow-game-purple/50 cursor-pointer relative z-10 border-2 border-warm-white/[0.06] hover:border-game-purple transition-colors"
         >
-          <div className="w-full h-full bg-[#0D0D12] rounded-xl flex items-center justify-center overflow-hidden relative">
+          <div className="w-full h-full bg-[#0A0A0A] rounded-xl flex items-center justify-center overflow-hidden relative">
             <img 
               src={`https://api.dicebear.com/7.x/bottts/svg?seed=hero&backgroundColor=transparent`} 
               alt="Avatar" 
@@ -84,7 +84,7 @@ export const UserOverview: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-[#13131A]/80 p-5 rounded-2xl border border-[#181820] mt-4 md:mt-6 shadow-inner relative overflow-hidden">
+        <div className="bg-[#111111]/80 p-5 rounded-2xl border border-warm-white/[0.06] mt-4 md:mt-6 shadow-inner relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 blur-[50px] rounded-full pointer-events-none" />
           <div className="flex justify-between items-end mb-3 relative z-10">
             <span className="text-sm font-bold text-slate-200">Level {level} Progress</span>

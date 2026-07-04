@@ -74,7 +74,7 @@ export const AvatarSelection: React.FC = () => {
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-[120] flex flex-col items-center justify-center p-6 md:p-12 bg-black/95 text-white overflow-y-auto"
       >
-        <Card className="w-full max-w-4xl p-8 bg-[#0D0D12] border-2 border-game-gold/30 shadow-2xl relative overflow-hidden">
+        <Card className="w-full max-w-4xl p-8 bg-[#0A0A0A] border-2 border-game-gold/30 shadow-2xl relative overflow-hidden">
           {/* Background Effects */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-game-purple/20 blur-[120px] rounded-full pointer-events-none" />
           
@@ -105,7 +105,7 @@ export const AvatarSelection: React.FC = () => {
                   className={`relative cursor-pointer rounded-2xl p-6 border-2 transition-all duration-300 flex flex-col items-center text-center ${
                     isSelected 
                       ? `${cls.border} ${cls.bg} shadow-[0_0_30px_rgba(139,92,246,0.15)]` 
-                      : 'border-[#181820] bg-[#13131A] hover:border-slate-700 opacity-75 hover:opacity-100'
+                      : 'border-warm-white/[0.06] bg-[#111111] hover:border-slate-700 opacity-75 hover:opacity-100'
                   }`}
                 >
                   {isSelected && (
