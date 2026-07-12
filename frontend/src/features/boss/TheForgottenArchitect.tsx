@@ -8,6 +8,8 @@ import Editor from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useRegionStore } from '../../store/regionStore';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TheForgottenArchitect() {
   const [code, setCode] = useState('# The Forgotten Architect demands a flawless spell structure.\n# Define a function named `forge_key` that takes `magic` as a parameter.\n# It must calculate `power = magic * 10` and `return power`.\n# Finally, call the function with magic = 5.\n\n');
@@ -114,10 +116,9 @@ export default function TheForgottenArchitect() {
   const handleVictory = async () => {
     try {
       console.log('handleVictory called');
-      gainXP(800, 'Boss Defeated');
       gainItem('summit-crown');
-      completeBoss('functions-mountain');
-      navigate('/region/functions-mountain');
+      await ProgressEngine.completeBoss('functions-mountain', 800);
+      NavigationService.returnToWorldMap();
     } catch (e) {
       console.error(e);
       alert('Error navigating. Please check console.');

@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from 'react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { MapNode, MapNodeProps } from '../components/learning/MapNode';
 import { Map, ChevronLeft, Shield } from 'lucide-react';
@@ -5,139 +6,68 @@ import { motion } from 'framer-motion';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { useRegionStore } from '../store/regionStore';
 import { useProgressionStore } from '../store/progressionStore';
-import { VARIABLES_FOREST_LESSONS } from '../data/variablesForestData';
-import { DATA_TYPES_VALLEY_LESSONS } from '../data/dataTypesValleyData';
-import { LOOPS_DESERT_LESSONS } from '../data/loopsDesertData';
-import { functionsMountainData } from '../data/functionsMountainData';
-import { collectionsKingdomData } from '../data/collectionsKingdomData';
-import { oopCastleData } from '../data/oopCastleData';
-import { exceptionAbyssData } from '../data/exceptionAbyssData';
-import { fileSystemRuinsData } from '../data/fileSystemRuinsData';
-import { modulesHarborData } from '../data/modulesHarborData';
-import { algorithmArenaData } from '../data/algorithmArenaData';
-import { bossGateSagaData } from '../data/bossGateSagaData';
+import { regions as regionDefinitions } from '../data/regions';
+import { NavigationService } from '../core/progression/NavigationService';
 
 export default function RegionMap() {
   const navigate = useNavigate();
   const { regionId } = useParams<{ regionId: string }>();
-  const { getRegionProgress, regions } = useRegionStore();
+  const { getRegionProgress } = useRegionStore();
   const { inventory } = useProgressionStore();
+
+  useEffect(() => {
+    sessionStorage.setItem('mapSource', 'region');
+  }, []);
   
-  if (!regionId) return <Navigate to="/learning-map" replace />;
+  if (!regionId) return <Navigate to="/world-map" replace />;
   
-  const regionConfig = regions[regionId];
-  if (!regionConfig) return <Navigate to="/learning-map" replace />;
+  const regionDef = useMemo(() => regionDefinitions.find((r) => r.id === regionId), [regionId]);
+  if (!regionDef) return <Navigate to="/world-map" replace />;
 
   const progress = getRegionProgress(regionId);
   
-  let currentLessons: any = null;
-  let bossTitle = 'Coming Soon';
-  let bossArtifact = '';
-  
-  if (regionId === 'variables-forest') {
-    currentLessons = VARIABLES_FOREST_LESSONS;
-    bossTitle = 'Corrupted Crystal Guardian';
-    bossArtifact = 'forest-ring';
-  } else if (regionId === 'data-types-valley') {
-    currentLessons = DATA_TYPES_VALLEY_LESSONS;
-    bossTitle = 'The Type Shapeshifter';
-    bossArtifact = 'crystal-lens';
-  } else if (regionId === 'loops-desert') {
-    currentLessons = LOOPS_DESERT_LESSONS;
-    bossTitle = 'The Infinite Serpent';
-    bossArtifact = 'dune-scroll';
-  } else if (regionId === 'functions-mountain') {
-    currentLessons = functionsMountainData;
-    bossTitle = 'The Forgotten Architect';
-    bossArtifact = 'summit-crown';
-  } else if (regionId === 'collections-kingdom') {
-    currentLessons = collectionsKingdomData;
-    bossTitle = 'The Data Hoarder';
-    bossArtifact = 'royal-scepter';
-  } else if (regionId === 'oop-citadel') {
-    currentLessons = oopCastleData;
-    bossTitle = 'The Hollow King';
-    bossArtifact = 'class-sigil';
-  } else if (regionId === 'exception-abyss') {
-    currentLessons = exceptionAbyssData;
-    bossTitle = 'The Chaos Compiler';
-    bossArtifact = 'abyssal-shield';
-  } else if (regionId === 'filesystem-ruins') {
-    currentLessons = fileSystemRuinsData;
-    bossTitle = 'The Forgotten Archivist';
-    bossArtifact = 'stone-tablet';
-  } else if (regionId === 'modules-harbor') {
-    currentLessons = modulesHarborData;
-    bossTitle = 'The Smuggler of Secrets';
-    bossArtifact = 'harbor-compass';
-  } else if (regionId === 'algorithm-arena') {
-    currentLessons = algorithmArenaData;
-    bossTitle = 'The Time Eater';
-    bossArtifact = 'arena-trophy';
-  } else if (regionId === 'bossgate-saga') {
-    currentLessons = bossGateSagaData;
-    bossTitle = 'The Ancient Python Dragon';
-    bossArtifact = 'legends-crown';
-  }
+  const mapNodes: MapNodeProps[] = useMemo(() => {
+    const nodes: MapNodeProps[] = regionDef.lessons.map((lesson, index) => {
+      const isCompleted = progress.completedLessons.includes(lesson.id);
+      const isNextAvailable = !isCompleted && 
+        (index === 0 || progress.completedLessons.includes(regionDef.lessons[index - 1].id));
+      
+      let status: 'locked' | 'available' | 'current' | 'completed' = 'locked';
+      if (isCompleted) status = 'completed';
+      else if (isNextAvailable) status = 'current';
 
-  // If region is not implemented yet
-  if (!currentLessons) {
-    return (
-      <div className="max-w-6xl mx-auto pb-20 pt-8 px-6 text-center">
-        <button 
-          onClick={() => navigate('/learning-map')} 
-          className="mb-8 p-3 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all inline-flex items-center gap-2"
-        >
-          <ChevronLeft size={20} /> Back to Map
-        </button>
-        <div className="bg-slate-950/80 backdrop-blur-xl border border-game-border p-12 rounded-3xl">
-          <Map className="w-16 h-16 text-game-purple mx-auto mb-6 opacity-50" />
-          <h2 className="text-3xl font-bold text-white mb-4">Region Under Construction</h2>
-          <p className="text-slate-400 max-w-lg mx-auto">
-            This region of the Python Kingdom is still being forged by the developers. Check back in a future update!
-          </p>
-        </div>
-      </div>
-    );
-  }
-  
-  const mapNodes: MapNodeProps[] = Object.values(currentLessons as Record<string, any>).map((lesson: any, index) => {
-    const isCompleted = progress.completedLessons.includes(lesson.id);
-    const isNextAvailable = !isCompleted && 
-      (index === 0 || progress.completedLessons.includes(Object.values(currentLessons as Record<string, any>)[index - 1].id));
-    
-    let status: 'locked' | 'available' | 'current' | 'completed' = 'locked';
-    if (isCompleted) status = 'completed';
-    else if (isNextAvailable) status = 'current';
+      return {
+        id: lesson.id,
+        title: `Lesson ${lesson.number}: ${lesson.title}`,
+        description: `Complete this lesson to earn ${lesson.xpReward} XP.`,
+        status,
+        completion: isCompleted ? 100 : 0,
+        xpReward: lesson.xpReward,
+        difficulty: 'Beginner'
+      };
+    });
 
-    return {
-      id: lesson.id,
-      title: `Lesson ${lesson.id}: ${lesson.title}`,
-      description: `Complete this lesson to earn ${lesson.rewardXP} XP.`,
-      status,
-      completion: isCompleted ? 100 : 0,
-      xpReward: lesson.rewardXP,
-      difficulty: 'Beginner'
-    };
-  });
+    // Add the boss gate
+    const bossUnlocked = progress.completedLessons.length >= regionDef.lessons.length;
+    nodes.push({
+      id: 'boss',
+      title: regionDef.bossChallenge.title,
+      description: progress.bossStatus === 'locked' 
+        ? `Complete all ${regionDef.lessons.length} lessons to unlock the guardian.` 
+        : `Defeat the boss to restore the region!`,
+      status: progress.bossStatus === 'completed' ? 'completed' 
+            : progress.bossStatus === 'available' || bossUnlocked ? 'current' 
+            : 'locked',
+      completion: progress.bossStatus === 'completed' ? 100 : 0,
+      difficulty: 'Boss',
+      isBossGate: true,
+      artifactReward: regionDef.bossChallenge.artifactReward
+    });
 
-  const totalLessons = Object.keys(currentLessons as Record<string, any>).length;
+    return nodes;
+  }, [regionDef, progress]);
 
-  // Add the boss gate
-  mapNodes.push({
-    id: 'boss',
-    title: bossTitle,
-    description: progress.bossStatus === 'locked' 
-      ? `Complete all ${totalLessons} lessons to unlock the guardian.` 
-      : `Defeat the boss to restore the region!`,
-    status: progress.bossStatus === 'completed' ? 'completed' 
-          : progress.bossStatus === 'available' ? 'current' 
-          : 'locked',
-    completion: progress.bossStatus === 'completed' ? 100 : 0,
-    difficulty: 'Boss',
-    isBossGate: true,
-    artifactReward: bossArtifact
-  });
+  const totalLessons = regionDef.lessons.length;
 
   const regionName = regionId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   let regionDesc = 'Restore the scattered memory fragments of the ancient crystal.';
@@ -182,7 +112,7 @@ export default function RegionMap() {
              <span className="text-2xl font-black text-white">{inventory.length} / 10</span>
           </div>
           <button 
-            onClick={() => navigate('/learning-map')}
+            onClick={() => navigate('/world-map')}
             className="px-8 py-4 bg-red-600/20 text-red-400 font-bold uppercase tracking-widest text-sm rounded-xl hover:bg-red-600/40 border border-red-500/50 transition-all hover:shadow-[0_0_20px_rgba(239,68,68,0.4)]"
           >
             Return to Map
@@ -209,7 +139,7 @@ export default function RegionMap() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="flex items-center gap-4 mb-6 pt-8 px-6">
         <button 
-          onClick={() => navigate('/learning-map')} 
+          onClick={() => navigate('/world-map')} 
           className="p-3 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all"
         >
           <ChevronLeft size={24} />
@@ -323,13 +253,13 @@ export default function RegionMap() {
                     onClick={() => {
                       if (mod.status !== 'locked') {
                         if (mod.isBossGate) {
-                          navigate(`/region/${regionId}/boss`);
+                          NavigationService.goToBoss(regionId);
                         } else {
-                          navigate(`/lesson/${regionId}/${mod.id}`);
+                          NavigationService.goToLesson(regionId, mod.id.toString());
                         }
                       }
                     }}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                   >
                     <MapNode {...mod} />
                   </div>

@@ -4,6 +4,8 @@ import { Cpu, Sparkles, AlertTriangle, Gauge, Swords, Target, Crosshair } from '
 import { useRegionStore } from '../../store/regionStore';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useNavigate } from 'react-router-dom';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TheTimeEater() {
   const [phase, setPhase] = useState(1);
@@ -75,10 +77,9 @@ export default function TheTimeEater() {
         
         // Victory
         setIsVictory(true);
-        setTimeout(() => {
-          completeBoss('algorithm-arena');
+        setTimeout(async () => {
           gainItem('arena-trophy');
-          gainXP(600, 'Boss Defeated');
+          await ProgressEngine.completeBoss('algorithm-arena', 600);
         }, 2000);
       }
       
@@ -129,7 +130,7 @@ export default function TheTimeEater() {
             </div>
             <br />
             <button
-              onClick={() => navigate('/learning-map')}
+              onClick={() => NavigationService.returnToWorldMap()}
               className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-colors"
             >
               Return to Map

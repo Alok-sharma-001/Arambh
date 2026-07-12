@@ -19,7 +19,7 @@ import {
 import { useAuthStore } from '../../store/authStore';
 
 const navItems = [
-  { name: 'Learning Map', path: '/learning-map', icon: MapIcon },
+  { name: 'World Map', path: '/world-map', icon: MapIcon },
   { name: 'Inventory', path: '/inventory', icon: Grid },
   { name: 'Quests', path: '/quests', icon: Target },
   { name: 'Achievements', path: '/achievements', icon: Trophy },

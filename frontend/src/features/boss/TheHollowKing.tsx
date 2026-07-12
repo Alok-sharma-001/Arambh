@@ -4,6 +4,8 @@ import { Shield, Sparkles, AlertCircle, Sword } from 'lucide-react';
 import { useRegionStore } from '../../store/regionStore';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useNavigate } from 'react-router-dom';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TheHollowKing() {
   const [phase, setPhase] = useState(1);
@@ -75,10 +77,9 @@ export default function TheHollowKing() {
         
         // Victory
         setIsVictory(true);
-        setTimeout(() => {
-          completeBoss('oop-citadel');
+        setTimeout(async () => {
           gainItem('class-sigil');
-          gainXP(600, 'Boss Defeated');
+          await ProgressEngine.completeBoss('oop-citadel', 600);
         }, 2000);
       }
       
@@ -123,7 +124,7 @@ export default function TheHollowKing() {
             </div>
             <br />
             <button
-              onClick={() => navigate('/learning-map')}
+              onClick={() => NavigationService.returnToWorldMap()}
               className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-colors"
             >
               Return to Map

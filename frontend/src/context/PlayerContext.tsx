@@ -3,6 +3,7 @@ import type { PlayerState } from '@/types';
 import { regions } from '@/data/regions';
 import { useProgressionStore } from '@/store/progressionStore';
 import { useRegionStore } from '@/store/regionStore';
+import { ProgressEngine } from '../core/progression/ProgressEngine';
 
 interface PlayerContextType {
   player: PlayerState;
@@ -68,9 +69,9 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addXP = useCallback((amount: number) => {
-    gainXP(amount, 'lesson');
+    ProgressEngine.grantXP(amount, 'generic');
     setSessionXP(prev => prev + amount);
-  }, [gainXP]);
+  }, []);
 
   const incrementStreak = useCallback(() => {
     // Streaks are handled via backend login APIs in Arambh.
@@ -81,8 +82,11 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const completeLesson = useCallback((regionId: string, lessonId: string) => {
-    storeCompleteLesson(regionId, lessonId);
-  }, [storeCompleteLesson]);
+    const regionDef = regions.find(r => r.id === regionId);
+    const lessonDef = regionDef?.lessons.find(l => l.id === lessonId);
+    const xpReward = lessonDef?.xpReward || 50;
+    ProgressEngine.completeLesson(regionId, lessonId, xpReward);
+  }, []);
 
   return (
     <PlayerContext.Provider value={{ player, addXP, incrementStreak, resetStreak, completeLesson }}>

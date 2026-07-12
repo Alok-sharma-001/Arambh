@@ -8,6 +8,8 @@ import Editor from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useRegionStore } from '../../store/regionStore';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function InfiniteSerpent() {
   const [code, setCode] = useState('# Defeat the Infinite Serpent!\n# Its scales regenerate instantly unless struck rapidly in a loop.\n# Write a loop to cast "damage = 33" three times.\nfor i in range(3):\n    damage = 33\n');
@@ -127,10 +129,9 @@ export default function InfiniteSerpent() {
   const handleVictory = async () => {
     try {
       console.log('handleVictory called');
-      gainXP(600, 'Boss Defeated');
       gainItem('dune-scroll');
-      completeBoss('loops-desert');
-      navigate('/region/loops-desert');
+      await ProgressEngine.completeBoss('loops-desert', 600);
+      NavigationService.returnToWorldMap();
     } catch (e) {
       console.error(e);
       alert('Error navigating. Please check console.');

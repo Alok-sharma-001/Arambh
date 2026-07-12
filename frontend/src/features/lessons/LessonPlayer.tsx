@@ -34,7 +34,7 @@ export default function LessonPlayer() {
           Available Keys: {Object.keys(ALL_LESSONS).join(', ')}
         </pre>
         <button 
-          onClick={() => navigate('/learning-map')}
+          onClick={() => navigate('/world-map')}
           className="mt-8 px-6 py-2 bg-slate-800 rounded hover:bg-slate-700 transition"
         >
           Return to Map

@@ -8,13 +8,32 @@ interface AuthState {
   logout: () => void;
 }
 
+const getUsernameFromToken = (token: string | null): string | null => {
+  if (!token) return null;
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(window.atob(base64)).sub || null;
+  } catch {
+    return null;
+  }
+};
+
+const initialToken = localStorage.getItem('token');
+const initialUsername = getUsernameFromToken(initialToken);
+
 export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem('token'),
-  user: null,
+  token: initialToken,
+  user: initialUsername ? { username: initialUsername } : null,
   setToken: (token) => {
-    if (token) localStorage.setItem('token', token);
-    else localStorage.removeItem('token');
-    set({ token });
+    if (token) {
+      localStorage.setItem('token', token);
+      const username = getUsernameFromToken(token);
+      set({ token, user: username ? { username } : null });
+    } else {
+      localStorage.removeItem('token');
+      set({ token, user: null });
+    }
   },
   setUser: (user) => set({ user }),
   logout: () => {

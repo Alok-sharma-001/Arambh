@@ -8,6 +8,8 @@ import Editor from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useRegionStore } from '../../store/regionStore';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function InfiniteStreamSentinel() {
   const [code, setCode] = useState(`# Defeat the Infinite Stream Sentinel!
@@ -154,11 +156,10 @@ print(val3)
     }, 3900);
   };
 
-  const handleVictory = () => {
-    gainXP(600, 'Boss Defeated');
+  const handleVictory = async () => {
     gainItem('infinite-compass');
-    completeBoss('iterator-isles');
-    navigate('/region/iterator-isles');
+    await ProgressEngine.completeBoss('iterator-isles', 600);
+    NavigationService.returnToWorldMap();
   };
 
   return (

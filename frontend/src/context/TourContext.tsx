@@ -29,28 +29,28 @@ const TOUR_STEPS: TourStep[] = [
     title: 'XP & Progression Tracker',
     content: 'Welcome to Arambh! Here is your daily XP tracker. Completing coding challenges and quiz quests earns you XP to level up your character.',
     placement: 'bottom',
-    route: '/map',
+    route: '/world-map',
   },
   {
     target: '#streak-counter',
     title: 'Maintain Your Streak',
     content: 'This is your daily coding streak! Solve at least one Python exercise every day to keep your learning streak burning bright.',
     placement: 'bottom',
-    route: '/map',
+    route: '/world-map',
   },
   {
     target: '#world-map-grid',
     title: 'The Python World Map',
     content: 'Your journey starts here. Explore different thematic Python chapters (like Variables, Loops, and Functions). Click any unlocked card to view lessons and start coding!',
     placement: 'top',
-    route: '/map',
+    route: '/world-map',
   },
   {
     target: '#navigation-bar',
     title: 'Library & Memory Vault',
     content: 'Use the bottom navigation bar to switch between the World Map, Python Library (documentation reference), Memory Vault (saved code snippets), and the Leaderboard.',
     placement: 'top',
-    route: '/map',
+    route: '/world-map',
   },
 ];
 
@@ -66,7 +66,7 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const isCompleted = localStorage.getItem('arambh_tour_completed');
     // Only trigger if we are logged in and on the map page
-    if (!isCompleted && location.pathname === '/map') {
+    if (!isCompleted && location.pathname === '/world-map') {
       // Small timeout to allow map components to mount properly
       const startTimer = setTimeout(() => {
         setIsActive(true);
@@ -121,8 +121,8 @@ export const TourProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('arambh_tour_completed');
     setIsActive(true);
     setCurrentStepIndex(0);
-    if (location.pathname !== '/map') {
-      navigate('/map');
+    if (location.pathname !== '/world-map') {
+      navigate('/world-map');
     }
   };
 

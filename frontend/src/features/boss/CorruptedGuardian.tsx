@@ -8,6 +8,8 @@ import Editor from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useRegionStore } from '../../store/regionStore';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function CorruptedGuardian() {
   const [code, setCode] = useState('# Defeat the Corrupted Guardian!\n# 1. Create a variable "spell_power" and set it to 9000\n# 2. Create a variable "target" and set it to "Guardian"\n');
@@ -68,11 +70,10 @@ export default function CorruptedGuardian() {
     }
   };
 
-  const handleVictory = () => {
-    gainXP(500, 'Boss Defeated');
+  const handleVictory = async () => {
     gainItem('forest-ring');
-    completeBoss('variables-forest');
-    navigate('/region/variables-forest');
+    await ProgressEngine.completeBoss('variables-forest', 500);
+    NavigationService.returnToWorldMap();
   };
 
   return (

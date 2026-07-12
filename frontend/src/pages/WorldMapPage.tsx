@@ -7,6 +7,8 @@ import { useRegionStore } from '@/store/regionStore';
 import { regions } from '@/data/regions';
 import { BookOpen, Check, Circle, ChevronRight, Lock, Sword, Target, X } from 'lucide-react';
 import type { Region } from '@/types';
+import { NavigationService } from '../core/progression/NavigationService';
+import { ProgressValidator } from '../core/progression/ProgressValidator';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -299,19 +301,31 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
           <div className="mt-8">
             <h4 className="text-xs font-semibold uppercase tracking-[0.12em] text-mid-gray mb-3">Lessons</h4>
             <div className="space-y-0">
-              {region.lessons.map((lesson) => (
-                <div
-                  key={lesson.id}
-                  className="flex items-center gap-3 py-3 border-b border-warm-white/[0.04] hover:bg-warm-white/[0.02] transition-colors px-2 -mx-2 rounded"
-                >
-                  <span className="font-mono text-xs text-mid-gray w-6">{String(lesson.number).padStart(2, '0')}</span>
-                  <span className="flex-1 text-sm text-warm-white">{lesson.title}</span>
-                  {lesson.status === 'completed' && <Check size={16} className="text-emerald shrink-0" />}
-                  {lesson.status === 'current' && <Circle size={16} className="text-gold fill-gold shrink-0" />}
-                  {lesson.status === 'locked' && <Lock size={16} className="text-mid-gray shrink-0" />}
-                  <span className="font-mono text-xs text-gold">+{lesson.xpReward} XP</span>
-                </div>
-              ))}
+              {region.lessons.map((lesson) => {
+                const isLocked = lesson.status === 'locked';
+                return (
+                  <div
+                    key={lesson.id}
+                    onClick={() => {
+                      if (!isLocked) {
+                        NavigationService.openRegion(region.id);
+                      }
+                    }}
+                    className={`flex items-center gap-3 py-3 border-b border-warm-white/[0.04] px-2 -mx-2 rounded transition-all ${
+                      isLocked 
+                        ? 'opacity-50 cursor-not-allowed' 
+                        : 'cursor-pointer hover:bg-warm-white/[0.04] hover:border-gold/10'
+                    }`}
+                  >
+                    <span className="font-mono text-xs text-mid-gray w-6">{String(lesson.number).padStart(2, '0')}</span>
+                    <span className="flex-1 text-sm text-warm-white">{lesson.title}</span>
+                    {lesson.status === 'completed' && <Check size={16} className="text-emerald shrink-0" />}
+                    {lesson.status === 'current' && <Circle size={16} className="text-gold fill-gold shrink-0" />}
+                    {lesson.status === 'locked' && <Lock size={16} className="text-mid-gray shrink-0" />}
+                    <span className="font-mono text-xs text-gold">+{lesson.xpReward} XP</span>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -331,7 +345,7 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
                 <p className="mt-3 text-xs text-warm-white/50">LOCKED — Complete all lessons first</p>
               ) : (
                 <button 
-                  onClick={() => navigate(`/region/${region.id}/boss`)}
+                  onClick={() => NavigationService.goToBoss(region.id)}
                   className="mt-4 px-6 py-2.5 bg-gold text-near-black font-semibold text-sm rounded-lg hover:bg-[#d4b76e] transition-colors"
                 >
                   START BOSS
@@ -345,8 +359,7 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
         <div className="panel-inner space-y-3 p-6 border-t border-warm-white/[0.06]">
           <button
             onClick={() => {
-              const currentLesson = region.lessons.find((l) => l.status === 'current') || region.lessons[0];
-              navigate(`/lesson/${region.id}/${currentLesson.id}`);
+              NavigationService.openRegion(region.id);
             }}
             className="w-full inline-flex items-center justify-center gap-2 py-3.5 bg-gold text-near-black font-body font-semibold text-sm uppercase tracking-[0.1em] rounded-lg hover:bg-[#d4b76e] transition-colors"
           >
@@ -369,11 +382,16 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
 
 
 export default function WorldMapPage() {
+  const navigate = useNavigate();
   const mapRef = useRef<HTMLDivElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
   const { player } = usePlayer();
   const { regions: storeRegions } = useRegionStore();
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
+
+  useEffect(() => {
+    sessionStorage.setItem('mapSource', 'map');
+  }, []);
 
   // Enrich regions with player state
   const enrichedRegions = regions.map((region) => {
@@ -522,7 +540,11 @@ export default function WorldMapPage() {
             >
               <RegionNode
                 region={region}
-                onClick={() => setSelectedRegionId(region.id)}
+                onClick={() => {
+                  if (ProgressValidator.isRegionUnlocked(region.id)) {
+                    setSelectedRegionId(region.id);
+                  }
+                }}
               />
             </div>
           ))}
@@ -553,7 +575,11 @@ export default function WorldMapPage() {
           <RegionNode
             key={region.id}
             region={region}
-            onClick={() => setSelectedRegionId(region.id)}
+            onClick={() => {
+              if (ProgressValidator.isRegionUnlocked(region.id)) {
+                setSelectedRegionId(region.id);
+              }
+            }}
           />
         ))}
       </div>

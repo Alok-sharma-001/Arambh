@@ -7,7 +7,7 @@ import { useTour } from '../context/TourContext';
 import { motion } from 'framer-motion';
 
 const navLinks = [
-  { label: 'World Map', path: '/map' },
+  { label: 'World Map', path: '/world-map' },
   { label: 'Training', path: '/training/loops-desert' },
   { label: 'Library', path: '/library' },
   { label: 'Vault', path: '/vault' },
@@ -17,7 +17,7 @@ const navLinks = [
 ];
 
 const mobileTabItems = [
-  { label: 'Map', path: '/map', icon: MapPin },
+  { label: 'Map', path: '/world-map', icon: MapPin },
   { label: 'Train', path: '/training/loops-desert', icon: Swords },
   { label: 'Library', path: '/library', icon: BookOpen },
   { label: 'Vault', path: '/vault', icon: Brain },
@@ -69,7 +69,7 @@ export default function Navigation() {
           <div className="hidden md:flex items-center gap-4 lg:gap-8 h-full">
             {visibleLinks.map((link) => {
               const isActive = location.pathname === link.path || 
-                (link.path === '/map' && location.pathname.startsWith('/map')) ||
+                (link.path === '/world-map' && location.pathname.startsWith('/world-map')) ||
                 (link.path.startsWith('/training') && location.pathname.startsWith('/training'));
               return (
                 <Link
@@ -191,7 +191,7 @@ export default function Navigation() {
           <div className="flex items-center justify-around h-16 px-1">
             {mobileTabItems.map((item) => {
               const isActive = location.pathname === item.path || 
-                (item.path === '/map' && location.pathname.startsWith('/map')) ||
+                (item.path === '/world-map' && location.pathname.startsWith('/world-map')) ||
                 (item.path === '/training/loops-desert' && location.pathname.startsWith('/training'));
               return (
                 <NavLink

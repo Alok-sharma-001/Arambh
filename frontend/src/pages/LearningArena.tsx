@@ -14,6 +14,7 @@ import { useEngineStore } from '../store/engineStore';
 import { useToastStore } from '../store/toastStore';
 import { LineExecutionHighlighter } from '../components/arena/LineExecutionHighlighter';
 import { LearningLayer } from '../components/arena/LearningLayer';
+import { CodeEvaluator } from '../engine/CodeEvaluator';
 
 export default function LearningArena() {
   const navigate = useNavigate();
@@ -26,6 +27,8 @@ export default function LearningArena() {
 
   const handleRun = () => {
     setHasRun(true);
+    const result = CodeEvaluator.evaluate(code);
+    useEngineStore.setState({ steps: result.steps });
     initialize();
     play();
   };
@@ -58,7 +61,7 @@ export default function LearningArena() {
       <header className="h-16 border-b border-game-border flex items-center justify-between px-6 bg-slate-950/40 backdrop-blur-3xl relative z-30 shadow-xl flex-shrink-0">
         <div className="flex items-center space-x-4">
           <button 
-            onClick={() => navigate('/map')} 
+            onClick={() => navigate('/world-map')} 
             className="p-2 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-all"
           >
             <ChevronLeft size={20} />

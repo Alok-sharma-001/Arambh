@@ -8,6 +8,8 @@ import Editor from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useRegionStore } from '../../store/regionStore';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TheDataHoarder() {
   const [code, setCode] = useState(`# The Data Hoarder has corrupted the kingdom's archives!\n# Reconstruct the four core collections:\n# 1. Define a list 'inventory' with "sword" and "shield"\n# 2. Define a tuple 'coords' with 10 and 20\n# 3. Define a set 'unique_ids' with 1, 2, 3\n# 4. Define a dict 'player' with key "level" as 10\n\n`);
@@ -126,10 +128,9 @@ export default function TheDataHoarder() {
   const handleVictory = async () => {
     try {
       console.log('handleVictory called');
-      gainXP(500, 'Boss Defeated');
       gainItem('royal-scepter');
-      completeBoss('collections-kingdom');
-      navigate('/region/collections-kingdom');
+      await ProgressEngine.completeBoss('collections-kingdom', 500);
+      NavigationService.returnToWorldMap();
     } catch (e) {
       console.error(e);
       alert('Error navigating. Please check console.');

@@ -1,21 +1,19 @@
-import { useParams, Navigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
 import { analyticsApi } from '@/services/analyticsApi';
-import CorruptedGuardian from './CorruptedGuardian';
-import TypeShapeshifter from './TypeShapeshifter';
-import InfiniteSerpent from './InfiniteSerpent';
-import TheForgottenArchitect from './TheForgottenArchitect';
-import TheDataHoarder from './TheDataHoarder';
-import TheHollowKing from './TheHollowKing';
-import TheChaosCompiler from './TheChaosCompiler';
-import TheForgottenArchivist from './TheForgottenArchivist';
-import TheSmugglerOfSecrets from './TheSmugglerOfSecrets';
-import TheTimeEater from './TheTimeEater';
-import AncientPythonDragon from './AncientPythonDragon';
-import InfiniteStreamSentinel from './InfiniteStreamSentinel';
+import BossArena from './BossArena';
+import { ProgressValidator } from '../../core/progression/ProgressValidator';
+import { useProgressionStore } from '../../store/progressionStore';
 
 export default function BossBattleRouter() {
   const { regionId } = useParams<{ regionId: string }>();
+  const navigate = useNavigate();
+  const inventory = useProgressionStore((state) => state.inventory);
+
+  const isUnlocked = useMemo(() => {
+    if (!regionId) return false;
+    return ProgressValidator.isBossUnlocked(regionId);
+  }, [regionId]);
 
   useEffect(() => {
     if (regionId) {
@@ -23,32 +21,44 @@ export default function BossBattleRouter() {
     }
   }, [regionId]);
 
-  switch (regionId) {
-    case 'variables-forest':
-      return <CorruptedGuardian />;
-    case 'data-types-valley':
-      return <TypeShapeshifter />;
-    case 'loops-desert':
-      return <InfiniteSerpent />;
-    case 'functions-mountain':
-      return <TheForgottenArchitect />;
-    case 'collections-kingdom':
-      return <TheDataHoarder />;
-    case 'oop-citadel':
-      return <TheHollowKing />;
-    case 'exception-abyss':
-      return <TheChaosCompiler />;
-    case 'filesystem-ruins':
-      return <TheForgottenArchivist />;
-    case 'modules-harbor':
-      return <TheSmugglerOfSecrets />;
-    case 'algorithm-arena':
-      return <TheTimeEater />;
-    case 'iterator-isles':
-      return <InfiniteStreamSentinel />;
-    case 'bossgate-saga':
-      return <AncientPythonDragon />;
-    default:
-      return <Navigate to="/learning-map" replace />;
+  useEffect(() => {
+    if (regionId && !isUnlocked) {
+      console.warn(`BossBattleRouter: Blocked locked boss access for region ${regionId}`);
+      navigate('/world-map', { replace: true });
+    }
+  }, [regionId, isUnlocked, navigate]);
+
+  if (!regionId) {
+    return <Navigate to="/world-map" replace />;
   }
+
+  if (!isUnlocked) {
+    return <Navigate to="/world-map" replace />;
+  }
+
+  // Final boss gate seal check (requires all 10 artifacts)
+  if (regionId === 'bossgate-saga' && inventory.length < 10) {
+    return (
+      <div className="min-h-screen bg-[#050505] p-8 flex items-center justify-center font-sans">
+        <div className="max-w-2xl text-center bg-red-900/10 border border-red-500/30 p-12 rounded-3xl backdrop-blur-md">
+          <h1 className="text-4xl font-black text-red-400 mb-4 tracking-tight">The Boss Gate is Sealed</h1>
+          <p className="text-xl text-red-200/80 mb-8 font-light">
+            You must collect all 10 artifacts to break the seal. Return when you have gathered the artifacts of mastery.
+          </p>
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <span className="text-red-400 font-bold uppercase tracking-widest text-sm">Artifacts Collected:</span>
+            <span className="text-2xl font-black text-white">{inventory.length} / 10</span>
+          </div>
+          <button 
+            onClick={() => navigate('/world-map')}
+            className="px-8 py-4 bg-red-600/20 text-red-400 font-bold uppercase tracking-widest text-sm rounded-xl hover:bg-red-600/40 border border-red-500/50 transition-all"
+          >
+            Return to World Map
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return <BossArena regionId={regionId} />;
 }

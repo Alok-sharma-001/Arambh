@@ -4,6 +4,8 @@ import { Sparkles, AlertTriangle, Hexagon, Database, Cpu, Terminal, Flame, Eye }
 import { useRegionStore } from '../../store/regionStore';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useNavigate } from 'react-router-dom';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function AncientPythonDragon() {
   const [phase, setPhase] = useState(1);
@@ -74,10 +76,9 @@ export default function AncientPythonDragon() {
         
         // Victory
         setIsVictory(true);
-        setTimeout(() => {
-          completeBoss('bossgate-saga');
+        setTimeout(async () => {
           gainItem('legends-crown');
-          gainXP(5000, "Defeated the Ancient Python Dragon!");
+          await ProgressEngine.completeBoss('bossgate-saga', 5000);
         }, 3000);
       }
       
@@ -137,7 +138,7 @@ export default function AncientPythonDragon() {
             
             <br />
             <button
-              onClick={() => navigate('/dashboard')}
+              onClick={() => NavigationService.returnToWorldMap()}
               className="px-10 py-5 bg-white text-black font-black uppercase tracking-widest rounded-xl hover:bg-slate-200 transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.5)]"
             >
               Claim Victory

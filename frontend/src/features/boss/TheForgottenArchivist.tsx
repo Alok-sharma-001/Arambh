@@ -4,6 +4,8 @@ import { Archive, Sparkles, AlertTriangle, FileText, FileOutput, Shield, Databas
 import { useRegionStore } from '../../store/regionStore';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useNavigate } from 'react-router-dom';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TheForgottenArchivist() {
   const [phase, setPhase] = useState(1);
@@ -77,10 +79,9 @@ export default function TheForgottenArchivist() {
         
         // Victory
         setIsVictory(true);
-        setTimeout(() => {
-          completeBoss('filesystem-ruins');
+        setTimeout(async () => {
           gainItem('stone-tablet');
-          gainXP(600, 'Boss Defeated');
+          await ProgressEngine.completeBoss('filesystem-ruins', 600);
         }, 2000);
       }
       
@@ -128,7 +129,7 @@ export default function TheForgottenArchivist() {
             </div>
             <br />
             <button
-              onClick={() => navigate('/learning-map')}
+              onClick={() => NavigationService.returnToWorldMap()}
               className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-colors"
             >
               Return to Map

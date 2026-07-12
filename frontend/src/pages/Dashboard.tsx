@@ -18,6 +18,7 @@ import { useRegionStore } from '../store/regionStore';
 import { ALL_LESSONS, getRegionForLesson } from '../data/allLessons';
 import { DailyLoginRewards } from '../components/dashboard/DailyLoginRewards';
 import { useProgressionStore } from '../store/progressionStore';
+import { NavigationService } from '../core/progression/NavigationService';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -59,26 +60,7 @@ export default function Dashboard() {
     }
   }
 
-  const activeRegion = regions[activeRegionId];
-  let resumePath = '/learning-map';
-  if (activeRegion) {
-    if (activeRegion.bossStatus === 'available') {
-      resumePath = `/region/${activeRegionId}/boss`;
-    } else {
-      // Find the first uncompleted lesson for this region
-      const regionLessons = Object.keys(ALL_LESSONS).filter(id => getRegionForLesson(id) === activeRegionId);
-      regionLessons.sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
-      
-      const uncompletedLessons = regionLessons.filter(id => !activeRegion.completedLessons.includes(id));
-      const targetLessonId = uncompletedLessons.length > 0 ? uncompletedLessons[0] : regionLessons[0];
-      
-      if (targetLessonId) {
-        resumePath = `/lesson/${activeRegionId}/${targetLessonId}`;
-      } else {
-        resumePath = `/region/${activeRegionId}`;
-      }
-    }
-  }
+  // Navigation handled centrally by NavigationService
   
   const activeRegionName = activeRegionId.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
 
@@ -128,7 +110,7 @@ export default function Dashboard() {
                 <p className="text-xs text-mid-gray">You're currently in the <strong className="text-gold font-bold">{activeRegionName}</strong> module.</p>
               </div>
               <button 
-                onClick={() => navigate(resumePath)}
+                onClick={() => NavigationService.resumeProgress()}
                 className="w-full sm:w-auto px-4 py-2 rounded-lg bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 hover:border-gold/60 text-xs font-bold transition-all flex items-center justify-center gap-1.5"
               >
                 Resume Quest

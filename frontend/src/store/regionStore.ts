@@ -24,6 +24,7 @@ interface RegionStore {
   completeLesson: (regionId: string, lessonId: string) => void;
   unlockBoss: (regionId: string) => void;
   completeBoss: (regionId: string) => void;
+  skipRegion: (regionId: string) => void;
   getRegionProgress: (regionId: string) => RegionState;
   hydrate: (serverRegions: any[]) => void;
 }
@@ -155,6 +156,43 @@ export const useRegionStore = create<RegionStore>()(
             ...state.regions,
             [regionId]: {
               ...region,
+              bossStatus: 'completed' as BossStatus,
+              regionStatus: 'completed' as RegionStatus,
+              artifactAcquired: true,
+              completionPercentage: 100,
+            }
+          };
+
+          if (nextRegionId) {
+            const nextRegionState = newRegions[nextRegionId] || {
+              ...createDefaultRegionState(nextRegionId),
+              regionStatus: 'locked' as RegionStatus,
+            };
+            newRegions[nextRegionId] = {
+              ...nextRegionState,
+              regionStatus: 'available' as RegionStatus
+            } as RegionState;
+          }
+
+          return { regions: newRegions };
+        });
+        syncManager.performBackgroundSync();
+      },
+
+      skipRegion: (regionId) => {
+        analyticsApi.logEvent('region_skipped', { region_id: regionId });
+        set((state) => {
+          const region = state.regions[regionId] || createDefaultRegionState(regionId);
+          const definition = regionDefinitions.find((r) => r.id === regionId);
+          const lessonIds = definition ? definition.lessons.map(l => l.id) : [];
+          
+          const nextRegionId = getNextRegionId(regionId);
+          
+          const newRegions: Record<string, RegionState> = {
+            ...state.regions,
+            [regionId]: {
+              ...region,
+              completedLessons: lessonIds,
               bossStatus: 'completed' as BossStatus,
               regionStatus: 'completed' as RegionStatus,
               artifactAcquired: true,

@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Github } from 'lucide-react';
 
 const learnLinks = [
-  { label: 'World Map', path: '/map' },
+  { label: 'World Map', path: '/world-map' },
   { label: 'Training Ground', path: '/training/loops-desert' },
   { label: 'Practice', path: '/training/loops-desert' },
   { label: 'Knowledge Library', path: '/library' },

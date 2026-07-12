@@ -213,7 +213,7 @@ export const LessonCompletionModal: React.FC<LessonCompletionModalProps> = ({
                   analyticsApi.logEvent('next_lesson_clicked');
                   onNextLesson();
                 }}
-                className="flex-1 py-3.5 px-6 rounded-xl bg-game-gold text-black font-extrabold text-sm hover:bg-game-gold/90 transition-all flex items-center justify-center gap-2 group shadow-[0_4px_20px_rgba(251,191,36,0.2)]"
+                className="flex-1 py-3.5 px-6 rounded-xl bg-[#d4b76e] text-black font-extrabold text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2 group shadow-[0_4px_20px_rgba(251,191,36,0.2)]"
               >
                 {nextLessonTitle ? "Next Lesson" : "Fight Boss"}
                 <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

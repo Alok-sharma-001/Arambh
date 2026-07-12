@@ -11,13 +11,29 @@ import { Flame, Check, X as XIcon, ChevronRight, Lightbulb } from 'lucide-react'
 import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
 import { playSound } from '../utils/audio';
 import { useEffect } from 'react';
+import { useRegionStore } from '../store/regionStore';
 
 export default function LessonChallengePage() {
   const { regionId } = useParams();
   const navigate = useNavigate();
   const { player, addXP, incrementStreak, resetStreak } = usePlayer();
+  const skipRegion = useRegionStore((state) => state.skipRegion);
   const { burst } = useConfetti();
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const getBackUrl = () => {
+    const mapSource = sessionStorage.getItem('mapSource');
+    if (mapSource === 'region' && regionId) {
+      return `/region/${regionId}`;
+    }
+    if (mapSource === 'map') {
+      return '/world-map';
+    }
+    return sessionStorage.getItem('arambh_source_route') || (regionId ? `/region/${regionId}` : '/world-map');
+  };
+  const sourceRoute = getBackUrl();
+  const isRegionMap = sessionStorage.getItem('mapSource') === 'region' || sourceRoute.startsWith('/region/');
+  const mapLabel = isRegionMap ? 'Region Map' : 'World Map';
 
   const [currentQ, setCurrentQ] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -25,6 +41,9 @@ export default function LessonChallengePage() {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [showHint, setShowHint] = useState(false);
   const [animatingXP, setAnimatingXP] = useState(0);
+  const [incorrectAnswers, setIncorrectAnswers] = useState(0);
+  const [showLevelUpSuccess, setShowLevelUpSuccess] = useState(false);
+  const [showLevelUpFail, setShowLevelUpFail] = useState(false);
 
   useEffect(() => {
     if (regionId) {
@@ -72,7 +91,7 @@ export default function LessonChallengePage() {
       };
     }
   }, [regionId]);
-  const [trainingMode, setTrainingMode] = useState<'topic' | 'random'>('topic');
+  const [trainingMode, setTrainingMode] = useState<'topic' | 'random' | 'level_up'>('topic');
 
   const region = regions.find((r) => r.id === regionId);
   const questions = useMemo(() => {
@@ -80,23 +99,41 @@ export default function LessonChallengePage() {
       return [...sampleQuestions].sort((a, b) => b.id.localeCompare(a.id));
     }
 
+    let filtered = [...sampleQuestions];
     if (regionId === 'variables-forest') {
-      return sampleQuestions.filter((item) => item.id.startsWith('v-basic-'));
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('v-basic-'));
+    } else if (regionId === 'data-types-valley') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('d-val-') || item.id === 'q1');
+    } else if (regionId === 'loops-desert') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('l-des-') || ['q2', 'q5'].includes(item.id));
+    } else if (regionId === 'functions-mountain') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('f-mou-') || item.id === 'q3');
+    } else if (regionId === 'collections-kingdom') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('c-kin-') || ['q4', 'q7', 'q8'].includes(item.id));
+    } else if (regionId === 'oop-citadel') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('o-cit-'));
+    } else if (regionId === 'exception-abyss') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('e-aby-') || item.id === 'q6');
+    } else if (regionId === 'filesystem-ruins') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('fs-rui-'));
+    } else if (regionId === 'modules-harbor') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('m-har-'));
+    } else if (regionId === 'algorithm-arena') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('a-are-'));
+    } else if (regionId === 'iterator-isles') {
+      filtered = sampleQuestions.filter((item) => item.id.startsWith('i-tg-'));
+    } else {
+      filtered = sampleQuestions.slice(0, 4);
     }
 
-    if (regionId === 'loops-desert') {
-      return sampleQuestions.filter((item) => ['q2', 'q5'].includes(item.id));
+    if (trainingMode === 'level_up') {
+      return filtered.slice(0, 5);
     }
-
-    if (regionId === 'iterator-isles') {
-      return sampleQuestions.filter((item) => item.id.startsWith('i-tg-'));
-    }
-
-    return sampleQuestions.slice(0, 4);
+    return filtered;
   }, [regionId, trainingMode]);
   const question = questions[currentQ];
 
-  const changeTrainingMode = (mode: 'topic' | 'random') => {
+  const changeTrainingMode = (mode: 'topic' | 'random' | 'level_up') => {
     setTrainingMode(mode);
     setCurrentQ(0);
     setSelectedAnswer(null);
@@ -104,6 +141,7 @@ export default function LessonChallengePage() {
     setIsCorrect(null);
     setShowHint(false);
     setAnimatingXP(0);
+    setIncorrectAnswers(0);
   };
 
   const handleSelect = (letter: string) => {
@@ -155,6 +193,7 @@ export default function LessonChallengePage() {
       }
     } else {
       resetStreak();
+      setIncorrectAnswers((prev) => prev + 1);
     }
   }, [selectedAnswer, question, incrementStreak, addXP, resetStreak, burst, player.streak, regionId]);
 
@@ -177,9 +216,28 @@ export default function LessonChallengePage() {
         });
       }
     } else {
-      // Challenge complete - go back to map
-      navigate('/map');
+      // Challenge complete
+      if (trainingMode === 'level_up') {
+        if (incorrectAnswers === 0) {
+          setShowLevelUpSuccess(true);
+        } else {
+          setShowLevelUpFail(true);
+        }
+      } else {
+        navigate(sourceRoute);
+      }
     }
+  };
+
+  const handleRetryChallenge = () => {
+    setShowLevelUpFail(false);
+    setCurrentQ(0);
+    setSelectedAnswer(null);
+    setHasSubmitted(false);
+    setIsCorrect(null);
+    setShowHint(false);
+    setAnimatingXP(0);
+    setIncorrectAnswers(0);
   };
 
   if (!question) {
@@ -198,7 +256,7 @@ export default function LessonChallengePage() {
       <div className="border-b border-warm-white/[0.06] h-14">
         <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-6 lg:px-10">
           <div className="flex items-center gap-2 text-sm">
-            <Link to="/map" className="text-mid-gray hover:text-gold transition-colors">World Map</Link>
+            <button onClick={() => navigate(sourceRoute)} className="text-mid-gray hover:text-gold transition-colors">{mapLabel}</button>
             <span className="text-mid-gray">/</span>
             <span className="text-mid-gray">{region?.name || 'Challenge'}</span>
             <span className="text-mid-gray">/</span>
@@ -223,10 +281,11 @@ export default function LessonChallengePage() {
             <h1 className="font-display text-lg font-black text-white tracking-tight">Training Ground</h1>
             <p className="mt-0.5 text-xs text-mid-gray/70">Choose focused topic practice or a random question mix.</p>
           </div>
-          <div className="inline-flex rounded-lg border border-warm-white/[0.08] bg-near-black p-1">
+          <div className="inline-flex rounded-lg border border-warm-white/[0.08] bg-near-black p-1 flex-wrap gap-1">
             {[
               { key: 'topic' as const, label: 'Topic Practice' },
               { key: 'random' as const, label: 'Random Mix' },
+              { key: 'level_up' as const, label: 'Level Up Challenge' },
             ].map((mode) => (
               <button
                 key={mode.key}
@@ -451,6 +510,83 @@ export default function LessonChallengePage() {
         lessonId={question?.id || 'challenge'} 
         getCodeSnapshot={() => question?.code || ''} 
       />
+
+      {/* Level Up Victory Modal */}
+      {showLevelUpSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="absolute inset-0 bg-near-black/80 backdrop-blur-sm" />
+          <div className="relative bg-[#121212] border-2 border-gold/30 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center space-y-6 animate-in fade-in zoom-in duration-200">
+            <div className="mx-auto w-16 h-16 rounded-full bg-gold/10 flex items-center justify-center border border-gold/40 animate-bounce">
+              <span className="text-3xl text-gold">🏆</span>
+            </div>
+            <h3 className="text-2xl font-display font-black text-gold">Region Cleared!</h3>
+            <p className="text-mid-gray text-sm">
+              Incredible skill, Code-Master! You scored 100% on the Placement Challenge for <strong className="text-white">{region?.name}</strong>. You have proven that you are not a beginner!
+            </p>
+            <div className="bg-gold/5 border border-gold/15 p-4 rounded-xl">
+              <span className="text-xs uppercase text-gold font-mono tracking-widest font-bold">Reward</span>
+              <div className="text-xl font-mono font-black text-gold mt-1">+100 XP Challenge Bonus</div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <button
+                onClick={() => {
+                  if (regionId) {
+                    skipRegion(regionId);
+                    addXP(100);
+                  }
+                  setShowLevelUpSuccess(false);
+                  navigate(sourceRoute);
+                }}
+                className="w-full px-4 py-3 rounded-lg bg-gold text-near-black font-black uppercase text-xs tracking-wider hover:bg-[#d4b76e] transition-colors shadow-lg shadow-gold/20"
+              >
+                Skip Lessons & Unlock Next Region
+              </button>
+              <button
+                onClick={() => {
+                  setShowLevelUpSuccess(false);
+                  navigate(sourceRoute);
+                }}
+                className="w-full px-4 py-3 rounded-lg border border-warm-white/10 text-warm-white hover:bg-warm-white/5 transition-colors font-medium text-xs uppercase tracking-wider"
+              >
+                Stay in current region
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Level Up Failure Modal */}
+      {showLevelUpFail && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="absolute inset-0 bg-near-black/80 backdrop-blur-sm" />
+          <div className="relative bg-[#121212] border-2 border-red-500/20 rounded-2xl p-8 max-w-md w-full shadow-2xl text-center space-y-6 animate-in fade-in zoom-in duration-200">
+            <div className="mx-auto w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/30">
+              <span className="text-3xl text-red-400">🛡️</span>
+            </div>
+            <h3 className="text-2xl font-display font-black text-red-400">Test Incomplete</h3>
+            <p className="text-mid-gray text-sm">
+              You got <strong className="text-white">{incorrectAnswers}</strong> question(s) wrong during the challenge. To bypass this region and unlock the next level, you must achieve a perfect score.
+            </p>
+            <div className="flex gap-4">
+              <button
+                onClick={() => {
+                  setShowLevelUpFail(false);
+                  navigate(sourceRoute);
+                }}
+                className="flex-1 px-4 py-3 rounded-lg border border-warm-white/10 text-warm-white hover:bg-warm-white/5 transition-colors font-semibold text-xs uppercase tracking-wider"
+              >
+                {mapLabel}
+              </button>
+              <button
+                onClick={handleRetryChallenge}
+                className="flex-1 px-4 py-3 rounded-lg bg-gold text-near-black font-black hover:bg-[#d4b76e] transition-colors font-semibold text-xs uppercase tracking-wider"
+              >
+                Try Again
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

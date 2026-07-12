@@ -8,6 +8,8 @@ import Editor from '@monaco-editor/react';
 import { useNavigate } from 'react-router-dom';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useRegionStore } from '../../store/regionStore';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TypeShapeshifter() {
   const [code, setCode] = useState('# Defeat the Type Shapeshifter!\n# Cast different types to break its forms:\n# 1. string: form = "Solid"\n# 2. float: temperature = 98.6\n# 3. bool: is_stable = False\n');
@@ -105,10 +107,9 @@ export default function TypeShapeshifter() {
   const handleVictory = async () => {
     try {
       console.log('handleVictory called');
-      gainXP(500, 'Boss Defeated');
       gainItem('crystal-lens');
-      completeBoss('data-types-valley');
-      navigate('/region/data-types-valley');
+      await ProgressEngine.completeBoss('data-types-valley', 500);
+      NavigationService.returnToWorldMap();
     } catch (e) {
       console.error(e);
       alert('Error navigating. Please check console.');

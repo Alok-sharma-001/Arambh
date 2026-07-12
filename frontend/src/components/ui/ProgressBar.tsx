@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 interface ProgressBarProps {
   progress: number; // 0 to 100
@@ -27,15 +26,13 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         </div>
       )}
       <div className={`w-full bg-[#0D0D12] rounded-full overflow-hidden border border-[#181820] ${height}`}>
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: `${safeProgress}%` }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className={`h-full ${color} rounded-full relative`}
+        <div
+          className={`h-full ${color} rounded-full relative transition-all duration-1000 ease-out`}
+          style={{ width: `${safeProgress}%` }}
         >
           {/* Subtle glow effect on the bar */}
           <div className="absolute top-0 right-0 bottom-0 left-0 bg-white/20" style={{ clipPath: 'polygon(0 0, 100% 0, 95% 100%, 0% 100%)'}} />
-        </motion.div>
+        </div>
       </div>
     </div>
   );

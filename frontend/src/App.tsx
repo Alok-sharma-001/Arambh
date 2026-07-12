@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { MainLayout } from './components/layout/MainLayout';
 import Dashboard from './pages/Dashboard';
 import Login from './pages/Login';
@@ -7,13 +7,9 @@ import Register from './pages/Register';
 import { analyticsApi } from './services/analyticsApi';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import LearningArena from './pages/LearningArena';
-import LearningMap from './pages/LearningMap';
 import Quests from './pages/Quests';
 import Achievements from './pages/Achievements';
 import InventoryPage from './pages/InventoryPage';
-import LessonPlayer from './features/lessons/LessonPlayer';
-import RegionMap from './pages/RegionMap';
-import BossBattleRouter from './features/boss/BossBattleRouter';
 import GuildHall from './features/guild/GuildHall';
 import OracleHub from './features/oracle/OracleHub';
 import TowerHub from './features/tower/TowerHub';
@@ -24,6 +20,7 @@ import { TriggerEngine } from './engine/TriggerEngine';
 // PyQuest Migrated Pages
 import HomePage from './pages/HomePage';
 import WorldMapPage from './pages/WorldMapPage';
+import RegionMap from './pages/RegionMap';
 import LessonPage from './pages/LessonPage';
 import LessonChallengePage from './pages/LessonChallengePage';
 import LibraryPage from './pages/LibraryPage';
@@ -33,6 +30,11 @@ import MemoryVaultPage from './pages/MemoryVaultPage';
 import { PlayerProvider } from './context/PlayerContext';
 import Onboarding from './pages/Onboarding';
 import BetaFeedbackPage from './pages/BetaFeedbackPage';
+import BossBattleRouter from './features/boss/BossBattleRouter';
+
+// Core Progression
+import { ProgressEngine } from './core/progression/ProgressEngine';
+import { setGlobalNavigate } from './core/progression/NavigationService';
 
 // Initialize the event triggers (achievements, artifacts, quests)
 TriggerEngine.initialize();
@@ -98,8 +100,24 @@ function AnalyticsTracker() {
   useEffect(() => {
     if (token) {
       analyticsApi.logEvent('page_view', { path: location.pathname });
+      
+      const path = location.pathname;
+      if (path === '/world-map' || (path.startsWith('/region/') && !path.includes('/boss'))) {
+        sessionStorage.setItem('arambh_source_route', path);
+      }
     }
   }, [location.pathname, token]);
+
+  return null;
+}
+
+function ProgressEngineInitializer() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setGlobalNavigate(navigate);
+    ProgressEngine.init();
+  }, [navigate]);
 
   return null;
 }
@@ -111,19 +129,26 @@ function App() {
       <div className="relative z-10 min-h-screen">
         <Router>
           <AnalyticsTracker />
+          <ProgressEngineInitializer />
           <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
 
-            {/* Landing Page (Accessible by both logged in and logged out users) */}
+            {/* Landing Page */}
             <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
 
             {/* PyQuest Core UI Routes (Private) */}
-            <Route path="/map" element={<PrivateRoute><WorldMapPage /></PrivateRoute>} />
+            <Route path="/kingdom" element={<Navigate to="/world-map" replace />} />
+            <Route path="/world-map" element={<PrivateRoute><WorldMapPage /></PrivateRoute>} />
+            <Route path="/region/:regionId" element={<PrivateRoute><RegionMap /></PrivateRoute>} />
+            <Route path="/lesson/:lessonId" element={<PrivateRoute><LessonPage /></PrivateRoute>} />
             <Route path="/lesson/:regionId/:lessonId" element={<PrivateRoute><LessonPage /></PrivateRoute>} />
+            <Route path="/boss/:regionId" element={<PrivateRoute><BossBattleRouter /></PrivateRoute>} />
+            <Route path="/region/:regionId/boss" element={<Navigate to="/boss/:regionId" replace />} />
             <Route path="/training/:regionId" element={<PrivateRoute><LessonChallengePage /></PrivateRoute>} />
             <Route path="/challenge/:regionId/:lessonId" element={<PrivateRoute><LessonChallengePage /></PrivateRoute>} />
+            
             <Route path="/library" element={<PrivateRoute><LibraryPage /></PrivateRoute>} />
             <Route path="/artifacts" element={<PrivateRoute><ArtifactsPage /></PrivateRoute>} />
             <Route path="/leaderboard" element={<PrivateRoute><LeaderboardPage /></PrivateRoute>} />
@@ -132,11 +157,13 @@ function App() {
             <Route path="/onboarding" element={<PrivateRoute><Onboarding /></PrivateRoute>} />
             <Route path="/beta-feedback" element={<PrivateRoute><BetaFeedbackPage /></PrivateRoute>} />
 
-            {/* Legacy Arambh Private Routes */}
+            {/* Legacy Map Redirections */}
+            <Route path="/map" element={<Navigate to="/world-map" replace />} />
+            <Route path="/learning-map" element={<Navigate to="/world-map" replace />} />
+            <Route path="/legacy-lesson/:lessonId" element={<Navigate to="/world-map" replace />} />
+
+            {/* Other Arambh Private Routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/learning-map" element={<PrivateRoute><LearningMap /></PrivateRoute>} />
-            <Route path="/region/:regionId" element={<PrivateRoute><RegionMap /></PrivateRoute>} />
-            <Route path="/region/:regionId/boss" element={<PrivateRoute><BossBattleRouter /></PrivateRoute>} />
             <Route path="/inventory" element={<PrivateRoute><InventoryPage /></PrivateRoute>} />
             <Route path="/quests" element={<PrivateRoute><Quests /></PrivateRoute>} />
             <Route path="/achievements" element={<PrivateRoute><Achievements /></PrivateRoute>} />
@@ -144,7 +171,6 @@ function App() {
             <Route path="/oracle" element={<PrivateRoute><OracleHub /></PrivateRoute>} />
             <Route path="/tower" element={<PrivateRoute><TowerHub /></PrivateRoute>} />
             <Route path="/arena" element={<PrivateRoute><LearningArena /></PrivateRoute>} />
-            <Route path="/legacy-lesson/:lessonId" element={<LessonPlayer />} />
             
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

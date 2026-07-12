@@ -4,6 +4,8 @@ import { ShieldAlert, Sparkles, AlertTriangle, Bug } from 'lucide-react';
 import { useRegionStore } from '../../store/regionStore';
 import { useProgressionStore } from '../../store/progressionStore';
 import { useNavigate } from 'react-router-dom';
+import { ProgressEngine } from '../../core/progression/ProgressEngine';
+import { NavigationService } from '../../core/progression/NavigationService';
 
 export default function TheChaosCompiler() {
   const [phase, setPhase] = useState(1);
@@ -78,10 +80,9 @@ export default function TheChaosCompiler() {
         
         // Victory
         setIsVictory(true);
-        setTimeout(() => {
-          completeBoss('exception-abyss');
+        setTimeout(async () => {
           gainItem('abyssal-shield');
-          gainXP(600, 'Boss Defeated');
+          await ProgressEngine.completeBoss('exception-abyss', 600);
         }, 2000);
       }
       
@@ -129,7 +130,7 @@ export default function TheChaosCompiler() {
             </div>
             <br />
             <button
-              onClick={() => navigate('/learning-map')}
+              onClick={() => NavigationService.returnToWorldMap()}
               className="px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-colors"
             >
               Return to Map
