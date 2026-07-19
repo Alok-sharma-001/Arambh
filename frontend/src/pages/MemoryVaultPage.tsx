@@ -119,7 +119,7 @@ export default function MemoryVaultPage() {
   return (
     <div className="min-h-screen bg-near-black pt-[72px] pb-24 px-4 sm:px-6">
       <div className="max-w-3xl mx-auto mt-8">
-        <div className="flex items-center justify-between mb-8">
+        <div id="vault-collection" className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-display font-bold text-warm-white flex items-center gap-3">
               <Brain className="text-gold" /> The Memory Vault
@@ -133,7 +133,7 @@ export default function MemoryVaultPage() {
           </div>
         </div>
 
-        <div className="bg-deep-charcoal border border-warm-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+        <div id="vault-review" className="bg-deep-charcoal border border-warm-white/10 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-gold to-purple-600" />
           
           <h2 className="text-xl font-bold text-gold mb-6 text-center">{activeTopic.title}</h2>

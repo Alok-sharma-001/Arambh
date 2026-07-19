@@ -93,7 +93,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 items-stretch">
         
         {/* Row 1: Player (8 cols) & Progression (4 cols) */}
-        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-8">
+        <motion.div id="dashboard-overview" variants={itemVariants} className="md:col-span-1 lg:col-span-8">
           <CharacterCard />
         </motion.div>
         
@@ -121,7 +121,7 @@ export default function Dashboard() {
         </motion.div>
 
         {/* Row 3: Daily Quests (6 cols) & Daily Rewards (6 cols) */}
-        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
+        <motion.div id="dashboard-goals" variants={itemVariants} className="md:col-span-1 lg:col-span-6">
           <DailyGoals />
         </motion.div>
         
@@ -134,7 +134,7 @@ export default function Dashboard() {
           <ArtifactWidget />
         </motion.div>
         
-        <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
+        <motion.div id="dashboard-activity" variants={itemVariants} className="md:col-span-1 lg:col-span-6">
           <RecentActivity />
         </motion.div>
 

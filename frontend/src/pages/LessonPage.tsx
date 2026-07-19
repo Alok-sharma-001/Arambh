@@ -508,7 +508,7 @@ export default function LessonPage() {
               {/* TOP SECTION: Code Editor & Explanation */}
               <div className="grid grid-cols-1 lg:grid-cols-12 border-b border-warm-white/[0.06] divide-y lg:divide-y-0 lg:divide-x divide-warm-white/[0.06]">
                 {/* Code Editor (7/12) */}
-                <div className="lg:col-span-7 p-4">
+                <div id="lesson-code-editor" className="lg:col-span-7 p-4">
                   <div className="space-y-1 font-mono text-sm">
                     {codeLines.map((line, index) => {
                       const lineNumber = index + 1;
@@ -533,7 +533,7 @@ export default function LessonPage() {
                 </div>
 
                 {/* Explanation Panel (5/12) */}
-                <div className="lg:col-span-5 p-4 bg-warm-white/[0.01] flex flex-col justify-center">
+                <div id="lesson-execution-panel" className="lg:col-span-5 p-4 bg-warm-white/[0.01] flex flex-col justify-center">
                   <div className="rounded-xl border border-gold/15 bg-gold/[0.02] p-3.5">
                     <span className="font-mono text-[9px] text-gold font-bold uppercase tracking-wider">Line {currentStep.line} execution</span>
                     <h2 className="mt-1 font-display text-base font-extrabold text-white tracking-tight leading-tight">{currentStep.action}</h2>
@@ -545,7 +545,7 @@ export default function LessonPage() {
               {/* BOTTOM SECTION: Variables (Live Memory) & Output Console */}
               <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-warm-white/[0.06] divide-y lg:divide-y-0 lg:divide-x divide-warm-white/[0.06]">
                 {/* Variables (Live Memory) */}
-                <div className="p-4 flex flex-col bg-[#080809]">
+                <div id="lesson-memory-viewer" className="p-4 flex flex-col bg-[#080809]">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-gold">
                       <Database size={12} />
@@ -587,7 +587,7 @@ export default function LessonPage() {
                 </div>
 
                 {/* Output Console */}
-                <div className="p-4 flex flex-col bg-near-black">
+                <div id="lesson-output-console" className="p-4 flex flex-col bg-near-black">
                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.12em] text-gold mb-3">
                     <Terminal size={12} />
                     Output Console
@@ -617,6 +617,7 @@ export default function LessonPage() {
                     Back
                   </button>
                   <button
+                    id="lesson-run-button"
                     onClick={handleRunLine}
                     disabled={!canGoNext}
                     className="inline-flex items-center gap-1.5 rounded-lg bg-[#d4b76e] px-4 py-1.5 text-[10px] font-black uppercase tracking-wider text-near-black disabled:cursor-not-allowed disabled:opacity-40 hover:opacity-90 transition-apple-fast"

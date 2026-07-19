@@ -9,6 +9,7 @@ import { AutoSync } from '../sync/AutoSync';
 import { BugReportWidget } from '../analytics/BugReportWidget';
 import { TourProvider } from '../../context/TourContext';
 import { TourOverlay } from '../ui/TourOverlay';
+import { TourHelpButton } from '../ui/TourHelpButton';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -24,6 +25,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
         <ToastProvider />
         <AutoSync />
         <BugReportWidget />
+        <TourHelpButton />
         <TourOverlay />
         <main className="flex-1 overflow-x-hidden min-w-0 flex flex-col relative mt-16">
           <AnimatePresence mode="wait">

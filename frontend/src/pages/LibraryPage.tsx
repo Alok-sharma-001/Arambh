@@ -147,7 +147,7 @@ export default function LibraryPage() {
              ════════════════════════════════════════ */}
           <aside className="hidden lg:block sticky top-[90px] max-h-[calc(100vh-110px)] overflow-y-auto pr-3 custom-scrollbar">
             {/* Search */}
-            <div className="relative mb-6">
+            <div id="library-search" className="relative mb-6">
               <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-mid-gray" />
               <input
                 aria-label="Search concepts"
@@ -159,45 +159,47 @@ export default function LibraryPage() {
             </div>
 
             {/* Topic tree */}
-            {Object.entries(categories).map(([cat, catTopics]) => (
-              <div key={cat} className="mb-5">
-                <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-mid-gray/70">
-                  {cat}
-                </h3>
-                <div className="space-y-0.5">
-                  {catTopics.map((t) => {
-                    const Icon = t.icon;
-                    const active = selectedTopic?.id === t.id;
-                    return (
-                      <button
-                        key={t.id}
-                        onClick={() => switchTopic(t.id)}
-                        className={`group flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-all text-[13px] ${
-                          active
-                            ? 'bg-gold/10 text-gold font-semibold'
-                            : 'text-warm-white/70 hover:bg-warm-white/[0.04] hover:text-warm-white'
-                        }`}
-                      >
-                        <Icon
-                          size={14}
-                          className={active ? 'text-gold' : 'text-mid-gray/60 group-hover:text-warm-white/60 transition-colors'}
-                        />
-                        <span className="truncate">{t.title}</span>
-                        {t.completion > 0 && (
-                          <span className="ml-auto text-[10px] text-gold/70">{t.completion}%</span>
-                        )}
-                      </button>
-                    );
-                  })}
+            <div id="library-topics">
+              {Object.entries(categories).map(([cat, catTopics]) => (
+                <div key={cat} className="mb-5">
+                  <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.16em] text-mid-gray/70">
+                    {cat}
+                  </h3>
+                  <div className="space-y-0.5">
+                    {catTopics.map((t) => {
+                      const Icon = t.icon;
+                      const active = selectedTopic?.id === t.id;
+                      return (
+                        <button
+                          key={t.id}
+                          onClick={() => switchTopic(t.id)}
+                          className={`group flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-left transition-all text-[13px] ${
+                            active
+                              ? 'bg-gold/10 text-gold font-semibold'
+                              : 'text-warm-white/70 hover:bg-warm-white/[0.04] hover:text-warm-white'
+                          }`}
+                        >
+                          <Icon
+                            size={14}
+                            className={active ? 'text-gold' : 'text-mid-gray/60 group-hover:text-warm-white/60 transition-colors'}
+                          />
+                          <span className="truncate">{t.title}</span>
+                          {t.completion > 0 && (
+                            <span className="ml-auto text-[10px] text-gold/70">{t.completion}%</span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </aside>
 
           {/* ════════════════════════════════════════
               MAIN ARTICLE
              ════════════════════════════════════════ */}
-          <article ref={articleRef} className="min-w-0 pb-24">
+          <article id="library-content" ref={articleRef} className="min-w-0 pb-24">
             {selectedTopic ? (
               <>
                 {/* ── Breadcrumb ── */}

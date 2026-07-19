@@ -253,7 +253,7 @@ export default function LeaderboardPage() {
           )}
 
           {/* ── Filters & Search ── */}
-          <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pb-4">
+          <div id="leaderboard-filters" className="max-w-[1280px] mx-auto px-6 lg:px-10 pb-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                 {(['all-time', 'this-week', 'today'] as TimeFilter[]).map((t) => (
@@ -283,7 +283,7 @@ export default function LeaderboardPage() {
           </div>
 
           {/* ── Full Rankings Table ── */}
-          <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pb-20">
+          <div id="leaderboard-rankings" className="max-w-[1280px] mx-auto px-6 lg:px-10 pb-20">
             <div className="overflow-hidden rounded-2xl border border-warm-white/[0.08]">
               <div className="grid grid-cols-[60px_1fr_100px_100px_100px_80px] md:grid-cols-[60px_1fr_120px_120px_120px_100px] gap-2 border-b border-warm-white/[0.06] bg-deep-charcoal/40 px-5 py-3">
                 <button onClick={() => toggleSort('rank')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.14em] text-mid-gray hover:text-warm-white transition-colors">

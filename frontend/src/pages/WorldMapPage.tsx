@@ -265,6 +265,7 @@ function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () =>
     <>
       <div ref={backdropRef} className="fixed inset-0 bg-black/50 z-[60]" onClick={handleClose} />
       <div
+        id="region-detail-panel"
         ref={panelRef}
         className="fixed right-0 top-0 bottom-0 w-full sm:w-[480px] bg-[#0f0f0f]/98 backdrop-blur-xl border-l-2 border-gold/15 z-[60] flex flex-col"
       >

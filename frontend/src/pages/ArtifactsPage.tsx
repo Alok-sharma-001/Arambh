@@ -149,7 +149,7 @@ export default function ArtifactsPage() {
       </div>
 
       {/* ── Artifact Grid ── */}
-      <div className="max-w-[1280px] mx-auto px-6 lg:px-10 pb-20">
+      <div id="artifacts-collection" className="max-w-[1280px] mx-auto px-6 lg:px-10 pb-20">
         {filteredArtifacts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <Search size={48} className="text-warm-white/10" />
@@ -280,6 +280,7 @@ export default function ArtifactsPage() {
             className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none"
           >
             <div
+              id="artifacts-detail"
               className="relative w-full max-w-[520px] rounded-3xl border-2 overflow-hidden pointer-events-auto animate-in zoom-in-95 fade-in duration-300"
               style={{
                 borderColor: RARITY_CONFIG[selectedArtifact.rarity].border,

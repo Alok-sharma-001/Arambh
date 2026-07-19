@@ -396,12 +396,12 @@ export default function LessonChallengePage() {
               )}
 
               {/* Question */}
-              <h3 className="mt-4.5 font-display font-black text-lg text-white tracking-tight leading-snug">
+              <h3 id="training-question" className="mt-4.5 font-display font-black text-lg text-white tracking-tight leading-snug">
                 {question.question}
               </h3>
 
               {/* Answer Options */}
-              <div className="mt-5 space-y-2.5">
+              <div id="training-options" className="mt-5 space-y-2.5">
                 {question.options.map((option) => {
                   const isSelected = selectedAnswer === option.letter;
                   const isCorrectOption = hasSubmitted && option.letter === question.correctAnswer;
@@ -450,6 +450,7 @@ export default function LessonChallengePage() {
               {/* Submit or Next Button */}
               {!hasSubmitted ? (
                 <button
+                  id="training-submit"
                   onClick={handleSubmit}
                   disabled={!selectedAnswer}
                   className={`w-full mt-6 py-2.5 rounded-lg font-body font-black text-xs uppercase tracking-wider transition-apple-fast ${

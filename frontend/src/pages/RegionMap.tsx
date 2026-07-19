@@ -139,6 +139,7 @@ export default function RegionMap() {
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="flex items-center gap-4 mb-6 pt-8 px-6">
         <button 
+          id="region-back-button"
           onClick={() => navigate('/world-map')} 
           className="p-3 bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-all"
         >
@@ -152,7 +153,7 @@ export default function RegionMap() {
       </div>
 
       {/* Progress Summary */}
-      <div className="px-6 mb-12">
+      <div id="region-progress-bar" className="px-6 mb-12">
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4">
             <div className="w-16 h-16 rounded-full bg-game-purple/20 border-2 border-game-purple flex items-center justify-center">
@@ -179,6 +180,7 @@ export default function RegionMap() {
       </div>
 
       <motion.div 
+        id="region-lesson-nodes"
         variants={containerVariants}
         initial="hidden"
         animate="show"
@@ -250,6 +252,7 @@ export default function RegionMap() {
                   </div>
  
                   <div 
+                    id={mod.isBossGate ? "region-boss-gate" : undefined}
                     onClick={() => {
                       if (mod.status !== 'locked') {
                         if (mod.isBossGate) {
