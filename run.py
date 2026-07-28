@@ -80,6 +80,16 @@ def main():
     env = os.environ.copy()
     env["CI"] = "true"  # Prevents Vite from attempting interactive TTY shortcut reads
 
+    # 0. Run Database Migrations
+    alembic_bin = VENV_BIN / ("alembic.exe" if sys.platform == "win32" else "alembic")
+    if alembic_bin.exists():
+        print("\033[34m⚡ Checking database migrations (Alembic)... \033[0m")
+        try:
+            subprocess.run([str(alembic_bin), "upgrade", "head"], cwd=str(BACKEND_DIR), check=True)
+            print("\033[32m✓ Database migrations up to date!\033[0m")
+        except Exception as e:
+            print(f"\033[33m⚠️ Migration check notice: {e}\033[0m")
+
     # 1. Start Backend
     print("\033[34m⚡ Starting Backend Server (Uvicorn)... \033[0m")
     backend_cmd = [

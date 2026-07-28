@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { usePlayer } from '@/context/PlayerContext';
 import { useAuthStore } from '@/store/authStore';
-import { LogOut, Home, MapPin, Swords, BookOpen, Brain, Trophy, Flame, Sparkles } from 'lucide-react';
+import { LogOut, Home, MapPin, Swords, BookOpen, Brain, Trophy, Flame, Sparkles, MessageSquare } from 'lucide-react';
 import { useTour } from '../context/TourContext';
 import { motion } from 'framer-motion';
+import { LanguageSelector } from './ui/LanguageSelector';
+import { UserReviewModal } from './ui/UserReviewModal';
 
 const navLinks = [
   { label: 'World Map', path: '/world-map' },
@@ -26,6 +28,7 @@ const mobileTabItems = [
 
 export default function Navigation() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const { player } = usePlayer();
   const { startTour } = useTour();
   const location = useLocation();
@@ -61,8 +64,8 @@ export default function Navigation() {
       <nav id="navigation-bar" className="fixed top-0 left-0 right-0 z-40 h-[56px] bg-black/60 backdrop-blur-xl border-b border-warm-white/10">
         <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-4 md:px-6 lg:px-8">
           {/* Brand */}
-          <Link to="/" className="font-mono text-sm font-bold tracking-[0.2em] text-gold hover:opacity-80 transition-opacity">
-            PYQUEST
+          <Link to="/" className="font-mono text-sm font-bold tracking-[0.2em] text-gold hover:opacity-80 transition-opacity flex items-center gap-1.5">
+            <span>⚔️</span> ARAMBH
           </Link>
 
           {/* Desktop Nav Links */}
@@ -114,6 +117,15 @@ export default function Navigation() {
 
                 {/* Minimal Utility Icons */}
                 <div className="flex items-center gap-3 border-l border-warm-white/10 pl-4 lg:pl-6">
+                  <LanguageSelector />
+                  <button 
+                    onClick={() => setShowReviewModal(true)}
+                    className="text-mid-gray hover:text-amber-400 transition-colors p-1 flex items-center gap-1 text-[11px] font-mono"
+                    title="Leave a Review / Community Opinion"
+                  >
+                    <MessageSquare size={14} className="text-amber-400" />
+                    <span className="hidden lg:inline text-amber-400/90 font-bold">Review</span>
+                  </button>
                   <button 
                     onClick={startTour}
                     className="text-mid-gray hover:text-gold transition-colors p-1"
@@ -253,6 +265,9 @@ export default function Navigation() {
           </div>
         </div>
       )}
+
+      {/* Community Review / Opinion Modal */}
+      <UserReviewModal isOpen={showReviewModal} onClose={() => setShowReviewModal(false)} />
     </>
   );
 }

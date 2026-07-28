@@ -1,43 +1,37 @@
 import { create } from 'zustand';
+import api from '../services/api';
 
 interface AuthState {
   token: string | null;
   user: any | null;
   setToken: (token: string | null) => void;
   setUser: (user: any | null) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
-const getUsernameFromToken = (token: string | null): string | null => {
-  if (!token) return null;
-  try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(window.atob(base64)).sub || null;
-  } catch {
-    return null;
-  }
-};
-
-const initialToken = localStorage.getItem('token');
-const initialUsername = getUsernameFromToken(initialToken);
+const savedUser = localStorage.getItem('user');
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: initialToken,
-  user: initialUsername ? { username: initialUsername } : null,
+  token: null,
+  user: savedUser ? JSON.parse(savedUser) : null,
   setToken: (token) => {
-    if (token) {
-      localStorage.setItem('token', token);
-      const username = getUsernameFromToken(token);
-      set({ token, user: username ? { username } : null });
-    } else {
-      localStorage.removeItem('token');
-      set({ token, user: null });
-    }
+    set({ token });
   },
-  setUser: (user) => set({ user }),
-  logout: () => {
-    localStorage.removeItem('token');
+  setUser: (user) => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+    set({ user });
+  },
+  logout: async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch {
+      // ignore network error on logout
+    }
+    localStorage.removeItem('user');
     set({ token: null, user: null });
   },
 }));

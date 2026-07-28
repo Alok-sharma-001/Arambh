@@ -1,0 +1,17 @@
+{
+  "short_name": "Arambh",
+  "name": "Arambh — Gamified Dark Fantasy Python Academy",
+  "description": "Master Python through an immersive dark-fantasy RPG with line-by-line visual memory debugging.",
+  "icons": [
+    {
+      "src": "vite.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192 512x512"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0a0a0c",
+  "theme_color": "#0a0a0c",
+  "display": "standalone",
+  "orientation": "portrait"
+}

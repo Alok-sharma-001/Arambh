@@ -8,6 +8,7 @@ import { useRegionStore } from '../store/regionStore';
 import { useProgressionStore } from '../store/progressionStore';
 import { regions as regionDefinitions } from '../data/regions';
 import { NavigationService } from '../core/progression/NavigationService';
+import { PaymentGate } from '../components/PaymentGate';
 
 export default function RegionMap() {
   const navigate = useNavigate();
@@ -136,7 +137,8 @@ export default function RegionMap() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+    <PaymentGate regionId={regionId}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
       <div className="flex items-center gap-4 mb-6 pt-8 px-6">
         <button 
           id="region-back-button"
@@ -180,98 +182,95 @@ export default function RegionMap() {
       </div>
 
       <motion.div 
-        id="region-lesson-nodes"
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="relative py-12 mt-8 flex flex-col items-center"
-      >
-        {mapNodes.map((mod, index) => {
-          const isLeft = index % 2 === 0;
-          const isLast = index === mapNodes.length - 1;
-          const nextMod = !isLast ? mapNodes[index + 1] : null;
-          
-          const pathColor = mod.status === 'completed' && nextMod?.status !== 'locked' 
-            ? 'stroke-emerald-500/50' 
-            : mod.status === 'current'
-            ? 'stroke-game-purple/50'
-            : 'stroke-[#181820]';
+        id="region-timeline"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="mt-12 md:mt-20 flex flex-col items-center relative w-full"
+        >
+          {mapNodes.map((mod, index) => {
+            const isLeft = index % 2 === 0;
+            const isLast = index === mapNodes.length - 1;
+            const pathColor = mod.status === 'completed' ? 'stroke-amber-500/60' 
+                            : mod.status === 'current' ? 'stroke-purple-500/60' 
+                            : 'stroke-slate-800';
 
-          return (
-            <div key={mod.id} className="relative w-full max-w-4xl flex flex-col items-center">
-              
-              {!isLast && (
-                <div className="absolute top-[58%] left-0 right-0 h-32 md:h-48 z-0 pointer-events-none flex justify-center">
-                  <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-32 md:w-52 h-full">
-                    <defs>
-                      <linearGradient id="timeline-flow-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" stopColor="#5682B1" />
-                        <stop offset="50%" stopColor="#FFE8DB" />
-                        <stop offset="100%" stopColor="#5682B1" />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d={isLeft 
-                        ? `M 50 0 C 85 20, 85 80, 50 100` 
-                        : `M 50 0 C 15 20, 15 80, 50 100`
-                      }
-                      fill="none"
-                      className={`${pathColor} transition-colors duration-1000`}
-                      strokeWidth="2.5"
-                      strokeDasharray="4 4"
-                    />
-                    {(mod.status === 'completed' || mod.status === 'current') && (
-                       <path
-                       d={isLeft 
-                         ? `M 50 0 C 85 20, 85 80, 50 100` 
-                         : `M 50 0 C 15 20, 15 80, 50 100`
-                       }
-                       fill="none"
-                       stroke="url(#timeline-flow-grad)"
-                       strokeWidth="2"
-                       strokeDasharray="8 16"
-                       className="animate-timeline-flow opacity-80"
-                     />
-                    )}
-                  </svg>
-                </div>
-              )}
-
-              <motion.div 
-                variants={itemVariants}
-                className={`relative z-10 flex w-full justify-center md:justify-start ${isLeft ? 'md:pl-0' : 'md:justify-end md:pr-0'} mb-12 md:mb-20`}
-              >
-                <div className={`w-[90%] md:w-[45%] flex items-center justify-center relative ${isLeft ? 'md:ml-auto md:mr-12' : 'md:mr-auto md:ml-12'}`}>
-                  
-                  <div className={`hidden md:flex absolute ${isLeft ? '-right-12 translate-x-1/2' : '-left-12 -translate-x-1/2'} top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0D0D12] border-4 border-[#181820] items-center justify-center z-20`}>
-                    <div className={`w-3 h-3 rounded-full ${
-                      mod.status === 'completed' ? 'bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,1)]' 
-                      : mod.status === 'current' ? 'bg-game-purple shadow-[0_0_15px_rgba(139,92,246,1)] animate-pulse' 
-                      : 'bg-slate-700'
-                    }`} />
-                  </div>
- 
-                  <div 
-                    id={mod.isBossGate ? "region-boss-gate" : undefined}
-                    onClick={() => {
-                      if (mod.status !== 'locked') {
-                        if (mod.isBossGate) {
-                          NavigationService.goToBoss(regionId);
-                        } else {
-                          NavigationService.goToLesson(regionId, mod.id.toString());
+            return (
+              <div key={mod.id} className="relative w-full max-w-4xl flex flex-col items-center">
+                
+                {!isLast && (
+                  <div className="absolute top-[58%] left-0 right-0 h-32 md:h-48 z-0 pointer-events-none flex justify-center">
+                    <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="w-32 md:w-52 h-full">
+                      <defs>
+                        <linearGradient id="timeline-flow-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor="#5682B1" />
+                          <stop offset="50%" stopColor="#FFE8DB" />
+                          <stop offset="100%" stopColor="#5682B1" />
+                        </linearGradient>
+                      </defs>
+                      <path
+                        d={isLeft 
+                          ? `M 50 0 C 85 20, 85 80, 50 100` 
+                          : `M 50 0 C 15 20, 15 80, 50 100`
                         }
-                      }
-                    }}
-                    className="w-full cursor-pointer"
-                  >
-                    <MapNode {...mod} />
+                        fill="none"
+                        className={`${pathColor} transition-colors duration-1000`}
+                        strokeWidth="2.5"
+                        strokeDasharray="4 4"
+                      />
+                      {(mod.status === 'completed' || mod.status === 'current') && (
+                         <path
+                         d={isLeft 
+                           ? `M 50 0 C 85 20, 85 80, 50 100` 
+                           : `M 50 0 C 15 20, 15 80, 50 100`
+                         }
+                         fill="none"
+                         stroke="url(#timeline-flow-grad)"
+                         strokeWidth="2"
+                         strokeDasharray="8 16"
+                         className="animate-timeline-flow opacity-80"
+                       />
+                      )}
+                    </svg>
                   </div>
-                </div>
-              </motion.div>
-            </div>
-          );
-        })}
-      </motion.div>
-    </div>
+                )}
+
+                <motion.div 
+                  variants={itemVariants}
+                  className={`relative z-10 flex w-full justify-center md:justify-start ${isLeft ? 'md:pl-0' : 'md:justify-end md:pr-0'} mb-12 md:mb-20`}
+                >
+                  <div className={`w-[90%] md:w-[45%] flex items-center justify-center relative ${isLeft ? 'md:ml-auto md:mr-12' : 'md:mr-auto md:ml-12'}`}>
+                    
+                    <div className={`hidden md:flex absolute ${isLeft ? '-right-12 translate-x-1/2' : '-left-12 -translate-x-1/2'} top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0D0D12] border-4 border-[#181820] items-center justify-center z-20`}>
+                      <div className={`w-3 h-3 rounded-full ${
+                        mod.status === 'completed' ? 'bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,1)]' 
+                        : mod.status === 'current' ? 'bg-game-purple shadow-[0_0_15px_rgba(139,92,246,1)] animate-pulse' 
+                        : 'bg-slate-700'
+                      }`} />
+                    </div>
+
+                    <div 
+                      id={mod.isBossGate ? "region-boss-gate" : undefined}
+                      onClick={() => {
+                        if (mod.status !== 'locked') {
+                          if (mod.isBossGate) {
+                            NavigationService.goToBoss(regionId);
+                          } else {
+                            NavigationService.goToLesson(regionId, mod.id.toString());
+                          }
+                        }
+                      }}
+                      className="w-full cursor-pointer"
+                    >
+                      <MapNode {...mod} />
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            );
+          })}
+        </motion.div>
+      </div>
+    </PaymentGate>
   );
 }

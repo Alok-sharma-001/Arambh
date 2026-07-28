@@ -6,7 +6,10 @@ from app.database.session import get_db
 from app.auth.router import get_current_user
 from app.models.user import User, UserStats, InventoryItem
 from app.models.progression import LessonProgress, RegionProgress, AchievementProgress, QuestProgress, Revision
-from app.schemas.sync import PushPayload, PullResponse, StatsSync, InventorySync, LessonSync, RegionSync, AchievementSync, QuestSync, RevisionSync
+from app.schemas.sync import (
+    PushPayload, PullResponse, StatsSync, InventorySync, LessonSync, RegionSync,
+    AchievementSync, QuestSync, RevisionSync, KnowledgeGraphSync, TowerProgressSync
+)
 
 router = APIRouter()
 

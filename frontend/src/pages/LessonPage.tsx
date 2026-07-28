@@ -16,6 +16,8 @@ import {
 } from 'lucide-react';
 import { regions, sampleQuestions } from '@/data/regions';
 import { lessons } from '@/data/lessons';
+import { ALL_LESSONS } from '@/data/allLessons';
+import { PracticePanel } from '@/components/lesson/PracticePanel';
 import { CodeEvaluator } from '@/engine/CodeEvaluator';
 import SyntaxHighlighter from '@/components/SyntaxHighlighter';
 import { MentorChatPanel } from '@/components/mentor/MentorChatPanel';
@@ -57,6 +59,7 @@ export default function LessonPage() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [challengeSubmitted, setChallengeSubmitted] = useState(false);
   const [challengeIsCorrect, setChallengeIsCorrect] = useState<boolean | null>(null);
+  const [showPractice, setShowPractice] = useState(false);
 
   // Map lessonId to corresponding challenge question
   const challengeQuestion = useMemo(() => {
@@ -823,11 +826,15 @@ export default function LessonPage() {
                       <button
                         onClick={() => {
                           setShowChallenge(false);
-                          handleCompleteLesson();
+                          if (lessonId && (ALL_LESSONS[lessonId] as any)?.practice) {
+                            setShowPractice(true);
+                          } else {
+                            handleCompleteLesson();
+                          }
                         }}
                         className="flex-1 py-3 bg-emerald-600 text-white font-black uppercase text-xs tracking-wider rounded-lg hover:bg-emerald-700 transition-colors"
                       >
-                        Complete & Grant XP
+                        {lessonId && (ALL_LESSONS[lessonId] as any)?.practice ? 'Continue to Practice' : 'Complete & Grant XP'}
                       </button>
                     ) : (
                       <button
@@ -845,6 +852,24 @@ export default function LessonPage() {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+      )}
+      {/* Practice Modal */}
+      {showPractice && lessonId && (ALL_LESSONS[lessonId] as any)?.practice && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-md" onClick={() => setShowPractice(false)} />
+          <div className="relative w-full max-w-4xl h-[80vh]">
+            <PracticePanel
+              title={(ALL_LESSONS[lessonId] as any).practice.title}
+              description={(ALL_LESSONS[lessonId] as any).practice.description}
+              initialCode={(ALL_LESSONS[lessonId] as any).practice.initialCode}
+              validation={(ALL_LESSONS[lessonId] as any).practice.validation}
+              onSuccess={() => {
+                setShowPractice(false);
+                handleCompleteLesson();
+              }}
+            />
           </div>
         </div>
       )}

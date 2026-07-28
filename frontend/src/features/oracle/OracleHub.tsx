@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { BrainCircuit, Activity, BookOpen } from 'lucide-react';
 import { useKnowledgeStore, KnowledgeGraph } from '../../store/knowledgeStore';
 
 export default function OracleHub() {
+  const navigate = useNavigate();
   const { graph } = useKnowledgeStore();
 
   const maxVal = 100;
@@ -171,7 +173,10 @@ export default function OracleHub() {
           <p className="text-slate-300 leading-relaxed mb-4">
             Your logic structures are sound, but the Knowledge Graph indicates weakness in <strong className="text-white">File I/O</strong> and <strong className="text-white">Exceptions</strong>. I recommend venturing to the File System Ruins to stabilize these concepts.
           </p>
-          <button className="px-6 py-2 bg-royal-purple text-near-black hover:bg-cool-gray font-bold rounded-lg transition-colors text-sm">
+          <button 
+            onClick={() => navigate('/region/filesystem-ruins')}
+            className="px-6 py-2 bg-royal-purple text-near-black hover:bg-cool-gray font-bold rounded-lg transition-colors text-sm"
+          >
             Travel to File System Ruins
           </button>
         </div>

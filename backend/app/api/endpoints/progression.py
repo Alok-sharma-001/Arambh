@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
+from app.core.limiter import limiter
 from typing import List
 
 from app.database.session import get_db
@@ -92,8 +93,11 @@ def set_player_class(
         inventory=current_user.inventory
     )
 
+
 @router.post("/xp", response_model=ProgressionResponse)
+@limiter.limit("30/minute")
 def add_xp(
+    request_obj: Request,
     request: XPRewardRequest,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -102,8 +106,11 @@ def add_xp(
     if not stats:
         stats = UserStats(user_id=current_user.id)
         db.add(stats)
-        
-    stats.total_xp += request.amount
+    
+    # Security: Clamp XP to prevent client-side exploits
+    MAX_SINGLE_REWARD = 300
+    clamped_amount = max(0, min(request.amount, MAX_SINGLE_REWARD))
+    stats.total_xp += clamped_amount
     
     # Use centralized level/rank calculators
     new_level = calculate_level(stats.total_xp)
@@ -118,13 +125,16 @@ def add_xp(
     xp_event = AnalyticsEvent(
         user_id=current_user.id,
         event_type="gain_xp",
-        details=json.dumps({"amount": request.amount})
+        details=json.dumps({"amount": clamped_amount})
     )
     db.add(xp_event)
         
     db.commit()
     db.refresh(stats)
-    
+
+    from app.core.cache import cache_invalidate
+    cache_invalidate("leaderboard_cache")
+
     return ProgressionResponse(
         stats=stats,
         inventory=current_user.inventory
@@ -169,37 +179,71 @@ def get_leaderboard(
     db: Session = Depends(get_db)
 ):
     from datetime import datetime
+    from sqlalchemy.orm import joinedload
     from app.schemas.user import LeaderboardEntrySchema
+    from app.core.cache import cache_get, cache_set
+
+    cached_data = cache_get("leaderboard_cache")
+    if cached_data:
+        # Mark is_current_user correctly on cached payload
+        entries = []
+        for item in cached_data["entries"]:
+            item_copy = dict(item)
+            item_copy["is_current_user"] = (item_copy["user_id"] == current_user.id)
+            entries.append(LeaderboardEntrySchema(**item_copy))
+        return LeaderboardResponse(
+            entries=entries,
+            last_updated=datetime.fromisoformat(cached_data["last_updated"])
+        )
     
-    # Query top 50 users based on total_xp
-    top_stats = db.query(UserStats).order_by(UserStats.total_xp.desc()).limit(50).all()
+    # Query top 50 users based on total_xp with eager loading (eliminates N+1 queries)
+    top_stats = (
+        db.query(UserStats)
+        .options(
+            joinedload(UserStats.user).joinedload(User.inventory),
+            joinedload(UserStats.user).joinedload(User.regions)
+        )
+        .order_by(UserStats.total_xp.desc())
+        .limit(50)
+        .all()
+    )
     
     entries = []
+    cache_entries = []
     rank = 1
+    now = datetime.now()
+
     for stat in top_stats:
         user = stat.user
+        if not user:
+            continue
         
-        # Calculate derived stats if needed
-        # We can optimize this later with a join/group_by, but for now this works.
         artifacts_count = len(user.inventory) if user.inventory else 0
         regions_count = len([r for r in user.regions if r.status == 'completed']) if user.regions else 0
         
-        entries.append(LeaderboardEntrySchema(
-            rank=rank,
-            user_id=user.id,
-            username=user.username,
-            level=stat.current_level,
-            total_xp=stat.total_xp,
-            streak=stat.streak_days,
-            artifacts_collected=artifacts_count,
-            regions_completed=regions_count,
-            is_current_user=(user.id == current_user.id)
-        ))
+        entry_dict = {
+            "rank": rank,
+            "user_id": user.id,
+            "username": user.username,
+            "level": stat.current_level,
+            "total_xp": stat.total_xp,
+            "streak": stat.streak_days,
+            "artifacts_collected": artifacts_count,
+            "regions_completed": regions_count,
+            "is_current_user": (user.id == current_user.id)
+        }
+        entries.append(LeaderboardEntrySchema(**entry_dict))
+        cache_entries.append(entry_dict)
         rank += 1
         
+    cache_set("leaderboard_cache", {
+        "entries": cache_entries,
+        "last_updated": now.isoformat()
+    }, ttl_seconds=300)
+
     return LeaderboardResponse(
         entries=entries,
-        last_updated=datetime.now()
+        last_updated=now
     )
 
 @router.post("/claim-daily", response_model=ProgressionResponse)
@@ -280,3 +324,68 @@ def claim_daily_reward(
         stats=stats,
         inventory=current_user.inventory
     )
+
+from pydantic import BaseModel
+
+class PlacementTestRequest(BaseModel):
+    score: int
+
+@router.post("/placement-test", response_model=ProgressionResponse)
+def process_placement_test(
+    request: PlacementTestRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    score = max(0, min(10, request.score))
+    
+    if score >= 8:
+        unlocked_region_ids = [
+            "variables-forest", "data-types-valley", "loops-desert",
+            "functions-mountain", "collections-kingdom", "oop-citadel"
+        ]
+        bonus_xp = 1200
+    elif score >= 5:
+        unlocked_region_ids = ["variables-forest", "data-types-valley", "loops-desert"]
+        bonus_xp = 500
+    else:
+        unlocked_region_ids = ["variables-forest"]
+        bonus_xp = 100
+
+    from app.models.progression import RegionProgress
+    for r_id in unlocked_region_ids:
+        rp = db.query(RegionProgress).filter(
+            RegionProgress.user_id == current_user.id,
+            RegionProgress.region_id == r_id
+        ).first()
+        if not rp:
+            rp = RegionProgress(user_id=current_user.id, region_id=r_id, status="completed", boss_defeated=True)
+            db.add(rp)
+        else:
+            rp.status = "completed"
+            rp.boss_defeated = True
+
+    stats = current_user.stats
+    if not stats:
+        stats = UserStats(user_id=current_user.id)
+        db.add(stats)
+
+    stats.total_xp += bonus_xp
+    stats.current_level = calculate_level(stats.total_xp)
+    stats.rank = calculate_rank(stats.total_xp)
+
+    from app.models.analytics import AnalyticsEvent
+    import json
+    db.add(AnalyticsEvent(
+        user_id=current_user.id,
+        event_type="placement_test_completed",
+        details=json.dumps({"score": score, "unlocked_regions": unlocked_region_ids, "bonus_xp": bonus_xp})
+    ))
+
+    db.commit()
+    db.refresh(stats)
+
+    return ProgressionResponse(
+        stats=stats,
+        inventory=current_user.inventory
+    )
+

@@ -9,6 +9,7 @@ export interface Region {
   lessons: Lesson[];
   bossChallenge: BossChallenge;
   position: { x: number; y: number };
+  isPremium?: boolean;
 }
 
 export interface Lesson {

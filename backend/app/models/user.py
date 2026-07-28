@@ -9,7 +9,9 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
-    hashed_password = Column(String, nullable=False)
+    hashed_password = Column(String, nullable=True)
+    google_sub = Column(String, unique=True, index=True, nullable=True)
+    is_admin = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
 
     stats = relationship("UserStats", back_populates="user", uselist=False)
@@ -34,11 +36,17 @@ class User(Base):
     # Mentor
     mentor_conversations = relationship("MentorConversation", back_populates="user")
 
+    # Subscription
+    subscription = relationship("Subscription", back_populates="user", uselist=False)
+
+    # Certificate
+    certificate = relationship("Certificate", back_populates="user", uselist=False)
+
 class UserStats(Base):
     __tablename__ = "user_stats"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     current_level = Column(Integer, default=1)
     total_xp = Column(Integer, default=0)
     intelligence_stat = Column(Integer, default=10)
@@ -60,7 +68,7 @@ class InventoryItem(Base):
     __tablename__ = "inventory_items"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     item_id = Column(String, nullable=False) # e.g., "variables_crystal"
     acquired_at = Column(DateTime(timezone=True), server_default=text('CURRENT_TIMESTAMP'))
 
@@ -70,7 +78,7 @@ class SpacedRepetition(Base):
     __tablename__ = "spaced_repetition"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     topic_name = Column(String, nullable=False)
     interval_days = Column(Integer, default=1)
     ease_factor = Column(Float, default=2.5)
@@ -82,7 +90,7 @@ class ChallengeProgress(Base):
     __tablename__ = "challenge_progress"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     challenge_id = Column(String, nullable=False)
     completed = Column(Boolean, default=False)
     score = Column(Integer, default=0)

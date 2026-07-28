@@ -38,8 +38,8 @@ def setup_db():
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
     # Seed users
-    db.add(User(id=999, username="teststudent", email="student@example.com", hashed_password="hashedpassword"))
-    db.add(User(id=1000, username="founder", email="founder@example.com", hashed_password="hashedpassword"))
+    db.add(User(id=999, username="teststudent", email="student@example.com", hashed_password="hashedpassword", is_admin=False))
+    db.add(User(id=1000, username="founder", email="founder@example.com", hashed_password="hashedpassword", is_admin=True))
     db.commit()
     db.close()
     
@@ -109,7 +109,7 @@ def test_founder_dashboard_forbidden_for_student():
 def test_founder_dashboard_allowed_for_founder():
     global current_mock_user
     # Temporarily switch mock user to founder
-    current_mock_user = User(id=1000, username="founder", email="founder@example.com")
+    current_mock_user = User(id=1000, username="founder", email="founder@example.com", is_admin=True)
     
     response = client.get("/api/analytics/founder-dashboard")
     assert response.status_code == 200

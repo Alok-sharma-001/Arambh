@@ -30,6 +30,7 @@ const getThemeColors = (status: 'completed' | 'current' | 'locked') => {
 };
 
 function MapHeader() {
+  const navigate = useNavigate();
   const { player } = usePlayer();
   const completedRegions = Object.values(player.regionProgress).filter((r) => r.completed).length;
   const progressPercent = (completedRegions / regions.length) * 100;
@@ -41,6 +42,13 @@ function MapHeader() {
         <div className="h-14 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <span className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-gold">WORLD MAP</span>
+            <button
+              onClick={() => navigate('/placement-test')}
+              className="ml-2 px-3 py-1 rounded-full bg-[#c8a45e]/10 border border-[#c8a45e]/30 text-[#c8a45e] hover:bg-[#c8a45e]/20 text-xs font-semibold transition-all flex items-center gap-1.5"
+            >
+              <Target className="w-3.5 h-3.5" />
+              Skill Assessment
+            </button>
             <span className="hidden sm:inline text-warm-white/60">|</span>
             <span className="hidden sm:flex items-center gap-2 text-sm text-warm-white">
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors('current').accent }} />

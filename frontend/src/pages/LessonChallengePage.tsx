@@ -44,6 +44,7 @@ export default function LessonChallengePage() {
   const [incorrectAnswers, setIncorrectAnswers] = useState(0);
   const [showLevelUpSuccess, setShowLevelUpSuccess] = useState(false);
   const [showLevelUpFail, setShowLevelUpFail] = useState(false);
+  const [leftTab, setLeftTab] = useState<'code' | 'visualization'>('code');
 
   useEffect(() => {
     if (regionId) {
@@ -307,26 +308,51 @@ export default function LessonChallengePage() {
           <div className="bg-code-editor-bg border border-warm-white/[0.08] rounded-xl overflow-hidden">
             {/* Tabs */}
             <div className="flex border-b border-warm-white/[0.06]">
-              <button className="px-5 py-2.5 text-[10px] font-black uppercase text-gold border-b-2 border-gold tracking-wider">
+              <button 
+                onClick={() => setLeftTab('code')}
+                className={`px-5 py-2.5 text-[10px] font-black uppercase tracking-wider transition-all ${
+                  leftTab === 'code' ? 'text-gold border-b-2 border-gold' : 'text-mid-gray hover:text-warm-white'
+                }`}
+              >
                 CODE
               </button>
-              <button className="px-5 py-2.5 text-[10px] font-black uppercase text-mid-gray hover:text-warm-white transition-apple-fast tracking-wider">
+              <button 
+                onClick={() => setLeftTab('visualization')}
+                className={`px-5 py-2.5 text-[10px] font-black uppercase tracking-wider transition-all ${
+                  leftTab === 'visualization' ? 'text-gold border-b-2 border-gold' : 'text-mid-gray hover:text-warm-white'
+                }`}
+              >
                 VISUALIZATION
               </button>
             </div>
 
-            {/* Code display */}
+            {/* Code / Visualization display */}
             <div className="p-4 min-h-[300px]">
-              <div className="flex">
-                <div className="w-8 pr-3 text-right font-mono text-xs text-warm-white/15 select-none shrink-0">
-                  {question.code.split('\n').map((_, i) => (
-                    <div key={i}>{i + 1}</div>
+              {leftTab === 'code' ? (
+                <div className="flex">
+                  <div className="w-8 pr-3 text-right font-mono text-xs text-warm-white/15 select-none shrink-0">
+                    {question.code.split('\n').map((_, i) => (
+                      <div key={i}>{i + 1}</div>
+                    ))}
+                  </div>
+                  <div className="flex-1 overflow-x-auto">
+                    <SyntaxHighlighter code={question.code} />
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 text-xs font-mono text-slate-300 bg-slate-900/60 rounded-lg space-y-2">
+                  <div className="text-gold font-bold uppercase tracking-wider mb-2">Line Execution Graph</div>
+                  {question.code.split('\n').map((lineText, i) => (
+                    <div key={i} className="flex items-center gap-3 p-1.5 rounded bg-slate-800/40 border border-slate-800">
+                      <span className="text-slate-500 w-4 text-right">{i + 1}</span>
+                      <span className="text-white flex-1">{lineText}</span>
+                      <span className="text-[10px] text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded">
+                        Step {i + 1}
+                      </span>
+                    </div>
                   ))}
                 </div>
-                <div className="flex-1 overflow-x-auto">
-                  <SyntaxHighlighter code={question.code} />
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Hint toggle */}

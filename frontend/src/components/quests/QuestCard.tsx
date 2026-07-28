@@ -5,6 +5,7 @@ import { ProgressBar } from '../ui/ProgressBar';
 import { Target, Zap, CheckCircle2 } from 'lucide-react';
 
 export interface QuestCardProps {
+  id?: string;
   title: string;
   description: string;
   progress: number;
@@ -12,6 +13,8 @@ export interface QuestCardProps {
   xpReward: number;
   difficulty: 'Easy' | 'Medium' | 'Hard' | 'Epic';
   completed: boolean;
+  claimed?: boolean;
+  onClaim?: () => void;
 }
 
 export const QuestCard: React.FC<QuestCardProps> = ({
@@ -21,7 +24,9 @@ export const QuestCard: React.FC<QuestCardProps> = ({
   target,
   xpReward,
   difficulty,
-  completed
+  completed,
+  claimed,
+  onClaim
 }) => {
   const percentage = (progress / target) * 100;
   
@@ -73,6 +78,20 @@ export const QuestCard: React.FC<QuestCardProps> = ({
           color={completed ? "bg-emerald-500" : "bg-game-purple"} 
           height="h-2" 
         />
+        {completed && !claimed && onClaim && (
+          <button
+            onClick={onClaim}
+            className="w-full mt-4 py-2 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20"
+          >
+            <Zap className="w-4 h-4 fill-current" />
+            Claim {xpReward} XP Reward
+          </button>
+        )}
+        {completed && claimed && (
+          <div className="mt-3 text-center text-xs text-emerald-400 font-semibold flex items-center justify-center gap-1">
+            <CheckCircle2 size={14} /> Claimed
+          </div>
+        )}
       </div>
     </Card>
   );

@@ -9,6 +9,7 @@ import { fileSystemRuinsData } from './fileSystemRuinsData';
 import { modulesHarborData } from './modulesHarborData';
 import { algorithmArenaData } from './algorithmArenaData';
 import { bossGateSagaData } from './bossGateSagaData';
+import { ITERATOR_ISLES_LESSONS } from './iteratorIslesData';
 
 export const ALL_LESSONS = {
   ...VARIABLES_FOREST_LESSONS,
@@ -21,10 +22,12 @@ export const ALL_LESSONS = {
   ...fileSystemRuinsData,
   ...modulesHarborData,
   ...algorithmArenaData,
-  ...bossGateSagaData
+  ...bossGateSagaData,
+  ...ITERATOR_ISLES_LESSONS
 };
 
 export function getRegionForLesson(lessonId: string): string {
+  if (ITERATOR_ISLES_LESSONS[lessonId]) return 'iterator-isles';
   if (bossGateSagaData[lessonId]) return 'bossgate-saga';
   if (algorithmArenaData[lessonId]) return 'algorithm-arena';
   if (modulesHarborData[lessonId]) return 'modules-harbor';

@@ -158,7 +158,10 @@ export default function GuildHall() {
                   />
                 </div>
                 <p className="text-xs text-red-400 mt-2 font-mono">{myGuild.progress.boss_health_remaining} / 1,000,000 HP</p>
-                <button className="mt-6 px-8 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-500 transition-colors uppercase tracking-widest shadow-[0_0_15px_rgba(220,38,38,0.5)]">
+                <button 
+                  onClick={() => alert("Engaging Guild Boss! Preparing battle arena...")}
+                  className="mt-6 px-8 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-500 transition-colors uppercase tracking-widest shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+                >
                   Engage Boss
                 </button>
               </div>

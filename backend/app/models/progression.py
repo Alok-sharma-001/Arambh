@@ -14,7 +14,7 @@ class LessonProgress(Base):
     __tablename__ = "lesson_progress"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     lesson_id = Column(String, nullable=False, index=True)
     status = Column(String, default="locked") # 'locked', 'available', 'completed'
     completed_at = Column(DateTime(timezone=True), nullable=True)
@@ -26,7 +26,7 @@ class RegionProgress(Base):
     __tablename__ = "region_progress"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     region_id = Column(String, nullable=False, index=True)
     status = Column(String, default="locked") # 'locked', 'active', 'completed'
     boss_defeated = Column(Boolean, default=False)
@@ -38,10 +38,11 @@ class AchievementProgress(Base):
     __tablename__ = "achievement_progress"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     achievement_id = Column(String, nullable=False, index=True)
     progress = Column(Integer, default=0)
     completed = Column(Boolean, default=False)
+    claimed = Column(Boolean, default=False)
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User", back_populates="achievements")
@@ -50,10 +51,11 @@ class QuestProgress(Base):
     __tablename__ = "quest_progress"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     quest_id = Column(String, nullable=False, index=True)
     progress = Column(Integer, default=0)
     completed = Column(Boolean, default=False)
+    claimed = Column(Boolean, default=False)
     completed_at = Column(DateTime(timezone=True), nullable=True)
 
     user = relationship("User", back_populates="quests")
@@ -91,7 +93,7 @@ class Revision(Base):
     __tablename__ = "revisions"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
+    user_id = Column(Integer, ForeignKey("users.id"), index=True)
     concept_id = Column(String, nullable=False, index=True)
     next_review_date = Column(DateTime(timezone=True), nullable=False)
     interval = Column(Integer, default=0)

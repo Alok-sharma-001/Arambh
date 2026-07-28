@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { TowerControl as Castle, Activity, Crown, Zap, ChevronUp, Lock } from 'lucide-react';
 import { useTowerStore } from '../../store/towerStore';
@@ -6,6 +7,7 @@ import { TowerEngine, ProceduralChallenge } from '../../engine/TowerEngine';
 import { TowerFloor } from './TowerFloor';
 
 export default function TowerHub() {
+  const navigate = useNavigate();
   const { progress, activeStreak } = useTowerStore();
   const [activeChallenge, setActiveChallenge] = useState<ProceduralChallenge | null>(null);
 
@@ -130,8 +132,11 @@ export default function TowerHub() {
           </div>
 
           <div className="mt-6 pt-4 border-t border-slate-800 flex justify-center">
-            <button className="text-sm text-game-purple hover:text-white transition-colors flex items-center gap-2">
-              <Lock className="w-4 h-4" /> View Full Leaderboard
+            <button 
+              onClick={() => navigate('/leaderboard')}
+              className="text-sm text-game-purple hover:text-white transition-colors flex items-center gap-2"
+            >
+              <Crown className="w-4 h-4 text-game-gold" /> View Full Leaderboard
             </button>
           </div>
         </div>

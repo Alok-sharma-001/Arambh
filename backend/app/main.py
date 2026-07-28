@@ -1,13 +1,21 @@
+import os
+import sentry_sdk
+if os.getenv('SENTRY_DSN'):
+    sentry_sdk.init(dsn=os.getenv('SENTRY_DSN'), traces_sample_rate=0.1)
+
 import logging
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from sqlalchemy import inspect, text
 from sqlalchemy.exc import SQLAlchemyError
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from app.auth.router import router as auth_router
-from app.api.progress import router as progress_router
-from app.api.endpoints import progression, sync, guild, revisions, mentor, analytics
+from app.api.endpoints import progression, sync, guild, revisions, mentor, analytics, payments, quests, achievements, certificates, classroom, password_reset
 from app.database.session import engine, Base
 import app.models  # This ensures the __init__.py is loaded
 
@@ -22,61 +30,11 @@ async def lifespan(app: FastAPI):
         registered_tables = list(Base.metadata.tables.keys())
         logger.info(f"Registered metadata tables: {registered_tables}")
         
-        # Run database migrations
-        import os
-        from alembic.config import Config
-        from alembic import command
-        from app.core.config import settings
-        
-        base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        alembic_cfg_path = os.path.join(base_dir, "alembic.ini")
-        if os.path.exists(alembic_cfg_path):
-            logger.info(f"Running Alembic migrations from {alembic_cfg_path}...")
-            try:
-                alembic_cfg = Config(alembic_cfg_path)
-                alembic_cfg.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
-                command.upgrade(alembic_cfg, "head")
-                logger.info("Alembic migrations completed successfully.")
-            except Exception as e:
-                logger.error(f"Alembic migration failed: {e}")
-        else:
-            logger.warning(f"alembic.ini not found at {alembic_cfg_path}, skipping automatic migrations.")
-
-        # Create tables
-        Base.metadata.create_all(bind=engine)
-        logger.info("Successfully executed Base.metadata.create_all()")
-        
-        # Verify in DB
+        # Tables are managed by Alembic migrations — do NOT use create_all()
+        # Verify tables exist in DB
         inspector = inspect(engine)
         actual_tables = inspector.get_table_names()
-        logger.info(f"Actual tables in PostgreSQL: {actual_tables}")
-        
-        if "users" in actual_tables:
-            logger.info("Verified: 'users' table exists.")
-        else:
-            logger.error("Error: 'users' table was NOT created.")
-            
-        # Ensure new RPG columns exist in user_stats
-        from sqlalchemy import text, inspect as sa_inspect
-        with engine.begin() as conn:
-            try:
-                inspector = sa_inspect(engine)
-                existing_cols = {c['name'] for c in inspector.get_columns('user_stats')}
-                if 'player_class' not in existing_cols:
-                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN player_class VARCHAR;"))
-                if 'rank' not in existing_cols:
-                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN rank VARCHAR DEFAULT 'Novice';"))
-                if 'title' not in existing_cols:
-                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN title VARCHAR;"))
-                if 'daily_streak' not in existing_cols:
-                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN daily_streak INTEGER DEFAULT 0;"))
-                if 'last_claimed_at' not in existing_cols:
-                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN last_claimed_at TIMESTAMP WITH TIME ZONE;"))
-                if 'total_login_days' not in existing_cols:
-                    conn.execute(text("ALTER TABLE user_stats ADD COLUMN total_login_days INTEGER DEFAULT 0;"))
-                logger.info("Database migration: Verified/Added missing RPG and daily reward columns to user_stats.")
-            except Exception as e:
-                logger.warning(f"Database migration for user_stats failed: {e}")
+        logger.info(f"Actual database tables: {actual_tables}")
             
     except Exception as e:
         logger.error(f"Error during database initialization: {e}")
@@ -87,6 +45,20 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Arambh API", version="0.1.0", lifespan=lifespan)
 
+from app.core.limiter import limiter
+
+# Exception Handling
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error(f"Unhandled server error on {request.url.path}: {exc}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "An internal server error occurred. Please try again later."}
+    )
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -96,20 +68,24 @@ app.add_middleware(
         "http://127.0.0.1:3000",
         "https://arambh-beige.vercel.app",
     ],
-    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(auth_router, prefix="/api")
-app.include_router(progress_router, prefix="/api")
 app.include_router(progression.router, prefix="/api/progression", tags=["progression"])
 app.include_router(sync.router, prefix="/api/v1/sync", tags=["sync"])
 app.include_router(guild.router, prefix="/api/v1/guilds", tags=["guilds"])
 app.include_router(revisions.router, prefix="/api/v1/revisions", tags=["revisions"])
 app.include_router(mentor.router, prefix="/api/v1/mentor", tags=["mentor"])
 app.include_router(analytics.router, prefix="/api", tags=["analytics"])
+app.include_router(payments.router, prefix="/api", tags=["payments"])
+app.include_router(quests.router, prefix="/api", tags=["quests"])
+app.include_router(achievements.router, prefix="/api", tags=["achievements"])
+app.include_router(certificates.router, prefix="/api", tags=["certificates"])
+app.include_router(classroom.router, prefix="/api", tags=["classroom"])
+app.include_router(password_reset.router, prefix="/api/auth", tags=["auth"])
 
 @app.get("/")
 async def root():
@@ -119,8 +95,15 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+from app.auth.router import get_current_user
+from app.models.user import User
+from fastapi import Depends
+
 @app.get("/api/diag/db-status")
-async def db_status():
+async def db_status(current_user: User = Depends(get_current_user)):
+    if current_user.username not in ("admin", "founder"):
+        raise HTTPException(status_code=403, detail="Access denied.")
+        
     status = {
         "database_connected": False,
         "dialect": engine.dialect.name,

@@ -21,12 +21,26 @@ export const TourOverlay: React.FC = () => {
   });
 
   useEffect(() => {
-    const handleResize = () => {
+    const handleResizeOrScroll = () => {
       setWindowSize({ width: window.innerWidth, height: window.innerHeight });
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResizeOrScroll);
+    window.addEventListener('scroll', handleResizeOrScroll, { passive: true });
+    return () => {
+      window.removeEventListener('resize', handleResizeOrScroll);
+      window.removeEventListener('scroll', handleResizeOrScroll);
+    };
   }, []);
+
+  // Auto-scroll target into view if highlighted item is lower down the page
+  useEffect(() => {
+    if (isActive && currentStep?.target) {
+      const el = document.querySelector(currentStep.target) || document.getElementById(currentStep.target.replace('#', ''));
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }, [isActive, currentStep?.target, currentStepIndex]);
 
   if (!isActive || !currentStep) return null;
 

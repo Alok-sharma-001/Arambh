@@ -40,7 +40,7 @@ client = TestClient(app)
 def setup_db():
     Base.metadata.create_all(bind=engine)
     db = TestingSessionLocal()
-    db.add(User(id=999, username="founder", email="founder@arambh.com", hashed_password="hashedpassword"))
+    db.add(User(id=999, username="founder", email="founder@arambh.com", hashed_password="hashedpassword", is_admin=True))
     db.commit()
     db.close()
     
@@ -104,3 +104,24 @@ def test_founder_dashboard_extended_metrics():
     
     # Check dropoffs contain registration dropoff
     assert "registered_no_lesson" in data["dropoffs"]
+
+def test_password_validation_weak_fails():
+    app.dependency_overrides.clear() # clear mock user so register endpoint behaves normally
+    response = client.post("/api/auth/register", json={
+        "username": "newuser",
+        "email": "newuser@example.com",
+        "password": "weakpassword"
+    })
+    assert response.status_code == 422 # Pydantic validation error
+
+def test_password_validation_strong_passes():
+    import uuid
+    app.dependency_overrides.clear()
+    uname = f"user_{uuid.uuid4().hex[:6]}"
+    response = client.post("/api/auth/register", json={
+        "username": uname,
+        "email": f"{uname}@example.com",
+        "password": "StrongPassword1"
+    })
+    assert response.status_code == 200
+    assert response.json()["username"] == uname

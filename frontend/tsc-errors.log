@@ -1,0 +1,57 @@
+src/components/progression/CharacterCard.tsx(2,22): error TS1261: Already included file name '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/Card.tsx' differs from file name '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/card.tsx' only in casing.
+  The file is in the program because:
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/progression/CharacterCard.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/DailyGoals.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/artifacts/ArtifactWidget.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/AvatarSelection.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/ProgressionWidget.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/RecentActivity.tsx'
+    Imported via '../components/ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/pages/Dashboard.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/learning/MapNode.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/quests/QuestCard.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/achievements/AchievementCard.tsx'
+    Imported via '../components/ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/pages/InventoryPage.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/InventoryPreview.tsx'
+    Imported via '../ui/Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/UserOverview.tsx'
+    Matched by include pattern 'src' in '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/tsconfig.json'
+    Imported via './Card' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/StatCard.tsx'
+    Matched by include pattern 'src' in '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/tsconfig.json'
+src/components/progression/CharacterCard.tsx(4,23): error TS1261: Already included file name '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/Badge.tsx' differs from file name '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/badge.tsx' only in casing.
+  The file is in the program because:
+    Imported via '../ui/Badge' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/progression/CharacterCard.tsx'
+    Imported via '../ui/Badge' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/learning/MapNode.tsx'
+    Imported via '../ui/Badge' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/quests/QuestCard.tsx'
+    Imported via '../ui/Badge' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/achievements/AchievementCard.tsx'
+    Imported via '../ui/Badge' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/UserOverview.tsx'
+    Matched by include pattern 'src' in '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/tsconfig.json'
+    Matched by include pattern 'src' in '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/tsconfig.json'
+src/components/ui/alert-dialog.tsx(5,32): error TS1149: File name '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/button.tsx' differs from already included file name '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/Button.tsx' only in casing.
+  The file is in the program because:
+    Imported via '../ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/artifacts/ArtifactRevealModal.tsx'
+    Imported via '../ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/dashboard/AvatarSelection.tsx'
+    Imported via '../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/pages/Dashboard.tsx'
+    Imported via '../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/pages/LearningArena.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/lessons/LessonStory.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/lessons/LessonExplain.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/lessons/LessonPractice.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/lessons/LessonChallenge.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/lessons/LessonReward.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/boss/CorruptedGuardian.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/boss/TypeShapeshifter.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/boss/InfiniteSerpent.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/boss/TheForgottenArchitect.tsx'
+    Imported via '../../components/ui/Button' from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/features/boss/TheDataHoarder.tsx'
+    Matched by include pattern 'src' in '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/tsconfig.json'
+    Imported via "@/components/ui/button" from file '/home/alok/Projects_Antigravity/Arambh/Arambh/frontend/src/components/ui/alert-dialog.tsx'
+src/components/ui/calendar.tsx(91,9): error TS2353: Object literal may only specify known properties, and 'table' does not exist in type 'Partial<ClassNames>'.
+src/components/ui/chart.tsx(109,3): error TS2339: Property 'payload' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 24 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+src/components/ui/chart.tsx(114,3): error TS2339: Property 'label' does not exist on type 'Omit<Props<ValueType, NameType>, PropertiesReadFromContext> & { active?: boolean | undefined; allowEscapeViewBox?: AllowInDimension | undefined; ... 24 more ...; wrapperStyle?: CSSProperties | undefined; } & ClassAttributes<...> & HTMLAttributes<...> & { ...; }'.
+src/components/ui/chart.tsx(183,20): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/components/ui/chart.tsx(184,17): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/components/ui/chart.tsx(184,23): error TS7006: Parameter 'index' implicitly has an 'any' type.
+src/components/ui/chart.tsx(262,39): error TS2344: Type '"verticalAlign" | "payload"' does not satisfy the constraint '"string" | "name" | "method" | "filter" | "fill" | "values" | "id" | "suppressHydrationWarning" | "className" | "color" | "height" | "lang" | "max" | "media" | "min" | "style" | ... 422 more ... | "portal"'.
+  Type '"payload"' is not assignable to type '"string" | "name" | "method" | "filter" | "fill" | "values" | "id" | "suppressHydrationWarning" | "className" | "color" | "height" | "lang" | "max" | "media" | "min" | "style" | ... 422 more ... | "portal"'.
+src/components/ui/chart.tsx(268,17): error TS2339: Property 'length' does not exist on type '{}'.
+src/components/ui/chart.tsx(281,10): error TS2339: Property 'filter' does not exist on type '{}'.
+src/components/ui/chart.tsx(281,18): error TS7006: Parameter 'item' implicitly has an 'any' type.
+src/components/ui/chart.tsx(282,15): error TS7006: Parameter 'item' implicitly has an 'any' type.

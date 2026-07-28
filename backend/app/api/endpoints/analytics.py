@@ -30,10 +30,10 @@ from app.schemas.analytics import (
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 def is_founder(user: User):
-    if user.username not in ("founder", "admin"):
+    if not getattr(user, "is_admin", False):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Forbidden: Founder access only."
+            detail="Forbidden: Admin access only."
         )
 
 def safe_parse_json(text_val: Optional[str]) -> Dict[str, Any]:
@@ -160,6 +160,27 @@ def submit_beta_feedback(
         context_info=feedback.context_info,
         created_at=feedback.created_at
     )
+
+@router.get("/public-reviews", response_model=List[BetaFeedbackResponse])
+def get_public_reviews(
+    db: Session = Depends(get_db)
+):
+    """Retrieve recent community feedback and reviews to share with users."""
+    recent_feedback = db.query(BetaFeedback).order_by(BetaFeedback.created_at.desc()).limit(20).all()
+    res = []
+    for fb in recent_feedback:
+        user = db.query(User).filter(User.id == fb.user_id).first()
+        uname = user.username if user else "Code Mage"
+        res.append(BetaFeedbackResponse(
+            id=fb.id,
+            user_id=fb.user_id,
+            username=uname,
+            feedback_type=fb.feedback_type,
+            description=fb.description,
+            context_info=fb.context_info,
+            created_at=fb.created_at
+        ))
+    return res
 
 @router.post("/exit-survey")
 def submit_exit_survey(

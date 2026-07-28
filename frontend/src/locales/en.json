@@ -1,0 +1,28 @@
+{
+  "common": {
+    "welcome": "Welcome to Arambh",
+    "dashboard": "Dashboard",
+    "world_map": "World Map",
+    "library": "Library",
+    "quests": "Active Quests",
+    "achievements": "Achievements",
+    "leaderboard": "Leaderboard",
+    "pricing": "Premium Pass",
+    "logout": "Logout",
+    "level": "Level",
+    "xp": "XP",
+    "streak": "Streak",
+    "days": "Days"
+  },
+  "header": {
+    "tagline": "Gamified Dark Fantasy Python Academy",
+    "assessment": "Skill Assessment"
+  },
+  "pricing": {
+    "title": "Unlock the Full Realm of Python Mastery",
+    "subtitle": "Master advanced concepts from Functions & OOP to Data Structures & Capstone Saga.",
+    "monthly": "Monthly Warrior",
+    "yearly": "Yearly Grandmaster",
+    "most_popular": "Most Popular"
+  }
+}

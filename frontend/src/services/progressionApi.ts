@@ -48,5 +48,10 @@ export const progressionApi = {
   claimDailyReward: async () => {
     const response = await api.post<ProgressionResponse>('/progression/claim-daily');
     return response.data;
+  },
+
+  submitPlacementTest: async (score: number) => {
+    const response = await api.post<ProgressionResponse>('/progression/placement-test', { score });
+    return response.data;
   }
 };

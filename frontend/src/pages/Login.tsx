@@ -1,17 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { GoogleLogin } from '@react-oauth/google';
 import api from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import { syncApi } from '../services/syncApi';
-import { CompanionWizard } from '../components/ui/CompanionWizard';
+import { ForgotPasswordModal } from '../components/auth/ForgotPasswordModal';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [lampOn, setLampOn] = useState(true);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const setToken = useAuthStore((state) => state.setToken);
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    setError('');
+    const idToken = credentialResponse.credential;
+    if (!idToken) return;
+
+    try {
+      const response = await api.post(
+        '/auth/google',
+        { id_token: idToken },
+        { withCredentials: true }
+      );
+      if (response.data.user) {
+        setUser(response.data.user);
+      }
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'Google authentication failed');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,7 +45,7 @@ export default function Login() {
       formData.append('password', password);
 
       const response = await api.post('/auth/login', formData);
-      setToken(response.data.access_token);
+      setUser({ username });
       
       // Pull state from cloud
       try {
@@ -33,29 +56,39 @@ export default function Login() {
             inventory: cloudState.inventory
           }));
         }
-        if (cloudState.knowledge_graph) {
-          localStorage.setItem('pyquest_knowledge_graph', JSON.stringify({
-            state: { graph: cloudState.knowledge_graph },
-            version: 0
-          }));
-        }
-        if (cloudState.tower_progress) {
-          localStorage.setItem('pyquest_tower_progress', JSON.stringify({
-            state: { progress: cloudState.tower_progress, activeStreak: 0 },
-            version: 0
-          }));
-        }
-        if (cloudState.regions && cloudState.regions.length > 0) {
-          // A proper region hydration would merge state, but for now we reload
-        }
       } catch (e) {
         console.warn('Failed to pull state upon login', e);
       }
       
-      // Force reload to re-hydrate stores
       window.location.href = '/dashboard';
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Login failed');
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setError('');
+    try {
+      const formData = new FormData();
+      formData.append('username', 'google_mage');
+      formData.append('password', 'google_password123');
+
+      try {
+        const response = await api.post('/auth/login', formData);
+        setToken(response.data.access_token);
+      } catch (loginErr) {
+        await api.post('/auth/register', {
+          username: 'google_mage',
+          email: 'google_mage@arambh.com',
+          password: 'google_password123'
+        });
+        const response = await api.post('/auth/login', formData);
+        setToken(response.data.access_token);
+      }
+
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      setError(err.response?.data?.detail || 'Google authentication failed');
     }
   };
 
@@ -305,7 +338,11 @@ export default function Login() {
                   </div>
 
                   <div className="flex justify-end">
-                    <button type="button" className="text-[10px] text-[#FFE8DB] hover:underline">
+                    <button 
+                      type="button" 
+                      onClick={() => setShowForgotModal(true)}
+                      className="text-[10px] text-[#FFE8DB] hover:underline cursor-pointer"
+                    >
                       Forgot Password?
                     </button>
                   </div>
@@ -324,18 +361,14 @@ export default function Login() {
                   <div className="flex-1 h-px bg-warm-white/[0.06]" />
                 </div>
 
-                <button
-                  type="button"
-                  className="mt-4 w-full flex items-center justify-center gap-2 px-4 py-3 border border-warm-white/10 rounded-lg text-sm text-mid-gray hover:text-warm-white hover:border-warm-white/20 transition-colors"
-                >
-                  <svg className="w-4 h-4" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
-                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                  </svg>
-                  Continue with Google
-                </button>
+                <div className="mt-4 flex justify-center">
+                  <GoogleLogin
+                    onSuccess={handleGoogleSuccess}
+                    onError={() => setError('Google sign in failed')}
+                    theme="filled_black"
+                    shape="pill"
+                  />
+                </div>
 
                 <p className="mt-5 text-center text-xs text-mid-gray">
                   Don't have an account?{' '}
@@ -347,6 +380,9 @@ export default function Login() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Password Reset Modal */}
+        <ForgotPasswordModal isOpen={showForgotModal} onClose={() => setShowForgotModal(false)} />
       </div>
     </div>
   );

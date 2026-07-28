@@ -1,5 +1,17 @@
 import type { LessonDebugContent } from '@/types';
 import { ITERATOR_ISLES_LESSONS } from '@/data/iteratorIslesData';
+import { VARIABLES_FOREST_EXTRA_LESSONS } from './variablesForestLessons';
+import { DATA_TYPES_VALLEY_LESSONS as DTV_LESSONS } from './dataTypesValleyLessons';
+import { LOOPS_DESERT_LESSONS as LD_LESSONS } from './loopsDesertLessons';
+import { LOOPS_DESERT_L4 } from './loopsDesertL4';
+import { FUNCTIONS_MOUNTAIN_LESSONS } from './functionsMountainLessons';
+import { COLLECTIONS_KINGDOM_LESSONS } from './collectionsKingdomLessons';
+import { OOP_CITADEL_LESSONS } from './oopCitadelLessons';
+import { EXCEPTION_ABYSS_LESSONS } from './exceptionAbyssLessons';
+import { FILESYSTEM_RUINS_LESSONS } from './filesystemRuinsLessons';
+import { ALGORITHM_ARENA_LESSONS } from './algorithmArenaLessons';
+import { BOSSGATE_SAGA_LESSONS } from './bossgateSagaLessons';
+import { MODULES_HARBOR_LESSONS } from './modulesHarborLessons';
 
 export const lessons: Record<string, LessonDebugContent> = {
   'default': {
@@ -1801,4 +1813,17 @@ export const lessons: Record<string, LessonDebugContent> = {
     ]
 },
   ...ITERATOR_ISLES_LESSONS,
+  // Generated lesson content — overrides stubs above with real multi-step debugger content
+  ...VARIABLES_FOREST_EXTRA_LESSONS,
+  ...DTV_LESSONS,
+  ...LD_LESSONS,
+  ...LOOPS_DESERT_L4,
+  ...FUNCTIONS_MOUNTAIN_LESSONS,
+  ...COLLECTIONS_KINGDOM_LESSONS,
+  ...OOP_CITADEL_LESSONS,
+  ...EXCEPTION_ABYSS_LESSONS,
+  ...FILESYSTEM_RUINS_LESSONS,
+  ...ALGORITHM_ARENA_LESSONS,
+  ...BOSSGATE_SAGA_LESSONS,
+  ...MODULES_HARBOR_LESSONS,
 };

@@ -7,10 +7,10 @@ class AnalyticsEvent(Base):
     __tablename__ = "analytics_events"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
     event_type = Column(String, index=True, nullable=False)
     details = Column(Text, nullable=True)  # JSON-encoded string for flexible parameters
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
 
     user = relationship("User")
 
@@ -18,7 +18,7 @@ class LessonFeedback(Base):
     __tablename__ = "lesson_feedback"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     region_id = Column(String, nullable=False, index=True)
     lesson_id = Column(String, nullable=False, index=True)
     helpful = Column(Boolean, nullable=False)
@@ -30,7 +30,7 @@ class BugReport(Base):
     __tablename__ = "bug_reports"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     category = Column(String, nullable=False, index=True)  # 'lesson', 'content', 'ui'
     description = Column(Text, nullable=False)
     context_info = Column(Text, nullable=True)  # e.g., URL or system details
@@ -42,7 +42,7 @@ class BetaFeedback(Base):
     __tablename__ = "beta_feedback"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     feedback_type = Column(String, nullable=False, index=True)  # 'bug', 'feature_request', 'content', 'general'
     description = Column(Text, nullable=False)
     context_info = Column(Text, nullable=True)
@@ -54,7 +54,7 @@ class ExitSurveyResponse(Base):
     __tablename__ = "exit_survey_responses"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True, index=True)
     reason = Column(String, nullable=False)  # e.g., 'Too difficult', 'Too easy', etc.
     details = Column(Text, nullable=True)
     context = Column(String, nullable=False)  # 'registration', 'first_lesson', 'first_region'

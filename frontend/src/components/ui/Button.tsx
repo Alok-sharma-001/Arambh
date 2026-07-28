@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { audioEngine } from '../../lib/audioEngine';
 
 interface ButtonProps extends Omit<HTMLMotionProps<"button">, "ref"> {
   variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
@@ -50,8 +51,12 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${
           isDisabled ? "opacity-50 cursor-not-allowed" : ""
         } ${className}`}
-        disabled={isDisabled}
-        {...props}
+        onClick={(e) => {
+          if (!isDisabled) {
+            audioEngine.playClick();
+          }
+          props.onClick?.(e);
+        }}
       >
         {isLoading && <Loader2 className="w-5 h-5 mr-2 animate-spin" />}
         {!isLoading && leftIcon && <span className="mr-2">{leftIcon}</span>}

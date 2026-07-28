@@ -178,15 +178,31 @@ export const CompanionWizard: React.FC<CompanionWizardProps> = ({
               <stop offset="100%" stopColor="#D4B76E" />
             </linearGradient>
 
-            {/* Warm glow filter for eyes */}
-            <filter id="warmGlow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="1.5" result="blur" />
+            {/* Warm glow filter for eyes & magic */}
+            <filter id="warmGlow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
+            {/* Cool cyan & gold magical aura */}
+            <radialGradient id="magicAura" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.6" />
+              <stop offset="60%" stopColor="#c8a45e" stopOpacity="0.3" />
+              <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+            </radialGradient>
           </defs>
 
+          {/* ─── Floating Magical Aura Ring ─── */}
+          <motion.circle
+            cx="80"
+            cy="100"
+            r="65"
+            fill="url(#magicAura)"
+            animate={{ scale: [0.9, 1.1, 0.9], opacity: [0.5, 0.8, 0.5] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          />
+
           {/* ─── Ground Shadow ─── */}
-          <ellipse cx="80" cy="200" rx="28" ry="5" fill="#000000" fillOpacity="0.45" />
+          <ellipse cx="80" cy="200" rx="32" ry="6" fill="#000000" fillOpacity="0.6" />
 
           {/* ─── Body Group (with bob animation) ─── */}
           <motion.g
@@ -282,6 +298,15 @@ export const CompanionWizard: React.FC<CompanionWizardProps> = ({
             <g id="head">
               {/* Back Hair */}
               <path d="M 46 36 Q 44 14 62 12 Q 72 18 80 12 Q 88 18 98 12 Q 116 14 114 36 L 114 42 L 46 42 Z" fill="url(#hairGrad)" />
+
+              {/* Floating Mage Crown / Rune Gem */}
+              <motion.g
+                animate={{ y: [0, -4, 0] }}
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+              >
+                <polygon points="80,2 72,12 88,12" fill="#22d3ee" filter="url(#warmGlow)" />
+                <circle cx="80" cy="8" r="3" fill="#ffffff" />
+              </motion.g>
 
               {/* Face Shape */}
               <rect x="52" y="27" width="56" height="42" rx="14" fill="url(#skinGrad)" />
