@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleLogin } from '@react-oauth/google';
 import api from '../services/api';
@@ -8,6 +8,7 @@ import { syncApi } from '../services/syncApi';
 import { ForgotPasswordModal } from '../components/auth/ForgotPasswordModal';
 
 export default function Login() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -33,7 +34,7 @@ export default function Login() {
       if (response.data.user) {
         setUser(response.data.user);
       }
-      window.location.href = '/dashboard';
+      navigate('/world-map');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Google authentication failed');
     }
@@ -66,7 +67,7 @@ export default function Login() {
         console.warn('Failed to pull state upon login', e);
       }
       
-      window.location.href = '/dashboard';
+      navigate('/world-map');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Login failed');
     }

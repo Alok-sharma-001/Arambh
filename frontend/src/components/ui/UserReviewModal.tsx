@@ -75,100 +75,106 @@ export const UserReviewModal: React.FC<UserReviewModalProps> = ({ isOpen, onClos
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.92, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
-          className="relative w-full max-w-xl bg-[#0a0a0c] border border-amber-500/30 rounded-2xl shadow-[0_0_50px_rgba(200,164,94,0.15)] overflow-hidden text-slate-200"
+          exit={{ opacity: 0, scale: 0.92, y: 15 }}
+          className="relative w-full max-w-lg bg-[#0d0d12] border border-gold/30 rounded-2xl shadow-[0_0_60px_rgba(212,183,110,0.18)] overflow-hidden text-warm-white"
         >
-          {/* Top Header */}
-          <div className="flex items-center justify-between p-5 border-b border-white/10 bg-[#12131a]">
+          {/* Ambient Glow */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-32 bg-gold/10 blur-[80px] rounded-full pointer-events-none" />
+
+          {/* Header */}
+          <div className="relative flex items-center justify-between p-5 border-b border-warm-white/[0.08] bg-[#12121a]">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
-                <MessageSquare size={20} />
+              <div className="p-2.5 rounded-xl bg-gold/10 border border-gold/30 text-gold shadow-sm">
+                <MessageSquare size={18} />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-[#c8a45e] font-serif">Community Opinion & Reviews</h2>
-                <p className="text-xs text-slate-400">Share your thoughts to help shape the future of Arambh</p>
+                <h2 className="text-base font-bold font-display text-gold tracking-tight">Adventurer Reviews & Feedback</h2>
+                <p className="text-xs text-mid-gray mt-0.5">Shape the future of Arambh with your thoughts</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+              className="p-2 rounded-xl text-mid-gray hover:text-white hover:bg-warm-white/10 transition-colors"
+              title="Close review modal"
             >
               <X size={18} />
             </button>
           </div>
 
           {/* Navigation Tabs */}
-          <div className="flex border-b border-white/10 bg-[#0d0e14]">
+          <div className="flex border-b border-warm-white/[0.08] bg-[#09090e]">
             <button
               onClick={() => setActiveTab('submit')}
               className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 flex items-center justify-center gap-2 ${
                 activeTab === 'submit'
-                  ? 'text-amber-400 border-amber-400 bg-amber-500/5'
-                  : 'text-slate-400 border-transparent hover:text-slate-200'
+                  ? 'text-gold border-gold bg-gold/[0.04]'
+                  : 'text-mid-gray border-transparent hover:text-warm-white'
               }`}
             >
-              <Send size={14} /> Leave an Opinion
+              <Send size={13} /> Leave Feedback
             </button>
             <button
               onClick={() => setActiveTab('community')}
               className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider transition-all border-b-2 flex items-center justify-center gap-2 ${
                 activeTab === 'community'
-                  ? 'text-amber-400 border-amber-400 bg-amber-500/5'
-                  : 'text-slate-400 border-transparent hover:text-slate-200'
+                  ? 'text-gold border-gold bg-gold/[0.04]'
+                  : 'text-mid-gray border-transparent hover:text-warm-white'
               }`}
             >
-              <ThumbsUp size={14} /> Community Feed ({reviews.length})
+              <ThumbsUp size={13} /> Community Feed ({reviews.length})
             </button>
           </div>
 
-          {/* Tab Content */}
+          {/* Content Body */}
           <div className="p-6">
             {activeTab === 'submit' ? (
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* Rating Stars */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    Your Rating
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gold/80 mb-2">
+                    Your Overall Rating
                   </label>
-                  <div className="flex items-center gap-2">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <button
-                        type="button"
-                        key={star}
-                        onClick={() => setRating(star)}
-                        onMouseEnter={() => setHoverRating(star)}
-                        onMouseLeave={() => setHoverRating(0)}
-                        className="p-1 transition-transform hover:scale-125 focus:outline-none"
-                      >
-                        <Star
-                          size={28}
-                          className={`transition-colors ${
-                            (hoverRating || rating) >= star
-                              ? 'text-amber-400 fill-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.6)]'
-                              : 'text-slate-700'
-                          }`}
-                        />
-                      </button>
-                    ))}
-                    <span className="ml-2 font-mono text-sm text-amber-400 font-bold">
+                  <div className="flex items-center gap-2 bg-[#14141c] p-3 rounded-xl border border-warm-white/[0.06]">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          type="button"
+                          key={star}
+                          onClick={() => setRating(star)}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          className="p-1 transition-transform hover:scale-125 focus:outline-none"
+                        >
+                          <Star
+                            size={24}
+                            className={`transition-colors ${
+                              (hoverRating || rating) >= star
+                                ? 'text-gold fill-gold drop-shadow-[0_0_8px_rgba(212,183,110,0.7)]'
+                                : 'text-warm-white/20'
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    <span className="ml-auto font-mono text-xs text-gold font-bold bg-gold/10 px-2.5 py-1 rounded-lg border border-gold/20">
                       {rating} / 5 Stars
                     </span>
                   </div>
                 </div>
 
-                {/* Category Select */}
+                {/* Category */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gold/80 mb-2">
                     Feedback Category
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full bg-[#12131a] border border-white/10 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:border-amber-500 focus:outline-none"
+                    className="w-full bg-[#14141c] border border-warm-white/[0.08] rounded-xl px-4 py-2.5 text-xs text-warm-white focus:border-gold focus:outline-none transition-colors"
                   >
                     <option value="general">✨ General Experience & Design</option>
                     <option value="lesson">📚 Debugger & Lesson Quality</option>
@@ -177,17 +183,17 @@ export const UserReviewModal: React.FC<UserReviewModalProps> = ({ isOpen, onClos
                   </select>
                 </div>
 
-                {/* Textarea */}
+                {/* Feedback Textarea */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-                    Your Feedback & Review
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-gold/80 mb-2">
+                    Your Review & Experience
                   </label>
                   <textarea
                     rows={4}
                     value={opinion}
                     onChange={(e) => setOpinion(e.target.value)}
-                    placeholder="Tell us what you love or what we should improve to make Arambh the best Python learning experience..."
-                    className="w-full bg-[#12131a] border border-white/10 rounded-xl p-4 text-sm text-slate-200 placeholder-slate-500 focus:border-amber-500 focus:outline-none resize-none font-sans"
+                    placeholder="Tell us what you love or what we can refine to make Arambh extraordinary..."
+                    className="w-full bg-[#14141c] border border-warm-white/[0.08] rounded-xl p-3.5 text-xs text-warm-white placeholder-mid-gray/50 focus:border-gold focus:outline-none resize-none font-sans leading-relaxed"
                     required
                   />
                 </div>
@@ -196,55 +202,55 @@ export const UserReviewModal: React.FC<UserReviewModalProps> = ({ isOpen, onClos
                 <button
                   type="submit"
                   disabled={submitting || !opinion.trim()}
-                  className="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold uppercase tracking-widest text-xs rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.3)] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full py-3 bg-[#d4b76e] hover:bg-[#c4a75e] text-near-black font-extrabold uppercase tracking-wider text-xs rounded-xl shadow-[0_0_20px_rgba(212,183,110,0.25)] transition-all flex items-center justify-center gap-2 disabled:opacity-40"
                 >
                   {submitting ? (
-                    'Submitting Opinion...'
+                    'Submitting Review...'
                   ) : (
                     <>
-                      <Sparkles size={16} /> Submit Review
+                      <Sparkles size={15} /> Submit Review
                     </>
                   )}
                 </button>
 
                 {successMsg && (
                   <motion.div
-                    initial={{ opacity: 0, y: 10 }}
+                    initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-3 bg-green-950/40 border border-green-500/50 rounded-xl text-green-400 text-xs text-center flex items-center justify-center gap-2 font-mono"
+                    className="p-3 bg-emerald-950/40 border border-emerald-500/40 rounded-xl text-emerald-400 text-xs text-center flex items-center justify-center gap-2 font-medium"
                   >
-                    <CheckCircle2 size={16} /> Thank you! Your review has been published to the community feed.
+                    <CheckCircle2 size={16} /> Thank you! Your review has been submitted to the community.
                   </motion.div>
                 )}
               </form>
             ) : (
-              <div className="space-y-4 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+              <div className="space-y-3 max-h-[360px] overflow-y-auto pr-1.5 custom-scrollbar">
                 {loadingReviews ? (
-                  <div className="text-center py-12 text-slate-500 text-sm font-mono animate-pulse">
+                  <div className="text-center py-12 text-mid-gray text-xs font-mono animate-pulse">
                     Loading community feed...
                   </div>
                 ) : reviews.length === 0 ? (
-                  <div className="text-center py-12 text-slate-500 text-sm">
-                    No community reviews yet. Be the first to submit your opinion!
+                  <div className="text-center py-12 text-mid-gray text-xs">
+                    No community reviews yet. Be the first to share your experience!
                   </div>
                 ) : (
                   reviews.map((rev) => (
                     <div
                       key={rev.id}
-                      className="p-4 bg-[#12131a] border border-white/5 rounded-xl space-y-2"
+                      className="p-3.5 bg-[#14141c] border border-warm-white/[0.06] rounded-xl space-y-2"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-xs font-bold font-mono uppercase">
+                          <div className="w-6 h-6 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center text-gold text-[10px] font-bold font-mono uppercase">
                             {rev.username.slice(0, 2)}
                           </div>
-                          <span className="font-bold text-slate-200 text-sm">{rev.username}</span>
+                          <span className="font-bold text-warm-white text-xs">{rev.username}</span>
                         </div>
-                        <span className="text-[10px] font-mono text-amber-400/80 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20 uppercase">
+                        <span className="text-[9px] font-mono text-gold bg-gold/10 px-2 py-0.5 rounded border border-gold/20 uppercase font-bold">
                           {rev.feedback_type}
                         </span>
                       </div>
-                      <p className="text-xs text-slate-300 leading-relaxed font-sans pl-9">
+                      <p className="text-xs text-mid-gray leading-relaxed font-sans pl-8">
                         {rev.description}
                       </p>
                     </div>

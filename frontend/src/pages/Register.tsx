@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleLogin } from '@react-oauth/google';
 import api from '../services/api';
@@ -8,6 +8,7 @@ import { syncApi } from '../services/syncApi';
 import { analyticsApi } from '../services/analyticsApi';
 
 export default function Register() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +34,7 @@ export default function Register() {
       if (response.data.user) {
         setUser(response.data.user);
       }
-      window.location.href = '/dashboard';
+      navigate('/onboarding');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Google registration failed');
     }
@@ -104,7 +105,7 @@ export default function Register() {
         console.warn('Telemetry event logging failed', e);
       }
 
-      window.location.href = '/onboarding';
+      navigate('/onboarding');
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Registration failed');
     }

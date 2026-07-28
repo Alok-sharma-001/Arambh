@@ -13,6 +13,7 @@ import {
   RotateCcw,
   Target,
   Terminal,
+  X,
 } from 'lucide-react';
 import { regions, sampleQuestions } from '@/data/regions';
 import { lessons } from '@/data/lessons';
@@ -673,9 +674,21 @@ export default function LessonPage() {
                     </button>
                   </div>
                 ) : (
-                  <p className="text-sm text-gold font-medium">
-                    {feedbackHelpful ? 'Awesome! Glad you found it helpful. ⚔️' : 'Thanks! We will work to improve this lesson. 🛡️'}
-                  </p>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm text-gold font-medium">
+                      {feedbackHelpful ? 'Awesome! Glad you found it helpful.' : 'Thanks! We will work to improve this lesson.'}
+                    </span>
+                    <button
+                      onClick={() => {
+                        setFeedbackSubmitted(false);
+                        setFeedbackHelpful(null);
+                      }}
+                      className="p-1 text-mid-gray hover:text-white transition-colors rounded-lg hover:bg-warm-white/10"
+                      title="Dismiss feedback"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
