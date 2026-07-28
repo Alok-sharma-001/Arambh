@@ -106,7 +106,7 @@ def test_founder_dashboard_extended_metrics():
     assert "registered_no_lesson" in data["dropoffs"]
 
 def test_password_validation_weak_fails():
-    app.dependency_overrides.clear() # clear mock user so register endpoint behaves normally
+    app.dependency_overrides.pop(get_current_user, None)
     response = client.post("/api/auth/register", json={
         "username": "newuser",
         "email": "newuser@example.com",
@@ -116,7 +116,7 @@ def test_password_validation_weak_fails():
 
 def test_password_validation_strong_passes():
     import uuid
-    app.dependency_overrides.clear()
+    app.dependency_overrides.pop(get_current_user, None)
     uname = f"user_{uuid.uuid4().hex[:6]}"
     response = client.post("/api/auth/register", json={
         "username": uname,
