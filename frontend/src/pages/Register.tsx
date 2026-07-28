@@ -27,6 +27,9 @@ export default function Register() {
         { id_token: idToken },
         { withCredentials: true }
       );
+      if (response.data.access_token) {
+        setToken(response.data.access_token);
+      }
       if (response.data.user) {
         setUser(response.data.user);
       }
@@ -47,6 +50,9 @@ export default function Register() {
       formData.append('username', username);
       formData.append('password', password);
       const loginRes = await api.post('/auth/login', formData);
+      if (loginRes.data.access_token) {
+        setToken(loginRes.data.access_token);
+      }
       setUser({ username });
 
       // Migrate existing local progress to cloud

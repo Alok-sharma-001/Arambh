@@ -9,12 +9,18 @@ interface AuthState {
   logout: () => Promise<void>;
 }
 
+const savedToken = localStorage.getItem('token');
 const savedUser = localStorage.getItem('user');
 
 export const useAuthStore = create<AuthState>((set) => ({
-  token: null,
+  token: savedToken || null,
   user: savedUser ? JSON.parse(savedUser) : null,
   setToken: (token) => {
+    if (token) {
+      localStorage.setItem('token', token);
+    } else {
+      localStorage.removeItem('token');
+    }
     set({ token });
   },
   setUser: (user) => {
@@ -31,6 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch {
       // ignore network error on logout
     }
+    localStorage.removeItem('token');
     localStorage.removeItem('user');
     set({ token: null, user: null });
   },

@@ -27,6 +27,9 @@ export default function Login() {
         { id_token: idToken },
         { withCredentials: true }
       );
+      if (response.data.access_token) {
+        setToken(response.data.access_token);
+      }
       if (response.data.user) {
         setUser(response.data.user);
       }
@@ -45,6 +48,9 @@ export default function Login() {
       formData.append('password', password);
 
       const response = await api.post('/auth/login', formData);
+      if (response.data.access_token) {
+        setToken(response.data.access_token);
+      }
       setUser({ username });
       
       // Pull state from cloud
