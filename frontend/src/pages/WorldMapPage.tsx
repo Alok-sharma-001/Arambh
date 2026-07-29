@@ -14,19 +14,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 const getThemeColors = (status: 'completed' | 'current' | 'locked') => {
   if (status === 'completed') {
-    return {
-      accent: '#5682B1', // Steel Blue
-    };
+    return { accent: '#64748b' }; // Muted Slate
   }
   if (status === 'current') {
-    return {
-      accent: '#FFE8DB', // Peach
-    };
+    return { accent: '#d4b76e' }; // Muted Gold
   }
-  // Locked
-  return {
-    accent: '#739EC9', // Light Steel Blue
-  };
+  return { accent: '#475569' }; // Dark Muted Slate
 };
 
 function MapHeader() {
@@ -36,7 +29,7 @@ function MapHeader() {
   const progressPercent = (completedRegions / regions.length) * 100;
 
   return (
-    <div className="sticky top-[72px] z-40 bg-near-black/90 backdrop-blur-xl border-b border-gold/10">
+    <div className="sticky top-[72px] z-40 bg-[#09090d]/95 backdrop-blur-xl border-b border-warm-white/[0.08]">
       <div className="max-w-[1280px] mx-auto flex flex-col px-6 lg:px-10">
         {/* Top row */}
         <div className="h-14 flex items-center justify-between">
@@ -44,14 +37,14 @@ function MapHeader() {
             <span className="font-mono text-xs font-bold uppercase tracking-[0.15em] text-gold">WORLD MAP</span>
             <button
               onClick={() => navigate('/placement-test')}
-              className="ml-2 px-3 py-1 rounded-full bg-[#c8a45e]/10 border border-[#c8a45e]/30 text-[#c8a45e] hover:bg-[#c8a45e]/20 text-xs font-semibold transition-all flex items-center gap-1.5"
+              className="ml-2 px-3 py-1 rounded-full bg-warm-white/[0.06] border border-warm-white/10 text-warm-white hover:bg-warm-white/10 text-xs font-semibold transition-all flex items-center gap-1.5"
             >
-              <Target className="w-3.5 h-3.5" />
+              <Target className="w-3.5 h-3.5 text-gold" />
               Skill Assessment
             </button>
-            <span className="hidden sm:inline text-warm-white/60">|</span>
-            <span className="hidden sm:flex items-center gap-2 text-sm text-warm-white">
-              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: getThemeColors('current').accent }} />
+            <span className="hidden sm:inline text-mid-gray/40">|</span>
+            <span className="hidden sm:flex items-center gap-2 text-sm text-mid-gray">
+              <span className="w-2 h-2 rounded-full bg-gold" />
               {regions.find((r) => r.id === player.currentRegion)?.name}
             </span>
           </div>
@@ -60,23 +53,23 @@ function MapHeader() {
             <div className="hidden sm:block">
               <div className="w-[200px] h-1.5 bg-warm-white/[0.08] rounded-full overflow-hidden">
                 <div
-                   className="h-full gradient-completion-bar rounded-full transition-all duration-1000"
-                   style={{ width: `${progressPercent}%` }}
+                  className="h-full bg-gold rounded-full transition-all duration-1000"
+                  style={{ width: `${progressPercent}%` }}
                 />
               </div>
               <span className="text-[0.625rem] text-mid-gray mt-1 block">Region {completedRegions} of {regions.length}</span>
             </div>
 
             <div className="hidden sm:flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-gold flex items-center justify-center animate-level-pulse">
-                <span className="font-mono text-[0.625rem] font-bold text-near-black">{player.level}</span>
+              <div className="w-7 h-7 rounded-full bg-gold/20 border border-gold/40 flex items-center justify-center">
+                <span className="font-mono text-[0.625rem] font-bold text-gold">{player.level}</span>
               </div>
               <span className="font-mono text-sm text-gold tabular-nums">{player.totalXP.toLocaleString()} XP</span>
             </div>
           </div>
         </div>
 
-        {/* Mobile progress bar (visible only on small screens) */}
+        {/* Mobile progress bar */}
         <div className="sm:hidden pb-3">
           <div className="flex items-center justify-between mb-1.5">
             <span className="text-[10px] text-mid-gray font-mono font-bold">
@@ -88,11 +81,8 @@ function MapHeader() {
           </div>
           <div className="w-full h-1 bg-warm-white/[0.06] rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-1000"
-              style={{
-                width: `${progressPercent}%`,
-                background: 'linear-gradient(90deg, #5682B1, #FFE8DB)',
-              }}
+              className="h-full bg-gold rounded-full transition-all duration-1000"
+              style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
@@ -115,64 +105,44 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
   const bossCompleted = storeRegion?.bossStatus === 'completed';
   const bossAvailable = storeRegion?.bossStatus === 'available';
 
-  const glowClass = isCurrent ? 'animate-pulse-glow' : '';
-
-  const themeColors = getThemeColors(region.status);
-  const accentColor = themeColors.accent;
-
-  // Use the theme's colors for borders and shadows
-  const borderColor = isCompleted 
-    ? `${accentColor}50` // 50% opacity
-    : isCurrent 
-      ? '#FFE8DB' // Peach for currently active
-      : 'rgba(115,158,201,0.08)';
-
   return (
     <div
       id={region.number === 1 ? "world-map-grid" : undefined}
-      className={`relative cursor-pointer group z-10 ${glowClass}`}
+      className="relative cursor-pointer group z-10"
       onClick={onClick}
     >
       <div
-        className="relative w-full overflow-hidden rounded-xl p-3.5 transition-apple-fast hover:-translate-y-1"
-        style={{
-          background: isBoss
-            ? 'linear-gradient(135deg, rgba(20,20,20,0.98), rgba(15,8,22,0.98))'
-            : `linear-gradient(145deg, rgba(20,20,20,0.97), rgba(10,10,10,0.98)), radial-gradient(circle at 20% 0%, ${accentColor}18, transparent 40%)`,
-          borderColor,
-          boxShadow: isCurrent
-            ? `0 0 20px ${accentColor}25, 0 8px 30px rgba(0,0,0,0.4)`
-            : isBoss
-              ? '0 0 20px rgba(255,232,219,0.25), 0 0 40px rgba(86,130,177,0.1)'
-              : '0 8px 24px rgba(0,0,0,0.3)',
-        }}
+        className={`relative w-full overflow-hidden rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 border ${
+          isCurrent
+            ? 'bg-[#121218] border-gold/40 shadow-lg'
+            : isCompleted
+              ? 'bg-[#0e0e12] border-warm-white/10 hover:border-warm-white/20'
+              : 'bg-[#0a0a0e] border-warm-white/[0.05] opacity-75'
+        }`}
       >
-        <div
-          className="absolute -right-12 -top-12 h-28 w-28 rounded-full blur-2xl transition-opacity duration-300 group-hover:opacity-90"
-          style={{ backgroundColor: `${accentColor}15` }}
-        />
-        <div className="absolute inset-x-0 top-0 h-px opacity-60" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
-
         {/* ROW 1: Icon, Title, Status Badge */}
         <div className="relative flex items-center justify-between gap-2.5">
-          <div className="flex items-center gap-2.5 min-w-0">
-            {/* Shrunk Icon */}
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Simple Icon Badge */}
             <div
-              className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border"
-              style={{ backgroundColor: `${accentColor}10`, borderColor: `${accentColor}15` }}
+              className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold ${
+                isCurrent
+                  ? 'bg-gold/10 border-gold/30 text-gold'
+                  : isCompleted
+                    ? 'bg-slate-800/40 border-slate-700/40 text-slate-300'
+                    : 'bg-warm-white/[0.03] border-warm-white/[0.06] text-mid-gray/50'
+              }`}
             >
-              <span style={{ color: accentColor }}>
-                {isBoss ? <Sword size={14} /> : <span className="font-mono text-xs font-bold">{region.name.charAt(0)}</span>}
-              </span>
+              {isBoss ? <Sword size={14} /> : region.name.charAt(0)}
             </div>
 
             <div className="min-w-0">
               <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[9px] font-bold text-mid-gray/50">
+                <span className="font-mono text-[10px] font-bold text-mid-gray/50">
                   {String(region.number).padStart(2, '0')}
                 </span>
                 <span className="text-warm-white/20 text-[8px]">•</span>
-                <h3 className="font-display font-extrabold text-warm-white tracking-tight truncate text-sm leading-none">
+                <h3 className="font-display font-bold text-warm-white tracking-tight truncate text-sm leading-none">
                   {region.name}
                 </h3>
               </div>
@@ -180,63 +150,63 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
           </div>
 
           <span
-            className="shrink-0 rounded-full border px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider"
-            style={{
-              borderColor: `${accentColor}20`,
-              backgroundColor: `${accentColor}05`,
-              color: isLocked ? '#739EC9' : accentColor,
-            }}
+            className={`shrink-0 rounded-md px-2 py-0.5 text-[9px] font-mono font-bold uppercase tracking-wider border ${
+              isCompleted
+                ? 'bg-slate-800/50 border-slate-700/50 text-slate-300'
+                : isCurrent
+                  ? 'bg-gold/10 border-gold/30 text-gold'
+                  : 'bg-warm-white/[0.03] border-warm-white/[0.06] text-mid-gray/50'
+            }`}
           >
             {isCompleted ? 'Mastered' : isCurrent ? 'Active' : 'Locked'}
           </span>
         </div>
 
         {/* ROW 2: Subtitle */}
-        <p className="text-[10px] text-mid-gray/60 font-medium truncate mt-1.5 pl-0.5">
+        <p className="text-[11px] text-mid-gray/70 font-medium truncate mt-2 pl-0.5">
           {region.subtitle}
         </p>
 
-        {/* ROW 3: Thinner Progress Bar with Inline percentage */}
-        <div className="relative mt-2.5 flex items-center gap-2.5">
-          <div className="flex-1 relative h-[3px] bg-warm-white/[0.03] rounded-full overflow-hidden">
+        {/* ROW 3: Simple Progress Bar */}
+        <div className="relative mt-3 flex items-center gap-2.5">
+          <div className="flex-1 relative h-1 bg-warm-white/[0.06] rounded-full overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-300"
-              style={{
-                width: `${progressPercent}%`,
-                backgroundColor: accentColor,
-              }}
+              className={`h-full rounded-full transition-all duration-300 ${
+                isCompleted ? 'bg-slate-400' : isCurrent ? 'bg-gold' : 'bg-slate-700'
+              }`}
+              style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <span className="text-[9px] font-mono text-mid-gray/50 font-bold shrink-0 min-w-[22px] text-right">
+          <span className="text-[9px] font-mono text-mid-gray/60 font-bold shrink-0 min-w-[22px] text-right">
             {Math.round(progressPercent)}%
           </span>
         </div>
 
-        {/* ROW 4: Footer stats and navigation */}
-        <div className="relative mt-2.5 pt-2 border-t border-warm-white/5 flex items-center justify-between gap-2">
-          {/* Mini Inline Stats (Lessons, Boss Status) */}
-          <div className="flex items-center gap-2 text-[10px] font-bold text-mid-gray/60 pl-0.5">
+        {/* ROW 4: Footer details */}
+        <div className="relative mt-3 pt-2.5 border-t border-warm-white/[0.06] flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 text-[10px] font-bold text-mid-gray/60 pl-0.5 font-mono">
             <span>{completedLessons}/{region.lessons.length} Lessons</span>
             <span className="text-warm-white/10">•</span>
             <span>{bossCompleted ? 'Defeated' : bossAvailable ? 'Boss Ready' : 'Boss Locked'}</span>
           </div>
 
           {!isLocked && (
-            <ChevronRight size={12} className="text-mid-gray/40 group-hover:text-warm-white transition-colors" />
+            <ChevronRight size={13} className="text-mid-gray/40 group-hover:text-warm-white transition-colors" />
           )}
         </div>
 
         {/* Boss lock overlay */}
         {isBoss && isLocked && (
-          <div className="absolute inset-0 bg-near-black/90 backdrop-blur-md z-20 rounded-xl flex flex-col items-center justify-center">
-            <Lock size={20} className="text-mid-gray/50 mb-1" />
-            <span className="text-[9px] text-mid-gray/50 text-center px-4 font-bold uppercase tracking-widest">Locked</span>
+          <div className="absolute inset-0 bg-[#09090d]/90 backdrop-blur-sm z-20 rounded-xl flex flex-col items-center justify-center">
+            <Lock size={18} className="text-mid-gray/50 mb-1" />
+            <span className="text-[9px] text-mid-gray/50 text-center px-4 font-mono font-bold uppercase tracking-widest">Locked</span>
           </div>
         )}
       </div>
     </div>
   );
 }
+
 
 function RegionDetailPanel({ region, onClose }: { region: Region; onClose: () => void }) {
   const navigate = useNavigate();
