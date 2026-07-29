@@ -491,7 +491,7 @@ export default function WorldMapPage() {
             <path
               d={buildPath()}
               fill="none"
-              stroke="rgba(155,184,216,0.3)"
+              stroke="rgba(155,184,216,0.25)"
               strokeWidth="0.15"
             />
             {/* Animated bright path (draws on scroll) */}
@@ -503,7 +503,18 @@ export default function WorldMapPage() {
               strokeWidth="0.15"
               style={{ filter: 'drop-shadow(0 0 6px rgba(155,184,216,0.4))' }}
             />
+            {/* Animated energy particle flow along the path */}
+            <path
+              d={buildPath()}
+              fill="none"
+              stroke="#d4b76e"
+              strokeWidth="0.25"
+              strokeDasharray="1, 4"
+              className="animate-timeline-flow opacity-80"
+              style={{ filter: 'drop-shadow(0 0 8px rgba(212,183,110,0.8))' }}
+            />
           </svg>
+
 
           {/* Region Nodes */}
           {enrichedRegions.map((region) => (

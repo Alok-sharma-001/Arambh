@@ -1,5 +1,6 @@
 import { useMemo, useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { analyticsApi } from '@/services/analyticsApi';
 import {
   ArrowLeft,
@@ -566,27 +567,41 @@ export default function LessonPage() {
                     </div>
                   ) : (
                     <div className="grid gap-2 grid-cols-2">
-                      {currentStep.memory.map((slot) => (
-                        <div
-                          key={slot.name}
-                          className="relative overflow-hidden rounded-lg border bg-warm-white/[0.01] p-2.5 flex flex-col justify-between"
-                          style={{ borderColor: `${slot.accent}20` }}
-                        >
-                          <div>
-                            <span className="block font-mono text-[9px] text-mid-gray/60">{slot.name}</span>
-                            <strong className="mt-0.5 block break-all font-mono text-sm text-warm-white leading-tight">{slot.value}</strong>
-                          </div>
-                          <div className="mt-2 flex items-center justify-between">
-                            <span className="inline-flex rounded px-1 py-0.5 font-mono text-[8px] uppercase tracking-wider font-extrabold" style={{ backgroundColor: `${slot.accent}10`, color: slot.accent }}>
-                              {slot.type}
-                            </span>
-                            <span className="text-[9px] text-mid-gray/50 truncate max-w-[60px]" title={slot.note}>
-                              {slot.note}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+                      {currentStep.memory.map((slot) => {
+                        const isValueUpdated = stepIndex > 0 && (
+                          content.debuggerSteps[stepIndex - 1]?.memory.find(s => s.name === slot.name)?.value !== slot.value
+                        );
+
+                        return (
+                          <motion.div
+                            key={`${slot.name}-${slot.value}`}
+                            initial={isValueUpdated ? { scale: 0.92, borderColor: '#d4b76e', boxShadow: '0 0 20px rgba(212,183,110,0.6)' } : false}
+                            animate={{ scale: 1, borderColor: `${slot.accent}30`, boxShadow: '0 0 0px rgba(0,0,0,0)' }}
+                            transition={{ duration: 0.6, ease: 'easeOut' }}
+                            className="relative overflow-hidden rounded-lg border bg-warm-white/[0.02] p-2.5 flex flex-col justify-between"
+                          >
+                            <div>
+                              <div className="flex items-center justify-between">
+                                <span className="block font-mono text-[9px] text-mid-gray/60">{slot.name}</span>
+                                {isValueUpdated && (
+                                  <span className="font-mono text-[8px] font-bold text-gold bg-gold/10 px-1 rounded animate-pulse">UPDATED</span>
+                                )}
+                              </div>
+                              <strong className="mt-0.5 block break-all font-mono text-sm text-warm-white leading-tight">{slot.value}</strong>
+                            </div>
+                            <div className="mt-2 flex items-center justify-between">
+                              <span className="inline-flex rounded px-1 py-0.5 font-mono text-[8px] uppercase tracking-wider font-extrabold" style={{ backgroundColor: `${slot.accent}10`, color: slot.accent }}>
+                                {slot.type}
+                              </span>
+                              <span className="text-[9px] text-mid-gray/50 truncate max-w-[60px]" title={slot.note}>
+                                {slot.note}
+                              </span>
+                            </div>
+                          </motion.div>
+                        );
+                      })}
                     </div>
+
                   )}
                 </div>
 

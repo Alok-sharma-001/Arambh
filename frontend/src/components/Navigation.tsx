@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { usePlayer } from '@/context/PlayerContext';
 import { useAuthStore } from '@/store/authStore';
-import { LogOut, Home, MapPin, Swords, BookOpen, Brain, Trophy, Flame, Sparkles, MessageSquare } from 'lucide-react';
+import { useProgressionStore } from '@/store/progressionStore';
+import { audioEngine } from '@/lib/audioEngine';
+import { LogOut, Home, MapPin, Swords, BookOpen, Brain, Trophy, Flame, Sparkles, MessageSquare, Volume2, VolumeX } from 'lucide-react';
 import { useTour } from '../context/TourContext';
 import { motion } from 'framer-motion';
 import { LanguageSelector } from './ui/LanguageSelector';
@@ -29,12 +31,25 @@ const mobileTabItems = [
 export default function Navigation() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [isAudioMuted, setIsAudioMuted] = useState(audioEngine.isAudioMuted());
   const { player } = usePlayer();
+  const stats = useProgressionStore((state) => state.stats);
   const { startTour } = useTour();
   const location = useLocation();
   const navigate = useNavigate();
   const token = useAuthStore((state) => state.token);
   const logout = useAuthStore((state) => state.logout);
+
+  const streakDays = Math.max(1, stats?.daily_streak || stats?.streak_days || 1);
+
+  const toggleAudioMute = () => {
+    const nextMute = !isAudioMuted;
+    audioEngine.setMuted(nextMute);
+    setIsAudioMuted(nextMute);
+    if (!nextMute) {
+      audioEngine.playClick();
+    }
+  };
 
   const username = (() => {
     if (!token) return null;
@@ -100,9 +115,13 @@ export default function Navigation() {
             {token ? (
               <div className="flex items-center gap-4 lg:gap-6">
                 {/* Flame Streak Indicator */}
-                <div id="streak-counter" className="flex items-center gap-1.5 text-amber-500 font-mono text-[11px]" title="Daily Streak">
-                  <Flame className="w-3.5 h-3.5 fill-amber-500/20" />
-                  <span className="font-bold">3</span>
+                <div
+                  id="streak-counter"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 font-mono text-[11px] shadow-[0_0_12px_rgba(245,158,11,0.2)] animate-pulse"
+                  title={`${streakDays} Day Login Streak! Complete daily quests to maintain.`}
+                >
+                  <Flame className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                  <span className="font-extrabold">{streakDays}d Streak</span>
                 </div>
 
                 {/* Level / XP Tracker */}
@@ -117,6 +136,19 @@ export default function Navigation() {
 
                 {/* Minimal Utility Icons */}
                 <div className="flex items-center gap-3 border-l border-warm-white/10 pl-4 lg:pl-6">
+                  {/* Global Sound Effects Toggle */}
+                  <button
+                    onClick={toggleAudioMute}
+                    className="text-mid-gray hover:text-gold transition-colors p-1"
+                    title={isAudioMuted ? "Unmute Sound FX" : "Mute Sound FX"}
+                  >
+                    {isAudioMuted ? (
+                      <VolumeX size={15} className="text-red-400" />
+                    ) : (
+                      <Volume2 size={15} className="text-gold" />
+                    )}
+                  </button>
+
                   <LanguageSelector />
                   <button 
                     onClick={() => setShowReviewModal(true)}
