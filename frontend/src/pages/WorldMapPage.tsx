@@ -142,7 +142,7 @@ function RegionNode({ region, onClick }: { region: Region; onClick: () => void }
                   {String(region.number).padStart(2, '0')}
                 </span>
                 <span className="text-warm-white/20 text-[8px]">•</span>
-                <h3 className="font-display font-bold text-warm-white tracking-tight truncate text-sm leading-none">
+                <h3 className="font-display font-bold text-warm-white tracking-tight text-sm leading-none whitespace-nowrap">
                   {region.name}
                 </h3>
               </div>
@@ -520,14 +520,15 @@ export default function WorldMapPage() {
           {enrichedRegions.map((region) => (
             <div
               key={region.id}
-              className="region-node-wrapper absolute z-10"
+              className="region-node-wrapper absolute z-20"
               style={{
                 left: `${region.position.x}%`,
                 top: `${region.position.y}%`,
-                transform: 'translateX(-50%)',
-                width: region.number === 11 ? 'min(320px, calc(100vw - 48px))' : 'min(260px, calc(100vw - 48px))',
+                transform: 'translate(-50%, -50%)',
+                width: 'min(310px, calc(100vw - 48px))',
               }}
             >
+
               <RegionNode
                 region={region}
                 onClick={() => {

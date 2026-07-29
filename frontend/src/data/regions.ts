@@ -22,7 +22,7 @@ export const regions: Region[] = [
       artifactReward: 'Forest Ring',
       locked: true,
     },
-    position: { x: 50, y: 8 },
+    position: { x: 50, y: 6 },
   },
   {
     id: 'data-types-valley',
@@ -45,7 +45,7 @@ export const regions: Region[] = [
       artifactReward: 'Crystal Lens',
       locked: true,
     },
-    position: { x: 25, y: 17 },
+    position: { x: 25, y: 14 },
   },
   {
     id: 'loops-desert',
@@ -68,7 +68,7 @@ export const regions: Region[] = [
       artifactReward: 'Dune Scroll',
       locked: true,
     },
-    position: { x: 75, y: 26 },
+    position: { x: 75, y: 22 },
   },
   {
     id: 'functions-mountain',
@@ -91,7 +91,7 @@ export const regions: Region[] = [
       artifactReward: 'Summit Crown',
       locked: true,
     },
-    position: { x: 20, y: 35 },
+    position: { x: 22, y: 30 },
   },
   {
     id: 'collections-kingdom',
@@ -114,7 +114,7 @@ export const regions: Region[] = [
       artifactReward: 'Royal Scepter',
       locked: true,
     },
-    position: { x: 80, y: 44 },
+    position: { x: 78, y: 38 },
   },
   {
     id: 'oop-citadel',
@@ -137,7 +137,7 @@ export const regions: Region[] = [
       artifactReward: 'Class Sigil',
       locked: true,
     },
-    position: { x: 25, y: 53 },
+    position: { x: 22, y: 46 },
   },
   {
     id: 'exception-abyss',
@@ -160,7 +160,7 @@ export const regions: Region[] = [
       artifactReward: 'Abyssal Shield',
       locked: true,
     },
-    position: { x: 75, y: 62 },
+    position: { x: 78, y: 54 },
   },
   {
     id: 'filesystem-ruins',
@@ -183,7 +183,7 @@ export const regions: Region[] = [
       artifactReward: 'Stone Tablet',
       locked: true,
     },
-    position: { x: 20, y: 67 },
+    position: { x: 22, y: 62 },
   },
   {
     id: 'modules-harbor',
@@ -206,7 +206,7 @@ export const regions: Region[] = [
       artifactReward: 'Harbor Compass',
       locked: true,
     },
-    position: { x: 80, y: 73 },
+    position: { x: 78, y: 70 },
   },
   {
     id: 'algorithm-arena',
@@ -229,7 +229,7 @@ export const regions: Region[] = [
       artifactReward: 'Arena Trophy',
       locked: true,
     },
-    position: { x: 30, y: 80 },
+    position: { x: 25, y: 78 },
   },
   {
     id: 'iterator-isles',
@@ -252,7 +252,7 @@ export const regions: Region[] = [
       artifactReward: 'Infinite Compass',
       locked: true,
     },
-    position: { x: 70, y: 85 },
+    position: { x: 75, y: 86 },
   },
   {
     id: 'bossgate-saga',
@@ -275,9 +275,10 @@ export const regions: Region[] = [
       artifactReward: 'Legend\'s Crown',
       locked: true,
     },
-    position: { x: 50, y: 92 },
+    position: { x: 50, y: 94 },
   },
 ];
+
 
 export const sampleQuestions: ChallengeQuestion[] = [
   {
