@@ -201,8 +201,10 @@ export const BossArena: React.FC<BossArenaProps> = ({ regionId }) => {
       userAns = orderJoined;
       isAnswerCorrect = orderJoined === currentChallenge.correctAnswer;
     } else if (currentChallenge.type === 'fix-bug') {
-      isAnswerCorrect = selectedBugLine === currentChallenge.buggyLineIndex;
-      userAns = selectedBugLine !== null ? `Line ${selectedBugLine + 1}` : '';
+      const isLineMatch = selectedBugLine === currentChallenge.buggyLineIndex;
+      const isLetterMatch = selectedLetter === currentChallenge.correctAnswer;
+      isAnswerCorrect = isLineMatch || isLetterMatch;
+      userAns = selectedLetter || (selectedBugLine !== null ? `Line ${selectedBugLine + 1}` : '');
     } else {
       isAnswerCorrect = selectedLetter === currentChallenge.correctAnswer;
     }
@@ -646,7 +648,15 @@ export const BossArena: React.FC<BossArenaProps> = ({ regionId }) => {
                               return (
                                 <div
                                   key={idx}
-                                  onClick={() => !hasSubmitted && setSelectedBugLine(idx)}
+                                  onClick={() => {
+                                    if (!hasSubmitted) {
+                                      setSelectedBugLine(idx);
+                                      const matchOption = currentChallenge.options?.find(o => o.text.includes(`Line ${idx + 1}`));
+                                      if (matchOption) {
+                                        setSelectedLetter(matchOption.letter);
+                                      }
+                                    }
+                                  }}
                                   className={`flex items-center gap-4 px-3 py-1.5 rounded cursor-pointer transition-colors ${
                                     isSelected ? 'bg-red-500/20 border border-red-500/40' : 'hover:bg-white/5 border border-transparent'
                                   }`}
@@ -666,11 +676,11 @@ export const BossArena: React.FC<BossArenaProps> = ({ regionId }) => {
                     {/* Interactive inputs depending on challenge type */}
                     <div className="flex-1 flex flex-col justify-end space-y-3">
                       
-                      {/* MCQ / Predict Output Options */}
-                      {(currentChallenge.type === 'mcq' || currentChallenge.type === 'predict-output' || currentChallenge.type === 'fill-blank') && (
+                      {/* MCQ / Predict Output / Fix-Bug Options */}
+                      {(currentChallenge.type === 'mcq' || currentChallenge.type === 'predict-output' || currentChallenge.type === 'fill-blank' || currentChallenge.type === 'fix-bug') && (
                         <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
                           {currentChallenge.options.map((option) => {
-                            const isSelected = selectedLetter === option.letter;
+                            const isSelected = selectedLetter === option.letter || (currentChallenge.type === 'fix-bug' && option.text.includes(`Line ${selectedBugLine !== null ? selectedBugLine + 1 : -1}`));
                             const isCorrectOption = hasSubmitted && option.letter === currentChallenge.correctAnswer;
                             const isWrongOption = hasSubmitted && isSelected && !isCorrect;
 
@@ -692,7 +702,16 @@ export const BossArena: React.FC<BossArenaProps> = ({ regionId }) => {
                             return (
                               <button
                                 key={option.letter}
-                                onClick={() => !hasSubmitted && setSelectedLetter(option.letter)}
+                                onClick={() => {
+                                  if (!hasSubmitted) {
+                                    setSelectedLetter(option.letter);
+                                    const lineMatch = option.text.match(/Line (\d+)/);
+                                    if (lineMatch) {
+                                      const lineNum = parseInt(lineMatch[1], 10);
+                                      setSelectedBugLine(lineNum - 1);
+                                    }
+                                  }
+                                }}
                                 disabled={hasSubmitted}
                                 className={`w-full flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all ${borderCls} ${bgCls}`}
                               >
