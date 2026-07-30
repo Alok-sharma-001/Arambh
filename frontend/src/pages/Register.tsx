@@ -77,6 +77,11 @@ export default function Register() {
     const cleanUsername = username.trim();
     const cleanEmail = email.trim().toLowerCase();
 
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
     try {
       await api.post('/auth/register', { username: cleanUsername, email: cleanEmail, password });
       
@@ -162,9 +167,17 @@ export default function Register() {
         }
       }
 
-      setError(typeof detail === 'string' ? detail : 'Registration failed. Please check your details.');
+      let errorMsg = 'Registration failed. Please check your details.';
+      if (typeof detail === 'string') {
+        errorMsg = detail;
+      } else if (Array.isArray(detail) && detail.length > 0) {
+        errorMsg = detail.map((d: any) => (d.msg ? d.msg.replace('Value error, ', '') : 'Invalid input')).join(', ');
+      }
+
+      setError(errorMsg);
     }
   };
+
 
 
   const handleGoogleLogin = async () => {
