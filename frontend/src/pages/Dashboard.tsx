@@ -17,8 +17,10 @@ import { useProgression } from '../hooks/useProgression';
 import { useRegionStore } from '../store/regionStore';
 import { ALL_LESSONS, getRegionForLesson } from '../data/allLessons';
 import { DailyLoginRewards } from '../components/dashboard/DailyLoginRewards';
+import { DashboardLeaderboard } from '../components/dashboard/DashboardLeaderboard';
 import { useProgressionStore } from '../store/progressionStore';
 import { NavigationService } from '../core/progression/NavigationService';
+
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -129,7 +131,12 @@ export default function Dashboard() {
           <DailyLoginRewards />
         </motion.div>
 
-        {/* Row 4: Collection (6 cols) & Recent Activity (6 cols) */}
+        {/* Row 4: Guild Leaderboard (12 cols) */}
+        <motion.div variants={itemVariants} className="md:col-span-2 lg:col-span-12">
+          <DashboardLeaderboard />
+        </motion.div>
+
+        {/* Row 5: Collection (6 cols) & Recent Activity (6 cols) */}
         <motion.div variants={itemVariants} className="md:col-span-1 lg:col-span-6">
           <ArtifactWidget />
         </motion.div>
@@ -137,6 +144,7 @@ export default function Dashboard() {
         <motion.div id="dashboard-activity" variants={itemVariants} className="md:col-span-1 lg:col-span-6">
           <RecentActivity />
         </motion.div>
+
 
       </div>
     </motion.div>

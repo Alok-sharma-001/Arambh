@@ -16,9 +16,9 @@ const navLinks = [
   { label: 'Library', path: '/library' },
   { label: 'Vault', path: '/vault' },
   { label: 'Artifacts', path: '/artifacts' },
-  { label: 'Leaderboard', path: '/leaderboard' },
   { label: 'Dashboard', path: '/dashboard' },
 ];
+
 
 const mobileTabItems = [
   { label: 'Map', path: '/world-map', icon: MapPin },
