@@ -487,33 +487,24 @@ export default function WorldMapPage() {
 
           {/* SVG Path */}
           <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {/* Full route path (always visible as a faint guide) */}
+            {/* Full route path (faint guide) */}
             <path
               d={buildPath()}
               fill="none"
-              stroke="rgba(155,184,216,0.25)"
-              strokeWidth="0.15"
+              stroke="rgba(155,184,216,0.2)"
+              strokeWidth="0.2"
             />
-            {/* Animated bright path (draws on scroll) */}
+            {/* Solid blue route path (draws on scroll) */}
             <path
               ref={pathRef}
               d={buildPath()}
               fill="none"
               stroke="#9BB8D8"
-              strokeWidth="0.15"
-              style={{ filter: 'drop-shadow(0 0 6px rgba(155,184,216,0.4))' }}
-            />
-            {/* Animated energy particle flow along the path */}
-            <path
-              d={buildPath()}
-              fill="none"
-              stroke="#d4b76e"
-              strokeWidth="0.25"
-              strokeDasharray="1, 4"
-              className="animate-timeline-flow opacity-80"
-              style={{ filter: 'drop-shadow(0 0 8px rgba(212,183,110,0.8))' }}
+              strokeWidth="0.2"
+              style={{ filter: 'drop-shadow(0 0 8px rgba(155,184,216,0.6))' }}
             />
           </svg>
+
 
 
           {/* Region Nodes */}

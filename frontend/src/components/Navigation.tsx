@@ -76,39 +76,42 @@ export default function Navigation() {
   return (
     <>
       {/* ─── Top Navigation Bar ─── */}
-      <nav id="navigation-bar" className="fixed top-0 left-0 right-0 z-40 h-[56px] bg-black/60 backdrop-blur-xl border-b border-warm-white/10">
-        <div className="max-w-[1280px] mx-auto h-full flex items-center justify-between px-4 md:px-6 lg:px-8">
-          {/* Brand */}
-          <Link to="/" className="font-mono text-sm font-bold tracking-[0.2em] text-gold hover:opacity-80 transition-opacity flex items-center gap-1.5">
-            <span>⚔️</span> ARAMBH
-          </Link>
+      <nav id="navigation-bar" className="fixed top-0 left-0 right-0 z-40 h-[60px] bg-black/70 backdrop-blur-xl border-b border-warm-white/10">
+        <div className="max-w-[1380px] mx-auto h-full flex items-center justify-between px-5 md:px-8 lg:px-10">
+          <div className="flex items-center gap-10 lg:gap-16 h-full">
+            {/* Brand */}
+            <Link to="/" className="font-mono text-base font-bold tracking-[0.25em] text-gold hover:opacity-80 transition-opacity flex items-center gap-2 shrink-0">
+              <span>⚔️</span> ARAMBH
+            </Link>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-4 lg:gap-8 h-full">
-            {visibleLinks.map((link) => {
-              const isActive = location.pathname === link.path || 
-                (link.path === '/world-map' && location.pathname.startsWith('/world-map')) ||
-                (link.path.startsWith('/training') && location.pathname.startsWith('/training'));
-              return (
-                <Link
-                  key={link.label}
-                  to={link.path}
-                  className={`relative h-full flex items-center text-[11px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
-                    isActive ? 'text-gold' : 'text-warm-white/70 hover:text-gold'
-                  }`}
-                >
-                  {link.label}
-                  {isActive && (
-                    <motion.div 
-                      layoutId="active-nav-indicator"
-                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-gold shadow-[0_0_8px_rgba(255,232,219,0.6)]"
-                      transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                    />
-                  )}
-                </Link>
-              );
-            })}
+            {/* Desktop Nav Links */}
+            <div className="hidden md:flex items-center gap-6 lg:gap-8 h-full">
+              {visibleLinks.map((link) => {
+                const isActive = location.pathname === link.path || 
+                  (link.path === '/world-map' && location.pathname.startsWith('/world-map')) ||
+                  (link.path.startsWith('/training') && location.pathname.startsWith('/training'));
+                return (
+                  <Link
+                    key={link.label}
+                    to={link.path}
+                    className={`relative h-full flex items-center text-[11px] font-bold uppercase tracking-[0.14em] transition-colors duration-300 ${
+                      isActive ? 'text-gold' : 'text-warm-white/70 hover:text-gold'
+                    }`}
+                  >
+                    {link.label}
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-nav-indicator"
+                        className="absolute bottom-0 left-0 right-0 h-[2px] bg-gold shadow-[0_0_8px_rgba(255,232,219,0.6)]"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                      />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
           </div>
+
 
           {/* Right Side Actions (desktop) */}
           <div className="hidden md:flex items-center gap-4 lg:gap-6">
