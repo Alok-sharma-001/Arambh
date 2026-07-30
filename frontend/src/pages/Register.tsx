@@ -73,18 +73,22 @@ export default function Register() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    const cleanUsername = username.trim();
+    const cleanEmail = email.trim().toLowerCase();
+
     try {
-      await api.post('/auth/register', { username, email, password });
+      await api.post('/auth/register', { username: cleanUsername, email: cleanEmail, password });
       
       // Auto-login after registration
       const formData = new FormData();
-      formData.append('username', username);
+      formData.append('username', cleanUsername);
       formData.append('password', password);
       const loginRes = await api.post('/auth/login', formData);
       if (loginRes.data.access_token) {
         setToken(loginRes.data.access_token);
       }
-      setUser({ username });
+      setUser({ username: cleanUsername });
 
       // Migrate existing local progress to cloud
       try {
@@ -130,16 +134,38 @@ export default function Register() {
 
       // Log signup telemetry
       try {
-        await analyticsApi.logEvent('signup_completed', { username });
+        await analyticsApi.logEvent('signup_completed', { username: cleanUsername });
       } catch (e) {
         console.warn('Telemetry event logging failed', e);
       }
 
       navigate('/onboarding');
     } catch (err: any) {
-      setError(err.response?.data?.detail || 'Registration failed');
+      const detail = err.response?.data?.detail;
+
+      // Handle already registered accounts gracefully
+      if (detail === 'Username already taken' || detail === 'Email already registered') {
+        try {
+          const formData = new FormData();
+          formData.append('username', cleanUsername || cleanEmail);
+          formData.append('password', password);
+          const loginRes = await api.post('/auth/login', formData);
+          if (loginRes.data.access_token) {
+            setToken(loginRes.data.access_token);
+            setUser({ username: cleanUsername });
+            navigate('/world-map');
+            return;
+          }
+        } catch (autoLoginErr) {
+          setError('This account already exists! Click "Return to the Quest" below to sign in.');
+          return;
+        }
+      }
+
+      setError(typeof detail === 'string' ? detail : 'Registration failed. Please check your details.');
     }
   };
+
 
   const handleGoogleLogin = async () => {
     setError('');
