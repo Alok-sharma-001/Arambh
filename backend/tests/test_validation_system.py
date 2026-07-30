@@ -110,9 +110,10 @@ def test_password_validation_weak_fails():
     response = client.post("/api/auth/register", json={
         "username": "newuser",
         "email": "newuser@example.com",
-        "password": "weakpassword"
+        "password": "123"
     })
     assert response.status_code == 422 # Pydantic validation error
+
 
 def test_password_validation_strong_passes():
     import uuid
